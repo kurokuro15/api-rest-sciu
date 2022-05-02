@@ -1,5 +1,5 @@
 <?php
-require_once '/Models/Factura.php';
+require_once dirname(__DIR__) . '/Models/Factura.php';
 /**
  * Clase controladora de factura para pruebas
  */
