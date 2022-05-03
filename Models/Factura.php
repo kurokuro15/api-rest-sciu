@@ -1,6 +1,7 @@
 <?php
 namespace api\Models;
 
+include 'Model.php';
 use \api\Models\Model;
 
 use ErrorException;
