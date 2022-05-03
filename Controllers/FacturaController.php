@@ -1,5 +1,9 @@
 <?php
-require_once dirname(__DIR__) . '/Models/Factura.php';
+namespace api\Controllers;
+
+use \api\Models\Factura;
+
+use ErrorException;
 /**
  * Clase controladora de factura para pruebas
  */

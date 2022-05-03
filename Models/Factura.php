@@ -1,9 +1,12 @@
 <?php
-require_once 'Model.php';
+namespace api\Models;
+
+use \api\Models\Model;
+
+use ErrorException;
 /**
  * Modelo de la clase factura... para pruebas
  */
-
  class Factura extends Model {
 function __construct()
 {

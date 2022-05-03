@@ -1,4 +1,8 @@
 <?php
+namespace api\Models {
+
+use \PDO;
+use \PDOException;
 class Model
 {
 	private $conData;
@@ -81,4 +85,5 @@ class Model
 		$json = file_get_contents($root . "\Config/" . $file);		
 		return json_decode($json, true);
 	}
+}
 }

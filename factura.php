@@ -1,10 +1,10 @@
 <?php
-require_once 'Controllers/FacturaController.php';
+print_r('Facturando');
+use \api\Controllers\FacturaController as FacturaController;
 /**
  * Ruta de prueba
  */
 $_factura = new FacturaController;
-
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	$res = $_factura->get();
 	//Enviamos los resultados...
