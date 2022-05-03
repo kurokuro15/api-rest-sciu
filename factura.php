@@ -1,5 +1,4 @@
 <?php
-print_r('Facturando');
 include 'Controllers/FacturaController.php';
 include 'Models/Factura.php';
 use \api\Controllers\FacturaController as FacturaController;
