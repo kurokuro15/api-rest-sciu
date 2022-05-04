@@ -37,7 +37,11 @@ $ruta = str_replace($home, "", $_SERVER["REQUEST_URI"]);
 //Creo el array de ruta (filtrando los vacíos)
 // $array_ruta = array_filter(explode("/", $ruta));
 $array_link = array_filter(preg_split("/[\/ ?]+/", $ruta));
+foreach($array_link as $key => $value) { 
+    $paramsplit = preg_split("/[= &]+/", $value);
 
+}
+// url : host/api/estudiante/{cedula}/factura
 $split = explode('=', $array_link[1]);
 if($split) $param = array( $split[0] => $split[1]);
 //Decido la ruta en función de los elementos del array para factura.
