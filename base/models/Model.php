@@ -1,4 +1,9 @@
 <?php
+namespace base\models;
+
+use \PDO;
+use \PDOException;
+
 class Model
 {
 	private $conData;
@@ -77,7 +82,7 @@ class Model
 	}
 
 	private function getConfigFile($file) {
-		$root = dirname(__DIR__);
+		$root = dirname(dirname(__DIR__));
 		$json = file_get_contents($root . "\Config/" . $file);		
 		return json_decode($json, true);
 	}
