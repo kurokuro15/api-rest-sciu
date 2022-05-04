@@ -29,22 +29,26 @@ function autoload($clase,$dir=null){
 // instancio el controller
 $factura = new FacturaController;
 //Ruta de la home
-$home = "/api/public/";
+$home = "/api/";
 
 //Quito la home de la ruta de la barra de direcciones
 $ruta = str_replace($home, "", $_SERVER["REQUEST_URI"]);
 
 //Creo el array de ruta (filtrando los vacíos)
-$array_ruta = array_filter(explode("/", $ruta));
-foreach ($array_ruta as $i => $section){
-	if(str_contains($section,'?'))
-		$array_ruta[] = array_filter(explode("?", $section))[0];
-		$id = array_filter(explode("?id=", $section));
-}
+// $array_ruta = array_filter(explode("/", $ruta));
+$array_link = array_filter(preg_split("/[\/ ?]+/", $ruta));
+
+$split = explode('=', $array_link[1]);
+if($split) $param = array( $split[0] => $split[1]);
 //Decido la ruta en función de los elementos del array para factura.
-if (isset($array_ruta[3]) && $array_ruta[3] == "factura"){
+if (isset($array_link[0]) && $array_link[0] == "factura") {
+    if($param){
+        if($param['id']){
+            $factura->index($param['id']);
+
+        }
+    }
 	//Llamo al método ver pasándole la clave que me están pidiendo
-	$factura->index($id[1]);
 }
 else{
 
