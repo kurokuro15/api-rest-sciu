@@ -77,7 +77,6 @@ class Model
 		if ($stmt->execute()) {
 			return $this->conection->lastInsertId();
 		}
-
 		return false;
 	}
 

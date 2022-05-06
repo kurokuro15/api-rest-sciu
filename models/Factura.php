@@ -25,6 +25,7 @@ public function getFactura($id) {
 	} else {
 		return $results;
 	}
+	
 }
 
 }
