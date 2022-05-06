@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace base\routers;
 
@@ -37,7 +37,12 @@ class Route
 	{
 		return $this->callback;
 	}
-
+	public function getPatternSegments() {
+		$segments =  explode("/", $this->pattern);
+		// quito la primera posicion porque viene vacia
+		array_shift($segments);
+		return $segments;
+	}
 	private function validateMethod($method) {
 		if (in_array(strtoupper($method), $this->listMethod)) 
 				return $method;
