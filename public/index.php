@@ -11,6 +11,8 @@ spl_autoload_register('\api\Helpers\autoload');
 
 use base\routers\Router;
 use base\https\Response;
+use Throwable;
+
 $response = new Response;
 // Seteamos los Header necesarios.
 $response->setHeader('Access-Control-Allow-Origin: *');
@@ -22,8 +24,12 @@ $method = $_SERVER["REQUEST_METHOD"];
 
 $router = new Router($url,$method);
 require('../routers/router.php');
-
+try {
 $router->run();
+}
+catch (Throwable $err) {
+	echo "$err";
+}
 /**
  * 
  * ##############################################################################
