@@ -202,9 +202,10 @@ class Response
 		}
 	}
 
-	public function send($body)
+	public function send($body,$status = 200)
 	{
-		$this->setContent($body);
+		$this->response->setHeader(sprintf('HTTP/1.1 ' . $status . ' %s' , $this->response->getStatusCodeText($status)));
+		$this->response->setContent($body);
 		$this->render();
 	}
 }

@@ -6,7 +6,7 @@
  *
  */
 
-namespace Http;
+namespace base\https;
 
 /**
  * Class Request an http request
