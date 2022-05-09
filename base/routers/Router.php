@@ -45,6 +45,7 @@ class Router {
 		// obtenemos la clase de response. 
 		// $this->response = $GLOBALS['response'];
 	}
+
 	/**
 	 *  Añade una instancia de la clase Route al enrutador
 	 */
@@ -86,36 +87,6 @@ class Router {
 	}
 
 	/**
-	 *  dispatch url and pattern
-	 */
-	public function dispatch($url, $pattern)
-	{
-		preg_match_all('@:([\w]+)@', $pattern, $params, PREG_PATTERN_ORDER);
-
-		$patternAsRegex = preg_replace_callback('@:([\w]+)@', [$this, 'convertPatternToRegex'], $pattern);
-
-		if (substr($pattern, -1) === '/') {
-			$patternAsRegex = $patternAsRegex . '?';
-		}
-		$patternAsRegex = '@^' . $patternAsRegex . '$@';
-
-		// check match request url
-		if (preg_match($patternAsRegex, $url, $paramsValue)) {
-			array_shift($paramsValue);
-			foreach ($params[0] as $key => $value) {
-				$val = substr($value, 1);
-				if ($paramsValue[$val]) {
-					$this->setParams($val, urlencode($paramsValue[$val]));
-				}
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 *  get router
 	 */
 	public function getRouter()
@@ -129,7 +100,7 @@ class Router {
 	public function run()
 	{
 		if (!is_array($this->router) || empty($this->router))
-			throw new \Exception('NON-Object Route Set');
+			throw new \ErrorException('No se ha seteado un objeto Router.');
 		// filtramos por método las rutas que coincidan
 		$this->getMatchRoutersByRequestMethod();
 		//filtramos por endpoint y preparamos TODAS las rutas que coincidan.
@@ -137,15 +108,14 @@ class Router {
 
 		//Validamos que no esté vacío el arreglo de rutas de coincidencias
 		if (!$this->matchPatternRouter || empty($this->matchPatternRouter)) {
-			// $this->sendNotFound();
-			print_r('Error, no hay resultados');
+			throw new \ValueError("No se ha conseguido la ruta", 404);
 		} else {
 			// Hacemos la llamada del callback a cada método de cada ruta
 			foreach ($this->matchPatternRouter as $route) {
 				if (is_callable($route->getCallback())) {
 					call_user_func($route->getCallback(), $this->params);
 				} else {
-					throw new \Exception("error");
+					throw new \ErrorException("error, metodo no evocable");
 				}
 			}
 		}
@@ -177,15 +147,18 @@ class Router {
 	{
 		$url = $this->url;
 		$routes = $this->matchRouter;
+
 		// validamos si la url empieza por '/' (es la primera pasada) o no.
 		if (strpos($url, "/") === 0) {
 			$url_segments = explode("/", $url, 4);
 		} else {
 			$url_segments = explode("/", $url, 3);
 		}
+
 		// quito la primera posicion sí viene vacia
 		if (empty($url_segments[0]))
 			array_shift($url_segments);
+
 		//iteramos cada ruta matcheada anteriormente
 		foreach ($routes as $k => $route) {
 			$pattern_segments = $route->getPatternSegments();
@@ -198,18 +171,17 @@ class Router {
 			// si el pattern no tiene un parámetro y la url sí, sigamos pa lante
 			if ((empty($pattern_segments[1]) && !empty($url_segments[1])) || 
 					(!empty($pattern_segments[1]) && empty($url_segments[1]))) {
-						array_push($this->matchPatternRouter, $route);
 				continue;
 			}
 
 			// si existe un segundo parametro y no es un int(esto debemos permitir definirlo en el pattern) valido, 
 			// caso contrario retornamos error
 			if (!empty($url_segments[1]) && (int) ($url_segments[1]) === 0) {
-				echo "Parametro no valido";
-				return;
+				$param = ltrim($pattern_segments[1], ":");
+				throw new \TypeError("No se es válido el valor del parámetro: $param; $url_segments[1] no es válido.");
 			}
 
-			// si no hay parámetro, se detiene la iteración y setea matchRouter con la ruta actual.
+			// si no hay parámetro, se detiene la iteración y setea matchRouter con la ruta actual. Y dejamos de buscar.
 			if (empty($url_segments[1]) && empty($pattern_segments[1])) {
 				array_push($this->matchPatternRouter, $route);
 				break;
@@ -225,26 +197,15 @@ class Router {
 			// si no siguen mas segmentos en la url, llama al callback de la ruta actual porque ya esta es la última.
 			// caso contrario, volvamos a picar la ruta
 			if (isset($url_segments[2])) {
-				echo "llámame a este:" . "<br>" . $route->getPattern() . "<br>";
-				print_r($this->params);
-				echo "<br>";
 				array_push($this->matchPatternRouter, $route);
 				//$callback = $pattern->callback($params);
 				$this->url = $url_segments[2];
 				$this->getMatchRoutersByPattern($this->params);
 			} else {
-				echo "LLamame a este mismo:" . "<br>" . $route->getPattern() . "<br>";
-				print_r($params);
 				array_push($this->matchPatternRouter, $route);
 				break;
 			}
 			// repetir de nuevo
 		}
-	}
-
-	private function sendNotFound()
-	{
-		$this->response->sendStatus(404);
-		$this->response->setContent(['error' => 'Sorry This Route Not Found !', 'status_code' => 404]);
 	}
 }
