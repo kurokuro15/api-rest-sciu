@@ -12,13 +12,13 @@ function __construct()
 	parent::__construct();
 }
 
-public function getFactura($id) {
+public function getFactura($cedula) {
 	$query = "SELECT id_cedula, nombre1, factura, SUM(pagos.monto) as monto FROM alumnos 
 	JOIN emisiones ON id_cedula = id_cedul JOIN pagos ON idregistro = idregistr 
-	WHERE id_cedula = $id 
+	WHERE id_cedula = :cedula
 	GROUP BY id_cedula, nombre1, factura;";
 	
-	$results = parent::query($query);
+	$results = parent::query($query,[":cedula" => $cedula]);
 
 	if(!$results) {
 		throw new ErrorException('Not Data',0);
