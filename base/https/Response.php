@@ -1,5 +1,7 @@
 <?php
+
 namespace base\https;
+
 /**
  * Class Response an Http response
  *
@@ -74,7 +76,6 @@ class Response
 		508 => 'Loop Detected',
 		511 => 'Network Authentication Required',
 	];
-
 	protected $version;
 	protected $content;
 
@@ -109,16 +110,16 @@ class Response
 	 * @param int $code
 	 * @return string
 	 */
-	public function getStatusCodeText(int $code): string
+	public function getStatusCodeText($code)
 	{
-		return (string) isset($this->statusTexts[$code]) ? $this->statusTexts[$code] : 'unknown status';
+		return isset($this->statusTexts[$code]) ? $this->statusTexts[$code] : 'unknown status';
 	}
 
 	/**
 	 *  Set the response Headers.
 	 * @param $header
 	 */
-	public function setHeader(String $header)
+	public function setHeader($header)
 	{
 		$this->headers[] = $header;
 	}
@@ -190,22 +191,22 @@ class Response
 	{
 		if ($this->content) {
 			$output = $this->content;
-
 			// Headers
 			if (!headers_sent()) {
 				foreach ($this->headers as $header) {
 					header($header, true);
 				}
 			}
-
 			echo $output;
 		}
 	}
-
-	public function send($body,$status = 200)
+	/**
+	 * Send Body .
+	 */
+	public function send($body, $status = 200)
 	{
-		$this->response->setHeader(sprintf('HTTP/1.1 ' . $status . ' %s' , $this->response->getStatusCodeText($status)));
-		$this->response->setContent($body);
+		$this->setHeader(sprintf('HTTP/1.1 ' . $status . ' %s', $this->getStatusCodeText($status)));
+		$this->setContent($body);
 		$this->render();
 	}
 }

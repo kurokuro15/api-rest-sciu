@@ -13,16 +13,13 @@ $router->get("/estudiantes", function ($params) {
 $router->get("/estudiantes/:cedula", function ($params) {
 	$factura = new FacturaController;
 	try {
-
 		$body = $factura->get($params);
 		$response = $GLOBALS['response'];
 		if ($body) {
-			$response->status(200);
-			$response->send($body);
+			$response->send($body,200);
 		}
 	} catch (ValueError $err) {
-		$response->status(404);
-		$response->send("{\"error\":\"$err\"}");
+		$response->send("{\"error\":\"{$err->messange}\"}",404);
 	}
 });
 
