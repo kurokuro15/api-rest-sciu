@@ -2,8 +2,8 @@
 namespace api\controllers;
 
 use api\Models\Factura;
-use api\Helper\RouterHelper;
-use ErrorException;
+use ValueError;
+
 /**
  * Clase controladora de factura para pruebas
  */
@@ -11,35 +11,27 @@ use ErrorException;
 class FacturaController {
 	// podría inyectarse como dependencia FacturaModel y ResponseModel
 	protected $_factura;
-	protected $router;
 function __construct()
 {
-	$this->_factura = new Factura;
- $this->router = new RouterHelper();
+	$this->factura = new Factura;
 }
 
-public function index($id) {
-	$this->router->vista('factura',$id);
-}
-
-public function get($id) {
-	if(!empty($id)) {
+public function get($params) {
+	if(isset($params['cedula']))
+		$cedula = $params['cedula'];
+	else
+		throw new ValueError("cédula no seteada.");
+		
+	if(!empty($cedula)) {
 		try{
-			$body = $this->_factura->getFactura($id);
-			$response = [
-				"status"=> "ok",
-				"status_code" => "200",
-				"result"=> $body
-			];
-			
-			return $response;
-
-		} catch(ErrorException $err) {
+			$res = $this->factura->getFactura($cedula);
+			return $res;
+		} catch(\Error $err) {
 			//esto hay que formatearlo más 
-			return $err;
+			return $err->message;
 		}
 	} else {
-		echo 'no hay id';
+		echo 'no hay cedula';
 	}
 }
 
