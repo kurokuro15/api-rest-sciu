@@ -1,6 +1,6 @@
 <?php
 namespace api\Helpers;
-
+spl_autoload_register('\api\Helpers\autoload');
 function autoload($clase, $dir = null) {
         //Directorio raíz de mi proyecto (ruta absoluta)
     if (is_null($dir)) {
