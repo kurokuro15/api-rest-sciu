@@ -30,7 +30,7 @@ class Controller
 		$this->response = new Response;
 	}
 
-	protected function getQueryParams() {
+	protected function setQueryParams() {
 		if(!empty($_GET)) { 
 			foreach($_GET as $k => $v) {
 				$this->queryParams[$k] = $v;
