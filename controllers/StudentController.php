@@ -8,7 +8,7 @@ class StudentController extends Controller {
 	function __construct() { 
 		parent::__construct();
 		$this->students = new Student;
-		$this->getQueryParams();
+		$this->setQueryParams();
 	}
 	/* Handler to get a student of Db */
 	public function retrieve($params) {
