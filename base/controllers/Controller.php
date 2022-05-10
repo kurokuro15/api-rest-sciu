@@ -1,7 +1,5 @@
 <?php
-
 namespace base\controllers;
-
 use base\https\Response;
 use base\https\Request;
 
@@ -13,12 +11,12 @@ class Controller
 	/**
 	 * Request Class.
 	 */
-	public $request;
+	protected $request;
 
 	/**
 	 * Response Class.
 	 */
-	public $response;
+	protected $response;
 
 	/**
 	 *  Construct
