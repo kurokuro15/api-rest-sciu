@@ -8,6 +8,7 @@ class StudentController extends Controller {
 	function __construct() { 
 		parent::__construct();
 		$this->students = new Student;
+		$this->getQueryParams();
 	}
 	/* Handler to get a student of Db */
 	public function retrieve($params) {
@@ -22,9 +23,26 @@ class StudentController extends Controller {
 			if($data) {
 					$this->response->send($data);
 				}
+				
 		} catch(\Throwable $err){
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
 
+	}
+
+	public function get($params) {
+			$page = isset($this->queryParams['page']) ? $this->queryParams['page'] : 1;
+			$records = isset($this->queryParams['records']) ? $this->queryParams['records'] : 5;
+
+		try{
+			$data = $this->students->getAll($page, $records);
+				
+			if($data) {
+					$this->response->send($data);
+				}
+				
+		} catch(\Throwable $err){
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
 	}
 }
