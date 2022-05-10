@@ -115,17 +115,15 @@ class Model
 	 * take the number of page and number of items to show for page
 	 * by default page 0 and 20 items.
 	 */
-	protected function pagination($page = 0, $end = 15)
+	protected function pagination($page, $registros)
 	{
-		$start = 0;
-
+		$registroInicial = 0;
 		if ($page > 1) {
-			$start = ($end * ($page - 1)) + 1;
-			$end  = $end * $page;
+			$registroInicial = ($registros * ($page - 1));
 		}
 		// limit determina la cantidad de items
 		// offset determina el index desde el cual contar (empieza en 0)
-		return ["offset" => $page, "limit" => $end];
+		return [":inited" => $registroInicial, ":records" => $registros];
 	}
 
 	private function toUTF8($array) {
