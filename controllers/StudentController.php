@@ -31,11 +31,11 @@ class StudentController extends Controller {
 	}
 
 	public function get($params) {
-			$page = isset($this->queryParams['page']) ? $this->queryParams['page'] : 1;
-			$records = isset($this->queryParams['records']) ? $this->queryParams['records'] : 5;
+			if(isset($this->queryParams['page'])) $params['page'] =  $this->queryParams['page'];
+			if(isset($this->queryParams['records'])) $params['records'] =  $this->queryParams['records'];
 
 		try{
-			$data = $this->students->getAll($page, $records);
+			$data = $this->students->getAll($params);
 				
 			if($data) {
 					$this->response->send($data);
