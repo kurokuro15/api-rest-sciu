@@ -63,7 +63,7 @@ class Model
 		// bindear los parametros dados a la query
 		foreach ($params as $param => $value) {
 			$type = $this->types[gettype($value)];
-			if (!$stmt->bindParam($param, $value, $type)) {
+			if (!$stmt->bindValue($param, $value, $type)) {
 				throw new \Error("Can't bind param: {$param} with value: {$value}");
 			};
 		}
@@ -115,15 +115,25 @@ class Model
 	 * take the number of page and number of items to show for page
 	 * by default page 0 and 20 items.
 	 */
-	protected function pagination($page, $registros)
+	protected function pagination($params)
 	{
-		$registroInicial = 0;
+		$page = 0;
+		$records = 10;
+		
+		if(isset($params['page'])){ 
+			$page = $params['page'];
+		}
+		if(isset($params['records'])){ 
+			$records = $params['records'];
+		}
+
+		$registroInicial = ($records * ($page));
+		
 		if ($page > 1) {
-			$registroInicial = ($registros * ($page - 1));
 		}
 		// limit determina la cantidad de items
+		return ["inited" => $registroInicial, "records" => $records];
 		// offset determina el index desde el cual contar (empieza en 0)
-		return [":inited" => $registroInicial, ":records" => $registros];
 	}
 
 	private function toUTF8($array) {
