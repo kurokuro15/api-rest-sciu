@@ -17,7 +17,10 @@ class Controller
 	 * Response Class.
 	 */
 	protected $response;
-
+	/**
+	 * Query Params map array
+	 */
+	protected $queryParams = [];
 	/**
 	 *  Construct
 	 */
@@ -25,5 +28,14 @@ class Controller
 	{
 		$this->request = new Request;
 		$this->response = new Response;
+	}
+
+	protected function getQueryParams() {
+		if(!empty($_GET)) { 
+			foreach($_GET as $k => $v) {
+				$this->queryParams[$k] = $v;
+			}
+		}
+		return count($this->queryParams);
 	}
 }
