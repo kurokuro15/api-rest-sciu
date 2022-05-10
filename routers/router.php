@@ -1,26 +1,19 @@
 <?php
-
 /**
  * Definiremos las rutas acá.
  */
-
-use \api\controllers\FacturaController;
-
+use \api\Models\Student;
+use \api\Controllers\StudentController;
 $router->get("/estudiantes", function ($params) {
-
+	$student = new Student;
+	$data = $student->getAll();
+	$response = $GLOBALS['response'];
+	$response->send($data);
 });
 
-$router->get("/estudiantes/:cedula", function ($params) {
-	$factura = new FacturaController;
-	try {
-		$body = $factura->get($params);
-		$response = $GLOBALS['response'];
-		if ($body) {
-			$response->send($body,200);
-		}
-	} catch (ValueError $err) {
-		$response->send("{\"error\":\"{$err->messange}\"}",404);
-	}
+$router->get("/estudiantes/:cedula", function($params) {
+	$student = new StudentController;
+	$student->retrieve($params);
 });
 
 $router->get("/ordenes", function ($params) {
