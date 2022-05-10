@@ -92,7 +92,7 @@ class Model
 		// bindear los parametros dados a la query
 		foreach ($params as $param => $value) {
 			$type = $this->types[gettype($value)];
-			if (!$stmt->bindParam($param, $value, $type)) {
+			if (!$stmt->bindValue($param, $value, $type)) {
 				throw new \Error("Can't bind param: {$param} with value: {$value}");
 			};
 		}
