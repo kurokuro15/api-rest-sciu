@@ -20,11 +20,12 @@ $response->setHeader("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DEL
 $response->setHeader('Content-Type: application/json; charset=UTF-8');
 
 // resquest. Acá tocaría validad que sea un método válido CREO...
-$url = $_SERVER["REQUEST_URI"];
+$url = explode("?", $_SERVER["REQUEST_URI"], 2);
+//picamos la url
 $method = $_SERVER["REQUEST_METHOD"];
 
 // Se crea la ruta e intentamos ejecutarlas. Si algo sale mal, devolvemos un error message
-$router = new Router($url,$method);
+$router = new Router($url[0],$method);
 require('../routers/router.php');
 
 try {
