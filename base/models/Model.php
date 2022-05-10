@@ -1,4 +1,5 @@
 <?php
+
 namespace base\models;
 
 use \PDO;
@@ -8,7 +9,17 @@ class Model
 {
 	private $conData;
 	protected $conection;
-
+	protected $types = Array(
+		"boolean" => PDO::PARAM_BOOL,
+		"integer" => PDO::PARAM_INT,
+		"double" => PDO::PARAM_STR,
+		"string" => PDO::PARAM_STR,
+		"array" => PDO::PARAM_STR,
+		"object" => PDO::PARAM_STR, 
+		"resource" => PDO::PARAM_STR,
+		"NULL" => PDO::PARAM_NULL,
+		"unknown type" => PDO::PARAM_NULL
+	);
 	function __construct()
 	{
 		// obtener datos de la conection desde el archivo config
@@ -16,14 +27,14 @@ class Model
 
 		// // transformarlos a un array map
 		$this->conData = $this->conData["conection"];
-		
+
 		// string con la informacion requerida para conectar a la BD
 		// $MYSQL_DSN = "mysql:
-    //         host={$this->conData["host"]};
-    //         port={$this->conData["port"]};
-    //         dbname={$this->conData["database"]};
-    //         charset=utf8";
-		
+		//         host={$this->conData["host"]};
+		//         port={$this->conData["port"]};
+		//         dbname={$this->conData["database"]};
+		//         charset=utf8";
+
 		$PSQL_DNS = "pgsql:
             host={$this->conData["host"]};
             port={$this->conData["port"]};
@@ -39,19 +50,22 @@ class Model
 		}
 	}
 
-	// metodo base para obtener filas de la BD
-	// recibe un array de arrays donde cada uno es un
-	// array map de la forma
-	// [param => value]
-	// donde nombre es el placeholder en la query y tipo es una de las constantes
-	// PDO::PARAM_*
+	/** 
+	 * metodo base para obtener filas de la BD
+	 * recibe un array de arrays donde cada uno es un
+	 * array map de la forma
+	 * [param => value]
+	 * donde nombre es el placeholder en la query y tipo es una de las constantes
+	 * PDO::PARAM_*
+	 * */
 	public function query(string $query, $params = [])
 	{
 		$stmt = $this->conection->prepare($query);
 
 		// bindear los parametros dados a la query
 		foreach ($params as $param => $value) {
-			$stmt->bindParam($param, $value);
+			$type = $this->types[gettype($value)];
+			$stmt->bindParam($param, $value, $type);
 		}
 
 		if ($stmt->execute()) {
@@ -64,7 +78,13 @@ class Model
 		return false;
 	}
 
-	// metodo base para realizar inserts
+		/** 
+	 * metodo base para non-queries
+	 * recibe un array de la forma:
+	 * [param => value]
+	 * donde nombre es el placeholder en la query y tipo es una de las constantes
+	 * PDO::PARAM_*
+	 * */
 	function nonQuery(string $query, $params = [])
 	{
 		$stmt = $this->conection->prepare($query);
@@ -80,9 +100,10 @@ class Model
 		return false;
 	}
 
-	private function getConfigFile($file) {
+	private function getConfigFile($file)
+	{
 		$root = dirname(dirname(__DIR__));
-		$json = file_get_contents($root . "\Config/" . $file);		
+		$json = file_get_contents($root . "\Config/" . $file);
 		return json_decode($json, true);
 	}
 }
