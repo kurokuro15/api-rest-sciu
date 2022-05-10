@@ -35,11 +35,12 @@ class Student extends Model
 		return $data[0];
 	}
 
-	function getAll($page = 0, $items = 5){
-		$pagination = parent::pagination($page,$items);
+	function getAll($page, $records){
+		$pagination = parent::pagination($page,$records);
 
-		$query = "SELECT cedula as cedula, nombre1 as first_name, apellido1 as last_name, semestre as semester, fechainscr as reg_date, nombrecarrera as career FROM alumnos JOIN carreras ON id_carrera = id_carrer  ORDER BY reg_date DESC LIMIT :limit OFFSET :offset";
+		$query = "SELECT id_cedula as cedula, nombre1 as first_name, apellido1 as last_name, semestre as semester, fechainscr as reg_date, nombrecarrera as career FROM alumnos JOIN carreras ON id_carrera = id_carrer  ORDER BY reg_date desc,cedula desc OFFSET :inited LIMIT :records";
 		$data = parent::query($query,$pagination);
+
 		if (count($data)<1) {
 			throw new Error("data not found", 404);
 		}
