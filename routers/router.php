@@ -3,6 +3,7 @@
  * Definiremos las rutas acá.
  */
 use \api\Controllers\StudentController;
+use \api\Controllers\OrderController;
 
 $router->get("/estudiantes", function ($params) {
 	$student = new StudentController;
@@ -13,4 +14,15 @@ $router->get("/estudiantes/:cedula", function($params) {
 	$student = new StudentController;
 	$student->retrieve($params);
 });
+
+$router->get("/ordenes", function ($params) {
+	$order = new OrderController;
+	$order->get($params);
+});
+
+$router->get("/ordenes/:order", function ($params) {
+	$order = new OrderController;
+	$order->retrieve($params);
+});
+
 
