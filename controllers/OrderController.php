@@ -58,7 +58,7 @@ class OrderController extends Controller {
 			$data = $this->order->getByStudent($params['cedula']);
 				
 			if($data) {
-					$this->response->send($data);
+					$this->response->send(["orders" => $data]);
 				}
 		} catch(\Throwable $err){
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());

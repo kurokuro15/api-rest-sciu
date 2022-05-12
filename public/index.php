@@ -11,8 +11,8 @@ require (__ROOT__ . '/helpers/Autoload.php');
 use base\routers\Router;
 use base\https\Response;
 use Throwable;
-
 $response = new Response;
+
 
 // Seteamos los Header necesarios.
 $response->setHeader('Access-Control-Allow-Origin: *');
@@ -30,6 +30,7 @@ require('../routers/router.php');
 
 try {
 $router->run();
+$response->render();
 }
 catch (Throwable $err) {
 	// responde con el error en formato json y el código de error HTTP pasado en el error

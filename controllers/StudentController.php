@@ -21,7 +21,7 @@ class StudentController extends Controller {
 			$data = $this->students->get($params['cedula']);
 				
 			if($data) {
-					$this->response->send($data);
+					$this->response->send(["students" => $data ]);
 				}
 				
 		} catch(\Throwable $err){
@@ -38,7 +38,7 @@ class StudentController extends Controller {
 			$data = $this->students->getAll($params);
 				
 			if($data) {
-					$this->response->send($data);
+					$this->response->send(["students" => $data]);
 				}
 				
 		} catch(\Throwable $err){

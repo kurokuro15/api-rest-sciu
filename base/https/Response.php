@@ -77,7 +77,7 @@ class Response
 		511 => 'Network Authentication Required',
 	];
 	protected $version;
-	protected $content;
+	protected $content = [];
 
 	/**
 	 * Response constructor.
@@ -139,7 +139,11 @@ class Response
 	 */
 	public function setContent($content)
 	{
-		$this->content = json_encode($content);
+		if(is_array($this->content)){
+			foreach ($content as $k => $v) {
+				$this->content[$k] = $v;
+			}
+		}
 	}
 
 	/**
@@ -187,10 +191,10 @@ class Response
 	/**
 	 *  Render Output
 	 */
-	private function render()
+	public function render()
 	{
 		if ($this->content) {
-			$output = $this->content;
+			$output = json_encode($this->content);
 			// Headers
 			if (!headers_sent()) {
 				foreach ($this->headers as $header) {
@@ -207,6 +211,5 @@ class Response
 	{
 		$this->setHeader(sprintf('HTTP/1.1 ' . $status . ' %s', $this->getStatusCodeText($status)));
 		$this->setContent($body);
-		$this->render();
 	}
 }

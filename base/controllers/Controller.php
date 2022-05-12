@@ -27,7 +27,7 @@ class Controller
 	public function __construct()
 	{
 		$this->request = new Request;
-		$this->response = new Response;
+		$this->response = $GLOBALS['response'];
 	}
 
 	protected function setQueryParams() {
