@@ -1,7 +1,10 @@
 <?php
 namespace base\models;
+
+use Error;
 use \PDO;
 use \PDOException;
+use ValueError;
 
 class Model
 {
@@ -64,7 +67,7 @@ class Model
 		foreach ($params as $param => $value) {
 			$type = $this->types[gettype($value)];
 			if (!$stmt->bindValue($param, $value, $type)) {
-				throw new \Error("Can't bind param: {$param} with value: {$value}");
+				throw new Error("Can't bind param: {$param} with value: {$value}");
 			};
 		}
 
@@ -74,7 +77,7 @@ class Model
 				return $this->toUTF8($result);
 			}
 		}
-			throw new \ValueError("not found");
+			throw new ValueError("not found");
 		
 	}
 
@@ -93,7 +96,7 @@ class Model
 		foreach ($params as $param => $value) {
 			$type = $this->types[gettype($value)];
 			if (!$stmt->bindValue($param, $value, $type)) {
-				throw new \Error("Can't bind param: {$param} with value: {$value}");
+				throw new Error("Can't bind param: {$param} with value: {$value}");
 			};
 		}
 
@@ -101,7 +104,7 @@ class Model
 			return $this->conection->lastInsertId();
 		}
 
-		throw new \ValueError("not changed");
+		throw new ValueError("not changed");
 	}
 
 	private function getConfigFile($file)
