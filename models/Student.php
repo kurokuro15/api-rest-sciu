@@ -19,7 +19,7 @@ class Student extends Model
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new ValueError("Cedula not is a valid number", 401);
+			throw new ValueError("Cedula is not a valid number", 401);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
