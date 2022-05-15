@@ -4,6 +4,7 @@ namespace api\Models;
 
 use \base\Models\Model;
 use Error;
+use Exception;
 use ValueError;
 
 /**
@@ -33,10 +34,12 @@ class Order extends Model
 			idregistro AS id,
 			fechaemision AS reg_date,
 			concepto AS concept,
+			claveconcepto AS username,
 			monto AS amount,
 			id_cedul AS cedula,
 			unidades as units,
-			nombrecategoria AS category
+			nombrecategoria AS category,
+			idproduct as product_id
 		FROM
 			emisiones
 		LEFT JOIN categorias ON
@@ -81,7 +84,7 @@ class Order extends Model
 			concepto AS concept,
 			idregistro AS id,
 			monto - SUM(pago) AS outstanding,
-			idproduct AS id_product,
+			idproduct AS product_id,
 			unidades AS units
 		FROM
 			(
@@ -168,5 +171,62 @@ class Order extends Model
 	{
 		$pagination = parent::pagination($params);
 		// hacemos magiaaaaaaa :V
+	}
+
+	public function insert($order)
+	{
+		$params = [];
+		// validate data
+		$required = [
+			'category_id',
+			'cedula',
+			'username',
+			'concept',
+			'amount',
+			'product_id',
+			'units'
+		];
+		//Validate & map params
+		//validate username, concept, amount, units
+		//validate product_id
+		foreach ($required as $value) {
+			if (empty($order[$value]) && $order[$value] !== 0) {
+				throw new Exception("no se a conseguido el campo $value", 403);
+			};
+			$params[$value] = $order[$value];
+		}
+
+		//validade cedula
+		if (!isset($params['cedula']) || (int) $params['cedula'] === 0) {
+			throw new ValueError("the cedula number is not a valid number", 401);
+		}
+
+		//set reg_date -4 GMT like 2022-05-15 17:05 Y-M-D H:mm
+		$params['reg_date'] = date('Y-m-d H:i');
+		// Prepare query
+		$query = "INSERT
+			INTO
+				emisiones (idcategori,
+				fechaemision,
+				concepto,
+				claveconcepto,
+				monto,
+				id_cedul,
+				idproduct,
+				unidades)
+			VALUES (:category_id,
+				:reg_date,
+				:concept,
+				:username,
+				:amount,
+				:cedula,
+				:product_id,
+				:units);";
+
+		//insert data 
+		$result = parent::nonQuery($query, $params);
+
+		return $result;
+		//return success messange or error msg
 	}
 }

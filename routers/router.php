@@ -37,6 +37,13 @@ $router->get("/ordenes/:order", function ($params) {
 	$order = new OrderController;
 	$order->retrieve($params);
 });
+
+// POST Method
+$router->post("/ordenes", function($params){
+	$order = new OrderController;
+	$order->create($params);
+});
+
 /**
  *  Orders Endpoints
  */

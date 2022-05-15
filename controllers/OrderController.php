@@ -4,7 +4,9 @@ namespace api\controllers;
 
 use \base\controllers\Controller;
 use \api\Models\Order;
+use Exception;
 use Throwable;
+use ValueError;
 
 /**
  * Clase Controlador para el Endpoint "Ordenes"
@@ -89,5 +91,22 @@ class OrderController extends Controller
 		 * TO do. :V This is a example response...
 		 */
 		$this->response->send(["from" => "Desde el endpoint /ordenes sin estudiantes"]);
+	}
+
+	/**
+	 * create an unpaid order
+	 */
+	function create($params)
+	{
+		try { 
+				$order = $this->request->input();
+				$result = $this->order->insert($order);
+				
+				$data = $this->order->get($result);
+				$this->response->send(["orders"=> $data]);
+
+			} catch(Throwable $err) {
+				$this->response->send(["error" => $err->getMessage()], $err->getCode());
+			}
 	}
 }
