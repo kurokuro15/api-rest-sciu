@@ -52,7 +52,7 @@ class Request
 	 * @param String $key
 	 * @return string
 	 */
-	public function get(String $key = '')
+	public function get($key = '')
 	{
 		if ($key != '')
 			return isset($_GET[$key]) ? $this->clean($_GET[$key]) : null;
@@ -66,7 +66,7 @@ class Request
 	 * @param String $key
 	 * @return string
 	 */
-	public function post(String $key = '')
+	public function post($key = '')
 	{
 		if ($key != '')
 			return isset($_POST[$key]) ? $this->clean($_POST[$key]) : null;
@@ -80,7 +80,7 @@ class Request
 	 * @param String $key
 	 * @return string
 	 */
-	public function input(String $key = '')
+	public function input($key = '')
 	{
 		$postdata = file_get_contents("php://input");
 		$request = json_decode($postdata, true);
