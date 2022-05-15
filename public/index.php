@@ -1,16 +1,20 @@
 <?php
+
 namespace api;
 // definimos ROOT y traemos el archivo Autoload.php
 define('__ROOT__', dirname(dirname(__FILE__)));
-require (__ROOT__ . '/helpers/Autoload.php');
+require(__ROOT__ . '/helpers/Autoload.php');
 
 /**
  * Este index será la ruta principal que servirá la API.
  */
 
+use base\https\Request;
 use base\routers\Router;
 use base\https\Response;
 use Throwable;
+
+$request = new Request;
 $response = new Response;
 
 
@@ -25,14 +29,13 @@ $url = explode("?", $_SERVER["REQUEST_URI"], 2);
 $method = $_SERVER["REQUEST_METHOD"];
 
 // Se crea la ruta e intentamos ejecutarlas. Si algo sale mal, devolvemos un error message
-$router = new Router($url[0],$method);
+$router = new Router($url[0], $method);
 require('../routers/router.php');
 
 try {
-$router->run();
-$response->render();
-}
-catch (Throwable $err) {
+	$router->run();
+	$response->render();
+} catch (Throwable $err) {
 	// responde con el error en formato json y el código de error HTTP pasado en el error
-	$response->send(["error"=>"{$err->getMessage()}"],$err->getCode());
+	$response->send(["error" => "{$err->getMessage()}"], $err->getCode());
 }
