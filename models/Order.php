@@ -182,12 +182,12 @@ class Order extends Model
 			'cedula',
 			'username',
 			'concept',
-			'amount',
+			'outstanding',
 			'product_id',
 			'units'
 		];
 		//Validate & map params
-		//validate username, concept, amount, units
+		//validate username, concept, outstanding , units
 		//validate product_id
 		foreach ($required as $value) {
 			if (empty($order[$value]) && $order[$value] !== 0) {
@@ -218,7 +218,7 @@ class Order extends Model
 				:reg_date,
 				:concept,
 				:username,
-				:amount,
+				:outstanding,
 				:cedula,
 				:product_id,
 				:units);";
