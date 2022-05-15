@@ -1,17 +1,21 @@
 <?php
 
 namespace api\Models;
-//include para probar no más xD 
+
 use base\models\Model;
 use Error;
 use ValueError;
 
 class Student extends Model
 {
+	function __construct()
+	{
+		parent::__construct();
+	}
 	/**
 	 * Retrieve a Student by 'cedula'
 	 */
-	function get($cedula)
+	public function get($cedula)
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
@@ -19,12 +23,30 @@ class Student extends Model
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
-		// prepare query
-		$query = "SELECT id_cedula as cedula, id_carrera as career_id, nombrecarrera as career, nombre1 as first_name, nombre2 as middle_name, apellido1 as last_name, apellido2 as sur_name, semestre as semester, fechainscr as reg_date FROM alumnos JOIN carreras ON id_carrera = id_carrer  WHERE alumnos.id_cedula = :cedula;";
+
+		// query to get all detail of a Student
+		$query = "SELECT
+			id_cedula AS cedula,
+			id_carrera AS career_id,
+			nombrecarrera AS career,
+			nombre1 AS first_name,
+			nombre2 AS middle_name,
+			apellido1 AS last_name,
+			apellido2 AS sur_name,
+			semestre AS semester,
+			fechainscr AS reg_date
+		FROM
+			alumnos
+		JOIN carreras ON
+			id_carrera = id_carrer
+		WHERE
+			alumnos.id_cedula = :cedula;";
+
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
+		//validate data
 		if (is_array($data)) {
-			// we mapping properties of class to use this info. And send Json object form return.
+			// Map properties of class to use this info. And return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
@@ -34,14 +56,33 @@ class Student extends Model
 		// if all it's okay return the student.
 		return $data[0];
 	}
-
-	function getAll($params){
+	/**
+	 * Get all Students on page of 20 by default
+	 */
+	public function getAll($params)
+	{
 		$pagination = parent::pagination($params);
+		// query of some data from Students, to basic view
+		$query = "SELECT
+			id_cedula AS cedula,
+			nombre1 AS first_name,
+			apellido1 AS last_name,
+			semestre AS semester,
+			fechainscr AS reg_date,
+			nombrecarrera AS career
+		FROM
+			alumnos
+		JOIN carreras ON
+			id_carrera = id_carrer
+		ORDER BY
+			reg_date DESC,
+			cedula DESC 
+		OFFSET :inited
+		LIMIT :records;";
 
-		$query = "SELECT id_cedula as cedula, nombre1 as first_name, apellido1 as last_name, semestre as semester, fechainscr as reg_date, nombrecarrera as career FROM alumnos JOIN carreras ON id_carrera = id_carrer  ORDER BY reg_date desc,cedula desc OFFSET :inited LIMIT :records";
-		$data = parent::query($query,$pagination);
-
-		if (count($data)<1) {
+		$data = parent::query($query, $pagination);
+		// validate that have some more zero records
+		if (count($data) < 1) {
 			throw new Error("data not found", 404);
 		}
 		// if all it's okay return the student.
