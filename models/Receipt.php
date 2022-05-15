@@ -13,6 +13,12 @@ class Receipt extends Model
 		parent::__construct();
 	}
 	/**
+	 * retrieve a receipt by id
+	 */
+	public function get($id) {
+		
+	}
+	/**
 	 * get All receipts from a Student
 	 */
 	public function getByStudent($cedula)
