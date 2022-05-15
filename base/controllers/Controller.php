@@ -26,7 +26,7 @@ class Controller
 	 */
 	public function __construct()
 	{
-		$this->request = new Request;
+		$this->request = $GLOBALS['request'];
 		$this->response = $GLOBALS['response'];
 	}
 
