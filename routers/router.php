@@ -4,6 +4,7 @@
  */
 use \api\Controllers\StudentController;
 use \api\Controllers\OrderController;
+use api\controllers\ReceiptController;
 
 $router->get("/estudiantes", function ($params) {
 	$student = new StudentController;
@@ -25,4 +26,8 @@ $router->get("/ordenes/:order", function ($params) {
 	$order->retrieve($params);
 });
 
+$router->get("/recibos", function ($params) {
+	$receipt = new ReceiptController;
+	$receipt->get($params);
+});
 

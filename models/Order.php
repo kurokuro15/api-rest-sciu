@@ -3,6 +3,7 @@
 namespace api\Models;
 
 use \base\Models\Model;
+use Error;
 
 // require dirname(dirname(__FILE__)) . '/base/Models/Model.php';
 /**
@@ -38,7 +39,7 @@ class Order extends Model
 				$this->$prop = $value;
 			}
 		} else {
-			throw new \Error("data not found", 404);
+			throw new Error("data not found", 404);
 		}
 		// if all it's okay return the order.
 		return $data[0];
@@ -132,13 +133,8 @@ class Order extends Model
 	 ORDER BY
 		id;";
 		$data = parent::query($query, $param);
-		if (is_array($data)) {
-			// we map properties of class to use this info. And send Json object form return.
-			foreach ($data[0] as $prop => $value) {
-				$this->$prop = $value;
-			}
-		} else {
-			throw new \Error("data not found", 404);
+		if (count($data)<1) {
+			throw new Error("data not found", 404);
 		}
 		// if all it's okay return the order.
 		return $data;
