@@ -1,8 +1,12 @@
 <?php
+
 namespace api\Helpers;
+// setea por defecto la zona horaria de America/Caracas. Técnicamente -4:00 GMT 
+date_default_timezone_set('America/Caracas');
 spl_autoload_register('\api\Helpers\autoload');
-function autoload($clase, $dir = null) {
-        //Directorio raíz de mi proyecto (ruta absoluta)
+function autoload($clase, $dir = null)
+{
+    //Directorio raíz de mi proyecto (ruta absoluta)
     if (is_null($dir)) {
         $dirname = str_replace('\helpers', '', dirname(__FILE__));
         $dir = realpath($dirname);
