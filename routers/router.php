@@ -4,6 +4,7 @@
  * Definiremos las rutas acá.
  */
 
+use api\controllers\ChargeController;
 use \api\Controllers\StudentController;
 use \api\Controllers\OrderController;
 use api\controllers\ReceiptController;
@@ -52,10 +53,39 @@ $router->post("/ordenes", function($params){
 /**
  *  Receipts Endpoints
  */
+$router->get("/recibos/:receipt", function ($params) {
+	$receipt = new ReceiptController;
+	$receipt->retrieve($params);
+});
+
 $router->get("/recibos", function ($params) {
 	$receipt = new ReceiptController;
 	$receipt->get($params);
 });
 /**
  *  Receipts Endpoints
+ */
+
+
+ /**
+ *  Charges Endpoints
+ */
+
+$router->get("/cobros/:charge", function ($params) {
+	$charge = new ChargeController;
+	$charge->retrieve($params);
+});
+
+$router->get("/cobros", function ($params) {
+	$charge = new ChargeController;
+	$charge->get($params);
+});
+
+$router->post("/cobros", function ($params) {
+	$charge = new ChargeController;
+	$charge->create($params);
+});
+
+/**
+ *  Charges Endpoints
  */
