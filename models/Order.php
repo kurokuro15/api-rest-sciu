@@ -35,10 +35,10 @@ class Order extends Model
 			fechaemision AS reg_date,
 			concepto AS concept,
 			claveconcepto AS username,
-			monto AS amount,
+			monto AS outstanding,
 			id_cedul AS cedula,
 			unidades as units,
-			nombrecategoria AS category,
+			idcategoria AS id_category,
 			idproduct as product_id
 		FROM
 			emisiones
