@@ -38,6 +38,27 @@ class ReceiptController extends Controller
 		}
 	}
 
+		/**
+	 * Retrieve an order by 'order' number
+	 */
+	public function retrieve($params)
+	{
+		// validate that param 'order' exist
+		if (empty($params) || empty($params['receipt'])) {
+			$this->response->send(["error" => "receipt identity field was not send"], 400);
+		}
+
+		try {
+			$data = $this->receipt->get($params['receipt']);
+
+			if ($data) {
+				$this->response->send(["receipts" => $data]);
+			}
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
+	}
+
 	/**
 	 * retrieve all receipts of a student.
 	 */
