@@ -59,6 +59,7 @@ class Charge extends Model
 
 	/**
 	 * Get all Charge record by Student
+	 * lest add pagination
 	 */
 	public function getByStudent($cedula)
 	{
@@ -90,17 +91,12 @@ class Charge extends Model
 			id_cedul = :cedula;";
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
-		//validate data
-		if (is_array($data)) {
-			// Map properties of class to use this info. And return object.
-			foreach ($data[0] as $prop => $value) {
-				$this->$prop = $value;
-			}
-		} else {
+		// validate that have some more zero records
+		if (count($data) < 1) {
 			throw new Error("data not found", 404);
 		}
 		// if all it's okay return the student.
-		return $data[0];
+		return $data;
 	}
 	/**
 	 * Get All Charge Records
