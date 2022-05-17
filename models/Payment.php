@@ -40,7 +40,7 @@ class Payment extends Model
 			idtipopago = :id;";
 
 		// retrieve data and save in an variable
-		$data = parent::query($query, $param);
+		$data = parent::query($query, $param, false);
 		//validate data
 		if (is_array($data)) {
 			// Map properties of class to use this info. And return object.
@@ -48,7 +48,7 @@ class Payment extends Model
 				$this->$prop = $value;
 			}
 		} else {
-			throw new Error("data not found", 404);
+			throw new Error("not found", 404);
 		}
 		// if all it's okay return the student.
 		return $data[0];
@@ -71,7 +71,7 @@ class Payment extends Model
 			/**fecha */
 			"payment_date",
 			/**banco */
-			"banck",
+			"bank",
 			/**concepto */
 			"concept",
 		];
@@ -86,12 +86,13 @@ class Payment extends Model
 
 		foreach ($nonrequired as $value) {
 			//validamos que no estén vacíos, si lo están los definimos como NULL. 
-			if (!isset($payment[$value]) && $this->is_blank($payment[$value])) {
+			if (!isset($payment[$value])) {
 				$params[$value] = null;
-				continue;
+					continue;
+				}
+				$params[$value] = $payment[$value];
 			}
-			$params[$value] = $payment[$value];
-		}
+
 		// sí está en null payment_date, entonces seteamos la hora actual.
 		if ($params['payment_date'] === null) {
 			//set payment_date -4 GMT like 2022-05-15 17:05 Y-M-D H:mm
@@ -110,16 +111,16 @@ class Payment extends Model
 			concepto,
 			tipopago)
 		VALUES (
-			:id,
+			:deposit,
 			:payment_date,
 			:bank,
 			:concept,
-			:deposit); /**idtipopago -> detalles del método */
-			";
+			:method) /**idtipopago -> detalles del método */
+			RETURNING idtipopago;";
 		//insert data 
-		$result = parent::nonQuery($query, $params);
+		$data = parent::query($query, $params);
 
-		return $result;
+		return $data[0];
 		//return success messange or error msg
 	}
 }
