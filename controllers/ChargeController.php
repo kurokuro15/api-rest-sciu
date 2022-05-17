@@ -136,7 +136,7 @@ class ChargeController extends Controller
 					$charge["receipt_number"] = $receipt["receipt_number"];
 					//validamos que exista y sea un array el att "method" y lo extraemos
 					if (empty($charge["method"]) || !is_array($charge["method"])) {
-						throw new Exception("No se a conseguido ningún método", 403);
+						throw new Exception("No se a conseguido ningún método", 400);
 					}
 
 					foreach ($charge["method"] as $key => $method) {
