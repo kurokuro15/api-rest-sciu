@@ -82,7 +82,7 @@ class Model
 				return $result;
 			}
 		}
-		throw new ValueError("not found");
+		throw new ValueError("not found",200);
 	}
 
 	/** 
@@ -108,7 +108,7 @@ class Model
 			return $this->conection->lastInsertId();
 		}
 
-		throw new ValueError("not changed");
+		throw new ValueError("not changed",200);
 	}
 
 	private function getConfigFile($file)
