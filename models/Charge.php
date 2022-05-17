@@ -237,4 +237,19 @@ class Charge extends Model
 	function delete($charge)
 	{
 	}
+
+	function getLastReceipt() {
+		$query= "select
+		case
+			when max(factura) is null then 1
+			else max(factura)
+		end as receipt_number
+	from
+		pagos";
+
+		$data = parent::query($query);
+		if($data){ 
+			return $data[0];
+		}
+	}
 }
