@@ -22,7 +22,7 @@ class Payment extends Model
 	public function get($id)
 	{
 		//Validate param
-		if (!isset($id) || (int) $id === 0) {
+		if ($this->is_blank($id)) {
 			throw new ValueError("Charge identity is not a valid number", 401);
 		}
 		// map param in a array
