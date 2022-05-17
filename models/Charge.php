@@ -121,7 +121,8 @@ class Charge extends Model
 				idpago as id,
 				idregistr as order_id,
 				fechapago as reg_date,
-				monto as amount,
+				p.monto as amount,
+				e.concepto as concept,
 				factura as receipt_number,
 				registrador as username,
 				anulado as canceled,
@@ -130,7 +131,9 @@ class Charge extends Model
 				tipopago as payment,
 				fecha as payment_date
 			FROM
-				pagos
+				pagos p
+			join emisiones e on 
+				idregistr  = idregistro
 			left join tipospago on
 				idtipopag = idtipopago
 			where

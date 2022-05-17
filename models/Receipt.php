@@ -25,21 +25,28 @@ class Receipt extends Model
 		$param = [":receipt" => $receipt];
 		$query = "SELECT
 					factura as receipt,
-					SUM(pagos.monto) as total,
+					SUM(pagos.monto) as amount,
 					fechapago as payment_date,
 					registrador as username,
-					id_cedul as cedula
+					id_cedul as cedula,
+					CONCAT(apellido1 || ' ' || nombre1 ) as nombre 
 				from
 					pagos
 				join emisiones on
 					idregistro = idregistr
+					join alumnos on
+					id_cedul = id_cedula
 				where 
 					factura = :receipt
 				group by
 					factura,
 					fechapago,
 					registrador,
-					id_cedul;";
+					id_cedul,
+					nombre1,
+					nombre2,
+					apellido1,
+					apellido2 ";
 
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
@@ -50,7 +57,7 @@ class Receipt extends Model
 				$this->$prop = $value;
 			}
 			// if all it's okay return the receipt.
-			return $data[0];
+			return $data;
 		} else {
 			throw new Error("Not Found", 404);
 		}
