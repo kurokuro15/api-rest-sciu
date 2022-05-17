@@ -20,7 +20,7 @@ class Charge extends Model
 	{
 		//Validate param
 		if (!isset($id) || (int) $id === 0) {
-			throw new ValueError("Charge identity is not a valid number", 401);
+			throw new ValueError("Charge identity is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":id" => $id];
@@ -51,11 +51,11 @@ class Charge extends Model
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
+			// if all it's okay return the charge.
+			return $data[0];
 		} else {
-			throw new Error("data not found", 404);
+			throw new Error("Not Found", 404);
 		}
-		// if all it's okay return the student.
-		return $data[0];
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Charge extends Model
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new ValueError("Cedula is not a valid number", 401);
+			throw new ValueError("Cedula is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
@@ -95,10 +95,6 @@ class Charge extends Model
 			fecha desc;";
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
-		// validate that have some more zero records
-		if (count($data) < 1) {
-			throw new Error("data not found", 404);
-		}
 		// if all it's okay return the student.
 		return $data;
 	}
@@ -116,7 +112,7 @@ class Charge extends Model
 	{
 		//Validate param
 		if (!isset($receipt) || (int) $receipt === 0) {
-			throw new ValueError("receipt number is not a valid number", 401);
+			throw new ValueError("receipt number is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":receipt" => $receipt];
@@ -144,10 +140,6 @@ class Charge extends Model
 				fecha desc;";
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
-		// validate that have some more zero records
-		if (count($data) < 1) {
-			throw new Error("data not found", 404);
-		}
 		// if all it's okay return the student.
 		return $data;
 	}
@@ -177,18 +169,18 @@ class Charge extends Model
 		// Validate all others required fields
 		foreach ($required as $value) {
 			if (!isset($payment[$value]) && $this->is_blank($charge[$value])) {
-				throw new Exception("no se a conseguido el campo $value", 403);
+				throw new Exception("no se a conseguido el campo $value", 400);
 			}
 			$params[$value] = $charge[$value];
 		}
  		
 		// Validamos que sean números válidos 
 		if (!isset($params['receipt_number']) || (int) $params['receipt_number'] === 0) {
-			throw new ValueError("the receipt_number is not a valid receipt number", 401);
+			throw new ValueError("the receipt_number is not a valid receipt number", 400);
 		}
 
 		if (!isset($params['order_id']) || (int) $params['order_id'] === 0) {
-			throw new ValueError("the order_id is not a valid receipt number", 401);
+			throw new ValueError("the order_id is not a valid receipt number", 400);
 		}
 		// seteamos la fecha :D
 		//set reg_date -4 GMT like 2022-05-15 17:05 Y-M-D H:mm

@@ -19,7 +19,7 @@ class Student extends Model
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new ValueError("Cedula is not a valid number", 401);
+			throw new ValueError("Cedula is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
@@ -50,11 +50,11 @@ class Student extends Model
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
+			// if all it's okay return the student.
+			return $data[0];
 		} else {
-			throw new Error("data not found", 404);
+			throw new Error("Not Found", 404);
 		}
-		// if all it's okay return the student.
-		return $data[0];
 	}
 	/**
 	 * Get all Students on page of 20 by default

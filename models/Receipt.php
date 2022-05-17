@@ -19,7 +19,7 @@ class Receipt extends Model
 	{
 		//Validate param
 		if (!isset($receipt) || (int) $receipt === 0) {
-			throw new ValueError("Receipt number is not a valid number", 401);
+			throw new ValueError("Receipt number is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":receipt" => $receipt];
@@ -49,11 +49,11 @@ class Receipt extends Model
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
+			// if all it's okay return the receipt.
+			return $data[0];
 		} else {
-			throw new Error("data not found", 404);
+			throw new Error("Not Found", 404);
 		}
-		// if all it's okay return the order.
-		return $data[0];
 	}
 	/**
 	 * get All receipts from a Student
@@ -62,7 +62,7 @@ class Receipt extends Model
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new ValueError("Cedula not is a valid number", 401);
+			throw new ValueError("Cedula not is a valid number", 400);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
@@ -87,12 +87,6 @@ class Receipt extends Model
 				fechapago DESC;";
 
 		$data = parent::query($query, $param);
-
-		// Validate data
-		if (count($data) < 1) {
-			throw new Error("data not found", 404);
-		}
-		// if all it's okay return the student.
 		return $data;
 	}
 }

@@ -23,7 +23,7 @@ class Order extends Model
 	{
 		//Validate param
 		if (!isset($registro) || (int) $registro === 0) {
-			throw new ValueError("Collection order number is not a valid number", 401);
+			throw new ValueError("Collection order number is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":registro" => $registro];
@@ -55,11 +55,11 @@ class Order extends Model
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
+			// if all it's okay return the order.
+			return $data[0];
 		} else {
-			throw new Error("not found", 200);
+			throw new Error("Not Found", 404);
 		}
-		// if all it's okay return the order.
-		return $data[0];
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Order extends Model
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new \ValueError("Cedula number is not a valid number", 401);
+			throw new \ValueError("Cedula number is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
@@ -156,12 +156,10 @@ class Order extends Model
 
 		$data = parent::query($query, $param);
 
-		// Validate data
-		if (count($data) < 1) {
-			throw new Error("not found", 200);
-		}
 		// if all it's okay return the order.
-		return $data;
+		if (isset($data)) {
+			return $data;
+		}
 	}
 
 	/**
@@ -191,14 +189,14 @@ class Order extends Model
 		//validate product_id
 		foreach ($required as $value) {
 			if (empty($order[$value]) && $order[$value] !== 0) {
-				throw new Exception("no se a conseguido el campo $value", 403);
+				throw new Exception("no se a conseguido el campo $value", 400);
 			};
 			$params[$value] = $order[$value];
 		}
 
 		//validade cedula
 		if (!isset($params['cedula']) || (int) $params['cedula'] === 0) {
-			throw new ValueError("the cedula number is not a valid number", 401);
+			throw new ValueError("the cedula number is not a valid number", 400);
 		}
 
 		//set reg_date -4 GMT like 2022-05-15 17:05 Y-M-D H:mm

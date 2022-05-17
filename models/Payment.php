@@ -17,13 +17,13 @@ class Payment extends Model
 		parent::__construct();
 	}
 	/**
-	 * Retrieve a Charge record
+	 * Retrieve a Payment record
 	 */
 	public function get($id)
 	{
 		//Validate param
 		if ($this->is_blank($id)) {
-			throw new ValueError("Charge identity is not a valid number", 401);
+			throw new ValueError("Payment identity is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":id" => $id];
@@ -47,11 +47,11 @@ class Payment extends Model
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
+			// if all it's okay return the payment.
+			return $data[0];
 		} else {
-			throw new Error("not found", 404);
+			throw new Error("Not Found", 404);
 		}
-		// if all it's okay return the student.
-		return $data[0];
 	}
 	/**
 	 * Create a Payment record
@@ -79,7 +79,7 @@ class Payment extends Model
 		foreach ($required as $value) {
 			//validamos que no estén vacíos. 
 			if (!isset($payment[$value]) && $this->is_blank($payment[$value])) {
-				throw new Exception("no se a conseguido el campo $value", 403);
+				throw new Exception("no se a conseguido el campo $value", 400);
 			}
 			$params[$value] = $payment[$value];
 		}
