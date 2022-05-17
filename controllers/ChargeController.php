@@ -126,7 +126,7 @@ class ChargeController extends Controller
 	{
 		// extraígo la data...
 		$input = $this->request->input(); // not an array por los momentos
-		
+
 		// preparamos el número de factura.
 		$receipt = $this->charge->getLastReceipt();
 		$receipt["receipt_number"] = $receipt["receipt_number"] + 1;
@@ -149,7 +149,7 @@ class ChargeController extends Controller
 							// validamos el metodo de pago del pago
 							$deposit = $this->payment->get($charge['deposit']);
 						} catch (Error $err) {
-							if ($err->getMessage() === "not found")
+							if ($err->getMessage() === "Not Found")
 								// registro metodo de pago del pago
 								$inserted = $this->payment->insert($charge);
 						}
@@ -161,14 +161,14 @@ class ChargeController extends Controller
 					} else  throw new Error("No se pudo validar el idtipodepago", 500);
 
 					//devuelvo los pagos por el id de recibo
-						$res["charges"][] = $data;
+					$res["charges"][] = $data;
 				} catch (Throwable $err) {
 					$this->response->send(["error" => $err->getMessage()], $err->getCode());
 				}
 			}
 		}
-		if(isset($res))
-		$res["receipt_number"] = $receipt["receipt_number"];
-			$this->response->send($res);
+		if (isset($res))
+			$res["receipt_number"] = $receipt["receipt_number"];
+		$this->response->send($res);
 	}
 }
