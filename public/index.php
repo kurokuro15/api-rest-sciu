@@ -34,8 +34,9 @@ require('../routers/router.php');
 
 try {
 	$router->run();
-	$response->render();
 } catch (Throwable $err) {
 	// responde con el error en formato json y el código de error HTTP pasado en el error
 	$response->send(["error" => "{$err->getMessage()}"], $err->getCode());
+} finally {
+	$response->render();
 }
