@@ -56,7 +56,7 @@ class Order extends Model
 				$this->$prop = $value;
 			}
 		} else {
-			throw new Error("data not found", 404);
+			throw new Error("not found", 200);
 		}
 		// if all it's okay return the order.
 		return $data[0];
@@ -158,7 +158,7 @@ class Order extends Model
 
 		// Validate data
 		if (count($data) < 1) {
-			throw new Error("data not found", 404);
+			throw new Error("not found", 200);
 		}
 		// if all it's okay return the order.
 		return $data;
