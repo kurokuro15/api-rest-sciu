@@ -61,7 +61,7 @@ class Model
 	 * donde nombre es el placeholder en la query y tipo es una de las constantes
 	 * PDO::PARAM_*
 	 * */
-	public function query(string $query, $params = [], $format=true)
+	public function query(string $query, $params = [], $format = true)
 	{
 		$stmt = $this->conection->prepare($query);
 
@@ -69,20 +69,20 @@ class Model
 		foreach ($params as $param => $value) {
 			$type = $this->types[gettype($value)];
 			if (!$stmt->bindValue($param, $value, $type)) {
-				throw new Error("Can't bind param: {$param} with value: {$value}");
+				throw new Error("Can't bind param: {$param} with value: {$value}", 500);
 			};
 		}
 
 		if ($stmt->execute()) {
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			if (count($result) > 0) {
-				if($format){
-					return $this->toUTF8($result);
-				} 
-				return $result;
+			if (isset($result)) {
+				if ($format) {
+					return $this->toUTF8($result) ?: "[]";
+				}
+				return $result ?: "[]";
 			}
 		}
-		throw new ValueError("not found",200);
+		throw new ValueError("failed in statement excecute", 500);
 	}
 
 	/** 
@@ -100,7 +100,7 @@ class Model
 		foreach ($params as $param => $value) {
 			$type = $this->types[gettype($value)];
 			if (!$stmt->bindValue($param, $value, $type)) {
-				throw new Error("Can't bind param: {$param} with value: {$value}");
+				throw new Error("Can't bind param: {$param} with value: {$value}", 500);
 			};
 		}
 
@@ -108,7 +108,7 @@ class Model
 			return $this->conection->lastInsertId();
 		}
 
-		throw new ValueError("not changed",200);
+		throw new ValueError("not changed", 200);
 	}
 
 	private function getConfigFile($file)
