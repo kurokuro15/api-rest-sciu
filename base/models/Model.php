@@ -3,6 +3,7 @@
 namespace base\models;
 
 use Error;
+use Exception;
 use \PDO;
 use \PDOException;
 use ValueError;
@@ -60,7 +61,7 @@ class Model
 	 * donde nombre es el placeholder en la query y tipo es una de las constantes
 	 * PDO::PARAM_*
 	 * */
-	public function query(string $query, $params = [])
+	public function query(string $query, $params = [], $format=true)
 	{
 		$stmt = $this->conection->prepare($query);
 
@@ -75,7 +76,10 @@ class Model
 		if ($stmt->execute()) {
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			if (count($result) > 0) {
-				return $this->toUTF8($result);
+				if($format){
+					return $this->toUTF8($result);
+				} 
+				return $result;
 			}
 		}
 		throw new ValueError("not found");
@@ -141,12 +145,16 @@ class Model
 
 	private function toUTF8($array)
 	{
-		array_walk_recursive($array, function (&$item, $key) {
-			if (!mb_detect_encoding($item, 'utf-8', true)) {
-				$item = utf8_encode($item);
-			}
-		});
-		return $array;
+		try {
+
+			array_walk_recursive($array, function (&$item, $key) {
+				if (!mb_detect_encoding($item, 'utf-8', true)) {
+					$item = utf8_encode($item);
+				}
+			});
+			return $array;
+		} catch (Exception $err) {
+		}
 	}
 	/**
 	 * validate blank fields
