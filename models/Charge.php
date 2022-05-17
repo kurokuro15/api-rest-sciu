@@ -161,35 +161,70 @@ class Charge extends Model
 		// validate data
 		$required = [
 			"order_id",
-			"reg_date",
 			"amount",
 			"receipt_number",
 			"username",
-			"canceled",
-			"autorized",
-			"payment_description",
-			"payment"
+			"deposit", /*idtipopago  */
 		];
 
+		/** Optional field */
+		if (isset($charge["autorized"]) && !$this->is_blank($charge["autorized"])) {
+			$params["autorized"] = $charge["autorized"];
+		} else {
+			$params["autorized"] = null;
+		}
+
+		// Validate all others required fields
 		foreach ($required as $value) {
-			if (empty($charge[$value]) && $charge[$value] !== 0) {
+			if (!isset($payment[$value]) && $this->is_blank($charge[$value])) {
 				throw new Exception("no se a conseguido el campo $value", 403);
-			};
+			}
 			$params[$value] = $charge[$value];
 		}
+ 		
+		// Validamos que sean números válidos 
 		if (!isset($params['receipt_number']) || (int) $params['receipt_number'] === 0) {
 			throw new ValueError("the receipt_number is not a valid receipt number", 401);
 		}
+
+		if (!isset($params['order_id']) || (int) $params['order_id'] === 0) {
+			throw new ValueError("the order_id is not a valid receipt number", 401);
+		}
+		// seteamos la fecha :D
 		//set reg_date -4 GMT like 2022-05-15 17:05 Y-M-D H:mm
 		$params['reg_date'] = date('Y-m-d H:i');
-		// Prepare query
-		$query = "";
+
+		/** Esto se hace así para 'soportar' las fallas actuales del sistema
+		 * se tiene que migrar la mayor´parte de la data y seccionar esto en
+		 * a otros campos
+		 */
+		$query = "INSERT 
+		INTO pagos(
+			idregistr,
+			fechapago, /**Generado en back */
+			monto,
+			idtipopag,
+			factura,	/**Generado en back */
+			registrador,
+			autorizacion /**Opcional*/
+			) 
+		VALUES (
+			:order_id,
+			:reg_date,
+			:amount,
+			:deposit,
+			:receipt_number,
+			:username,
+			:autorized
+			)";
+
 		//insert data 
 		$result = parent::nonQuery($query, $params);
 
 		return $result;
 		//return success messange or error msg
 	}
+	
 	/**
 	 * Update a Charge record
 	 */
@@ -201,5 +236,20 @@ class Charge extends Model
 	 */
 	function delete($charge)
 	{
+	}
+
+	function getLastReceipt() {
+		$query= "select
+		case
+			when max(factura) is null then 1
+			else max(factura)
+		end as receipt_number
+	from
+		pagos";
+
+		$data = parent::query($query);
+		if($data){ 
+			return $data[0];
+		}
 	}
 }

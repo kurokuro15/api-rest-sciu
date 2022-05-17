@@ -1,7 +1,9 @@
 <?php
+
 namespace base\models;
 
 use Error;
+use Exception;
 use \PDO;
 use \PDOException;
 use ValueError;
@@ -59,7 +61,7 @@ class Model
 	 * donde nombre es el placeholder en la query y tipo es una de las constantes
 	 * PDO::PARAM_*
 	 * */
-	public function query(string $query, $params = [])
+	public function query(string $query, $params = [], $format=true)
 	{
 		$stmt = $this->conection->prepare($query);
 
@@ -74,11 +76,13 @@ class Model
 		if ($stmt->execute()) {
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			if (count($result) > 0) {
-				return $this->toUTF8($result);
+				if($format){
+					return $this->toUTF8($result);
+				} 
+				return $result;
 			}
 		}
-			throw new ValueError("not found");
-		
+		throw new ValueError("not found",200);
 	}
 
 	/** 
@@ -104,7 +108,7 @@ class Model
 			return $this->conection->lastInsertId();
 		}
 
-		throw new ValueError("not changed");
+		throw new ValueError("not changed",200);
 	}
 
 	private function getConfigFile($file)
@@ -122,16 +126,16 @@ class Model
 	{
 		$page = 0;
 		$records = 10;
-		
-		if(isset($params['page'])){ 
+
+		if (isset($params['page'])) {
 			$page = $params['page'];
 		}
-		if(isset($params['records'])){ 
+		if (isset($params['records'])) {
 			$records = $params['records'];
 		}
 
 		$registroInicial = ($records * ($page));
-		
+
 		if ($page > 1) {
 		}
 		// limit determina la cantidad de items
@@ -139,12 +143,24 @@ class Model
 		// offset determina el index desde el cual contar (empieza en 0)
 	}
 
-	private function toUTF8($array) {
-		array_walk_recursive($array,function(&$item,$key){
-			if(!mb_detect_encoding($item,'utf-8',true)){
-				$item = utf8_encode($item);
-			}
-		});
-		return $array;
+	private function toUTF8($array)
+	{
+		try {
+
+			array_walk_recursive($array, function (&$item, $key) {
+				if (!mb_detect_encoding($item, 'utf-8', true)) {
+					$item = utf8_encode($item);
+				}
+			});
+			return $array;
+		} catch (Exception $err) {
+		}
+	}
+	/**
+	 * validate blank fields
+	 */
+	protected function is_blank($value)
+	{
+		return empty($value) && !is_numeric($value);
 	}
 }
