@@ -4,6 +4,7 @@
  * Definiremos las rutas acá.
  */
 
+use api\Controllers\CategoryController;
 use api\Controllers\StudentController;
 use api\controllers\ChargeController;
 use api\Controllers\OrderController;
@@ -85,4 +86,25 @@ $router->post("/cobros", function ($params) {
 });
 /**
  *  Charges Endpoints
+ */
+
+ /**
+ *  Categories Endpoints
+ */
+$router->get("/categorias", function($params) { 
+	$category = new CategoryController;
+	$category->get($params);
+});
+
+$router->get("/categorias/:category", function($params) { 
+	$category = new CategoryController;
+	$category->retrieve($params);
+});
+
+$router->post("/categorias", function($params) { 
+	$category = new CategoryController;
+	$category->create($params);
+});
+ /**
+ *  Categories Endpoints
  */
