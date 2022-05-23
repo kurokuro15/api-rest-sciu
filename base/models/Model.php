@@ -127,11 +127,11 @@ class Model
 		$page = 0;
 		$records = 10;
 
-		if (isset($params['page'])) {
-			$page = $params['page'];
+		if (isset($params['offset'])) {
+			$page = $params['offset'];
 		}
-		if (isset($params['records'])) {
-			$records = $params['records'];
+		if (isset($params['limit'])) {
+			$records = $params['limit'];
 		}
 
 		$registroInicial = ($records * ($page));
@@ -139,7 +139,7 @@ class Model
 		if ($page > 1) {
 		}
 		// limit determina la cantidad de items
-		return ["inited" => $registroInicial, "records" => $records];
+		return ["offset" => $registroInicial, "limit" => $records];
 		// offset determina el index desde el cual contar (empieza en 0)
 	}
 
