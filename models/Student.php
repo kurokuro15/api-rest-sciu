@@ -61,7 +61,6 @@ class Student extends Model
 	 */
 	public function getAll($params)
 	{
-		$pagination = parent::pagination($params);
 		// query of some data from Students, to basic view
 		$query = "SELECT
 			id_cedula AS cedula,
@@ -76,10 +75,12 @@ class Student extends Model
 			id_carrera = id_carrer
 		ORDER BY
 			reg_date DESC,
-			cedula DESC 
-		OFFSET :inited
-		LIMIT :records;";
+			cedula DESC";
 
+		if($params["offset"] && $params["limit"]) {
+			$pagination = parent::pagination($params);
+			$query .= " OFFSET :offset LIMIT :limit";
+		}
 		$data = parent::query($query, $pagination);
 		// validate that have some more zero records
 		if (count($data) < 1) {
