@@ -20,7 +20,7 @@ class JWT
   ) {
     $this->header = $header ?? ["alg" => "HS256", "typ" => "JWT"];
     $this->payload = $this->genPayload($payload ?? []);
-    $this->secret = $secret ?? Config::getConfigFileData('pepper')['pepperoni'];
+    $this->secret = $secret ?? Config::getConfigFileData('pepper')['peperoni'];
     $this->encode();
   }
 
@@ -29,6 +29,7 @@ class JWT
     $twoHours = 60 * 60; // 7.200 seconds
     $exp  = time() + $twoHours;
     $payload =  [];
+
     // set exp time
     $payload['exp'] = $exp;
 
@@ -68,12 +69,11 @@ class JWT
     return "{$this->tokenParts['header']}.{$this->tokenParts['payload']}.{$this->getSignature()}";
   }
 
-  public function validateJWT($token)
+  static public function validateJWT($token)
   {
-    $tokenParts = explode(".", $token);
-    $header = $tokenParts[0];
-    $payload = json_decode(Encoder::base64UrlDecode(($tokenParts[1])), true);
-    $signature = $tokenParts[2];
+    $tokenParts = JWT::decode($token);
+
+    list($header, $payload, $signature) = $tokenParts;
 
     $expired = $payload['exp'] - time() < 0;
     if ($expired) {
@@ -83,9 +83,24 @@ class JWT
     $jwt = new self($header, $payload);
 
     if ($signature !== $jwt->getSignature()) {
+      print_r($signature);
+
+      echo "\n\n";
+
+      print_r($jwt->getSignature());
       throw new Error("The JWT sent is not valid. Invalid signature: $signature", 403);
     }
 
     return true;
+  }
+
+  static public function decode($token)
+  {
+    $tokenParts = explode(".", $token);
+    $header = json_decode(Encoder::base64UrlDecode(($tokenParts[0])), true);
+    $payload = json_decode(Encoder::base64UrlDecode(($tokenParts[1])), true);
+    $signature = $tokenParts[2];
+
+    return [$header, $payload, $signature];
   }
 }
