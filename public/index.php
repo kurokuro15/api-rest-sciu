@@ -3,7 +3,7 @@
 namespace api;
 // definimos ROOT y traemos el archivo Autoload.php
 define('__ROOT__', dirname(dirname(__FILE__)));
-require(__ROOT__ . '/helpers/Autoload.php');
+require(__ROOT__ . '/base/helpers/Autoload.php');
 
 /**
  * Este index será la ruta principal que servirá la API.
