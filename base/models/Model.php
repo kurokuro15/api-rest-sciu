@@ -12,6 +12,7 @@ class Model
 {
 	private $conData;
 	protected $conection;
+	protected $authenticacion;
 	protected $types = array(
 		"boolean" => PDO::PARAM_BOOL,
 		"integer" => PDO::PARAM_INT,
@@ -38,16 +39,27 @@ class Model
 		//         dbname={$this->conData["database"]};
 		//         charset=utf8";
 
+		// Conexión PDO a la base de datos de Caja
 		$PSQL_DNS = "pgsql:
-            host={$this->conData["host"]};
-            port={$this->conData["port"]};
-            dbname={$this->conData["database"]};
-						user={$this->conData["user"]};
-						password={$this->conData["password"]};";
+			host={$this->conData["host"]};
+			port={$this->conData["port"]};
+			dbname={$this->conData["database"]};
+			user={$this->conData["user"]};
+			password={$this->conData["password"]};";
+		// Conexión PDO a la base de datos de autenticación
+		$PSQL_AUTH_DNS = "pgsql:
+			host={$this->conData["host"]};
+			port={$this->conData["port"]};
+			dbname={$this->conData["databaseAuth"]};
+			user={$this->conData["user"]};
+			password={$this->conData["password"]};";
 		// intenta crear la conection a la BD con los datos
 		// // o muestra el error si ocurre alguno
 		try {
+			// Conexión PDO a la base de datos de Caja
 			$this->conection = new PDO($PSQL_DNS, $this->conData["user"]);
+			// Conexión PDO a la base de datos de autenticación
+			$this->authenticacion = new PDO($PSQL_AUTH_DNS, $this->conData["user"]);
 		} catch (PDOException $err) {
 			echo "{$err->getMessage()}";
 		}
@@ -116,6 +128,35 @@ class Model
 		$root = dirname(dirname(__DIR__));
 		$json = file_get_contents($root . "\Config/" . $file);
 		return json_decode($json, true);
+	}
+
+	/** 
+	 * metodo base para obtener filas de la BD de autenticación
+	 * recibe un array de arrays donde cada uno es un
+	 * array map de la forma
+	 * [param => value]
+	 * donde nombre es el placeholder en la query y tipo es una de las constantes
+	 * PDO::PARAM_*
+	 * */
+	public function queryAuth(string $query, $params = [])
+	{
+		$stmt = $this->authenticacion->prepare($query);
+
+		// bindear los parametros dados a la query
+		foreach ($params as $param => $value) {
+			$type = $this->types[gettype($value)];
+			if (!$stmt->bindValue($param, $value, $type)) {
+				throw new Error("Can't bind param: {$param} with value: {$value}", 500);
+			};
+		}
+
+		if ($stmt->execute()) {
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if (isset($result)) {
+				return $result ?: "[]";
+			}
+		}
+		throw new ValueError("failed in statement excecute", 500);
 	}
 
 	/**
