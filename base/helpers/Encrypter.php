@@ -1,6 +1,6 @@
 <?php
 
-namespace base\Helpers;
+namespace base\helpers;
 
 /**
  * Clase para cifrar cadenas de texto
@@ -29,6 +29,30 @@ class Encrypter
 	{
 		$pass = $this->encrypt($str);
 		return password_hash($pass, PASSWORD_ARGON2ID);
+	}
+
+	/**
+	 * Static method to Encode base64Url
+	 */
+	static function base64UrlEncode($str)
+	{
+		return rtrim(strtr(base64_encode($str), "+/", "-_"), "=");
+	}
+
+	/**
+	 * Static method to Decode base64Url
+	 */
+	static public function base64UrlDecode($str)
+	{
+		return
+			base64_decode(
+				str_pad(
+					strtr($str, "-_", "+/"),
+					strlen($str) % 4,
+					"=",
+					STR_PAD_RIGHT
+				)
+			);
 	}
 
 	private function getFileData($file)
