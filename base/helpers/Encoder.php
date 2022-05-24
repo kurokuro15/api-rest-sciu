@@ -17,8 +17,8 @@ class Encoder
           strtr($str, "-_", "+/"),
           strlen($str) % 4,
           "=",
-          STR_PAD_RIGHT,
-        ),
+          STR_PAD_RIGHT
+        )
       );
   }
 }
