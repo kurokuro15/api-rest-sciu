@@ -1,5 +1,7 @@
 <?php
+
 namespace base\Helpers;
+
 /**
  * Clase para cifrar cadenas de texto
  */
