@@ -12,44 +12,46 @@ class JWTGenerator
 
 	private $data;
 	private $header;
-	private $jwt;
 	private $playload;
 	private $secret;
 	private $signature;
-
+ 	private $jwt;
 	function __construct($header = null, $data = null, $secret = null)
 	{
 		$this->data = $data;
 		$this->header = $this->base64url_encode($header || json_encode(["alg" => "HS256", "typ" => "JWT"]));
 		$this->secret = $secret || $this->getFileData("pepper")['peperoni'];
-
+		$this->jwt = null;
 		// generate token automatic with instance 
 		if ($this->data) {
 			$this->data = JWT::generatePlayload($this->data);
-			$this->generateJWT();
+			$this->createJWT();
 		}
 	}
-
-	function getJWT()
-	{
-		return $this->jwt;
-	}
-
+	
 	/**
 	 * Generate Json Web Token with data parameter and optional secret
 	 */
-	private function generateJWT($data = null, $secret = null)
+	private function createJWT($data = null, $secret = null)
 	{
 		// codifica el contenido del token de un array map a un json string
 		$data = $data || $this->data;
-		$this->playload = $this->base64url_encode(json_encode($data));
+		$this->data = JWT::generatePlayload($data);
+		$this->playload =	$this->base64url_encode(json_encode($this->data));
 
 		// genera la firma
 		$this->signatureEncode($secret);
 
-		$this->jwt = new JWT($this->header, $this->playload, $this->signature);
+		$this->jwt = new JWT($this->header, $this->data, $this->signature);
 
 		return "{$this->header}.{$this->playload}.{$this->signature}";
+	}
+
+	/**
+	 * Return a JWT object with raw playload
+	 */
+	function get () {
+		return $this->jwt;
 	}
 
 	/**
@@ -72,7 +74,7 @@ class JWTGenerator
 		}
 
 		// generar firma en base a la cabecera y data del token con la clave secreta
-		$this->generateJWT($playload);
+		$this->createJWT($playload);
 
 		// validate $header provide is equal to set header
 		if ($header !== $this->header) {
@@ -154,8 +156,8 @@ class JWT
 
 	static function generatePlayload($data = [])
 	{
-		$aDay = 60 * 60 * 24; //86.400 seconds
-		$iat  = time() + $aDay;
+		$twoHours = 60 * 60; //7.200 seconds
+		$iat  = time() + $twoHours;
 		$playload =  [];
 		//set time
 		$playload['iat'] = $iat;
