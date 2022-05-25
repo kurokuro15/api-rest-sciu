@@ -9,6 +9,7 @@ use api\Controllers\StudentController;
 use api\controllers\ChargeController;
 use api\Controllers\OrderController;
 use api\controllers\ReceiptController;
+use base\middleware\AuthenticationMiddleware;
 
 /**
  *  Students Endpoints
@@ -108,3 +109,14 @@ $router->post("/categorias", function($params) {
  /**
  *  Categories Endpoints
  */
+
+/**
+ * Login Endpoint
+ */
+$router->post("/login", function ($params) {
+
+	$params["username"] = "kurokuro15";
+	$params["password"] = "Syspwd12!.";
+	$auth = new AuthenticationMiddleware;
+	$auth->authUser($params);
+});
