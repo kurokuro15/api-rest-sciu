@@ -21,8 +21,11 @@ $router->get("/estudiantes", function ($params) {
 });
 //retrieve one
 $router->get("/estudiantes/:cedula", function ($params) {
-	$student = new StudentController;
-	$student->retrieve($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function($params) {
+			$student = new StudentController;
+			$student->retrieve($params);
+	});
 });
 /**
  *  Students Endpoints
@@ -114,9 +117,6 @@ $router->post("/categorias", function($params) {
  * Login Endpoint
  */
 $router->post("/login", function ($params) {
-
-	$params["username"] = "kurokuro15";
-	$params["password"] = "Syspwd12!.";
 	$auth = new AuthenticationMiddleware;
 	$auth->authUser($params);
 });
