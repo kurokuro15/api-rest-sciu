@@ -43,7 +43,7 @@ class Authentication extends Model
 
 		$this->jwt = new JWT(null, $payload);
 		$this->jwt->getSignature();
-		return $this->jwt->getToken();
+		return [$this->jwt->getToken(), $this->jwt];
 	}
 	// Obtener un token por el token (usuario asociado al token y el token persé)
 	// Crear un token para el usuario pasado
