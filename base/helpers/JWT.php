@@ -23,10 +23,14 @@ class JWT
     $this->secret = $secret ?? $this->getConfigFileData('pepper')['peperoni'];
     $this->encode();
   }
+  
+  public function getExpiration() {
+    return $this->payload["exp"];
+  }
 
   private function genPayload($data)
   {
-    $twoHours = 60 * 60; // 7.200 seconds
+    $twoHours = 60 * 60 * 2; // 7.200 seconds
     $iat = time();
     $exp  = $iat + $twoHours;
     $payload = [];
