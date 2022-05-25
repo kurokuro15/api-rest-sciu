@@ -2,8 +2,6 @@
 
 namespace base\helpers;
 
-require("Encrypter.php");
-
 use base\helpers\Config;
 use base\helpers\Encrypter;
 use Error;

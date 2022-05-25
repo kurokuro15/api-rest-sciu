@@ -1,6 +1,6 @@
 <?php
 
-namespace base\Helpers;
+namespace base\helpers;
 // setea por defecto la zona horaria de America/Caracas. Técnicamente -4:00 GMT 
 date_default_timezone_set('America/Caracas');
 spl_autoload_register('\base\Helpers\autoload');
