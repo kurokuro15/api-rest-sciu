@@ -36,6 +36,9 @@ class Request
 	 */
 	public $files;
 
+	public $headers;
+
+	public $clientIp;
 	/**
 	 * Request constructor.
 	 */
@@ -44,6 +47,8 @@ class Request
 		$this->request = ($_REQUEST);
 		$this->cookie = $this->clean($_COOKIE);
 		$this->files = $this->clean($_FILES);
+		$this->headers = getallheaders();
+		$this->clientIp = $this->getClientIp();
 	}
 
 	/**
