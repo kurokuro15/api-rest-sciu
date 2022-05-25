@@ -57,9 +57,13 @@ class Model
 		// // o muestra el error si ocurre alguno
 		try {
 			// Conexión PDO a la base de datos de Caja
-			$this->conection = new PDO($PSQL_DNS, $this->conData["user"]);
+			$this->conection = new PDO($PSQL_DNS, $this->conData["user"], null, array(
+				PDO::ATTR_PERSISTENT => true
+			));
 			// Conexión PDO a la base de datos de autenticación
-			$this->authenticacion = new PDO($PSQL_AUTH_DNS, $this->conData["user"]);
+			$this->authenticacion = new PDO($PSQL_AUTH_DNS, $this->conData["user"], null, array(
+				PDO::ATTR_PERSISTENT => true
+			));
 		} catch (PDOException $err) {
 			echo "{$err->getMessage()}";
 		}
