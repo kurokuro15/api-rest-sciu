@@ -67,7 +67,7 @@ class JWT
     );
 
     $this->tokenParts['signature'] = Encrypter::base64UrlEncode($signature);
-    return $this->tokenParts['signature'];
+    return Encrypter::base64UrlEncode($signature);
   }
 
   public function getToken()
