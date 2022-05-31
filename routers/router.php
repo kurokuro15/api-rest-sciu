@@ -9,6 +9,7 @@ use api\Controllers\StudentController;
 use api\controllers\ChargeController;
 use api\Controllers\OrderController;
 use api\controllers\ReceiptController;
+use api\Controllers\ReportController;
 use base\middleware\AuthenticationMiddleware;
 
 /**
@@ -119,4 +120,14 @@ $router->post("/categorias", function($params) {
 $router->post("/login", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authUser($params);
+});
+
+
+/**
+ * Reports endpoint
+ */
+
+$router->get("/reportes", function ($params) {
+	$report = new ReportController;
+	$report->get($params);
 });
