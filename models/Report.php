@@ -87,8 +87,11 @@ class Report extends Model
 			$params["endDate"] = "2100-01-01";
 		}
 
-		$data = $this->query($query, $params);
-
+		$data = $this->query($query, $params, false);
+		foreach($data as $key => $value) {
+			//convert $data['amount'] field to float
+			$data[$key]['amount'] = floatval($value['amount']);
+		}
 		// if all it's okay return the reports.
 		return $data;
 	}
