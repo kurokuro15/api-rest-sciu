@@ -11,7 +11,7 @@ class Report extends Model
 		$params = [];
 		$query = "select
 			nombrecategoria as category,
-			tipodepago as paymentMethod,
+			tipodepago as payment_method,
 			Sum(monto) as amount
 		from
 			(
