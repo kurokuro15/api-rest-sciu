@@ -12,7 +12,7 @@ class Model
 {
 	private $conData;
 	protected $conection;
-	protected $authenticacion;
+	protected $authentication;
 	protected $types = array(
 		"boolean" => PDO::PARAM_BOOL,
 		"integer" => PDO::PARAM_INT,
@@ -61,7 +61,7 @@ class Model
 				PDO::ATTR_PERSISTENT => true
 			));
 			// Conexión PDO a la base de datos de autenticación
-			$this->authenticacion = new PDO($PSQL_AUTH_DNS, $this->conData["user"], null, array(
+			$this->authentication = new PDO($PSQL_AUTH_DNS, $this->conData["user"], null, array(
 				PDO::ATTR_PERSISTENT => true
 			));
 		} catch (PDOException $err) {
@@ -144,7 +144,7 @@ class Model
 	 * */
 	public function queryAuth(string $query, $params = [])
 	{
-		$stmt = $this->authenticacion->prepare($query);
+		$stmt = $this->authentication->prepare($query);
 
 		// bindear los parametros dados a la query
 		foreach ($params as $param => $value) {

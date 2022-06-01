@@ -10,6 +10,7 @@ use api\controllers\ChargeController;
 use api\Controllers\OrderController;
 use api\controllers\ReceiptController;
 use api\Controllers\ReportController;
+use base\controllers\UserController;
 use base\middleware\AuthenticationMiddleware;
 
 /**
@@ -130,4 +131,12 @@ $router->post("/login", function ($params) {
 $router->get("/reportes", function ($params) {
 	$report = new ReportController;
 	$report->get($params);
+});
+
+/**
+ * Users Endpoints
+ */
+$router->post("/usuarios", function ($params) {
+	$users = new UserController;
+	$users->createUser($params);
 });
