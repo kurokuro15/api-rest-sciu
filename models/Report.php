@@ -88,10 +88,14 @@ class Report extends Model
 		}
 
 		$data = $this->query($query, $params, false);
-		foreach($data as $key => $value) {
-			//convert $data['amount'] field to float
-			$data[$key]['amount'] = floatval($value['amount']);
+
+		if ($data !== '[]') {
+			foreach ($data as $key => $value) {
+				//convert $data['amount'] field to float
+				$data[$key]['amount'] = floatval($value['amount']);
+			}
 		}
+
 		// if all it's okay return the reports.
 		return $data;
 	}
