@@ -8,7 +8,6 @@ use \base\models\Model;
 use Error;
 use PDO;
 use PDOException;
-use ValueError;
 
 /**
  * Class Model of Authentication middleware

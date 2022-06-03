@@ -5,7 +5,6 @@ namespace api\Models;
 use \base\models\Model;
 use Error;
 use Exception;
-use ValueError;
 
 /**
  * Model class to 'tipospago' table
@@ -23,7 +22,7 @@ class Payment extends Model
 	{
 		//Validate param
 		if ($this->is_blank($id)) {
-			throw new ValueError("Payment identity is not a valid number", 400);
+			throw new Error("Payment identity is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":id" => $id];

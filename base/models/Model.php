@@ -2,11 +2,10 @@
 
 namespace base\models;
 
-use Error;
 use Exception;
-use \PDO;
-use \PDOException;
-use ValueError;
+use PDO;
+use PDOException;
+use Error;
 
 class Model
 {
@@ -98,7 +97,7 @@ class Model
 				return $result ?: "[]";
 			}
 		}
-		throw new ValueError("failed in statement excecute", 500);
+		throw new Error("failed in statement excecute", 500);
 	}
 
 	/** 
@@ -124,7 +123,7 @@ class Model
 			return $this->conection->lastInsertId();
 		}
 
-		throw new ValueError("not changed", 200);
+		throw new Error("not changed", 200);
 	}
 
 	private function getConfigFile($file)
@@ -160,7 +159,7 @@ class Model
 				return $result ?: "[]";
 			}
 		}
-		throw new ValueError("failed in statement excecute", 500);
+		throw new Error("failed in statement excecute", 500);
 	}
 
 	/**

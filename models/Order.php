@@ -5,7 +5,6 @@ namespace api\Models;
 use \base\Models\Model;
 use Error;
 use Exception;
-use ValueError;
 
 /**
  * Class Model of collection orders. 
@@ -23,7 +22,7 @@ class Order extends Model
 	{
 		//Validate param
 		if (!isset($registro) || (int) $registro === 0) {
-			throw new ValueError("Collection order number is not a valid number", 400);
+			throw new Error("Collection order number is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":registro" => $registro];
@@ -69,7 +68,7 @@ class Order extends Model
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new \ValueError("Cedula number is not a valid number", 400);
+			throw new \Error("Cedula number is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
@@ -196,7 +195,7 @@ class Order extends Model
 
 		//validade cedula
 		if (!isset($params['cedula']) || (int) $params['cedula'] === 0) {
-			throw new ValueError("the cedula number is not a valid number", 400);
+			throw new Error("the cedula number is not a valid number", 400);
 		}
 
 		//set reg_date -4 GMT like 2022-05-15 17:05 Y-M-D H:mm

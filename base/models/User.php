@@ -4,7 +4,6 @@ namespace base\models;
 
 use base\helpers\Encrypter;
 use Error;
-use ValueError;
 
 class User extends Model
 {
@@ -14,7 +13,7 @@ class User extends Model
 	{
 		//Validate param
 		if (!isset($username)) {
-			throw new ValueError("username not ¿declared?", 400);
+			throw new Error("username not ¿declared?", 400);
 		}
 		// map param in a array
 		$param = [":username" => $username];
@@ -55,7 +54,7 @@ class User extends Model
 	{
 		//Validate param
 		if (!isset($user)) {
-			throw new ValueError("user not ¿declared?", 400);
+			throw new Error("user not ¿declared?", 400);
 		}
 
 

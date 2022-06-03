@@ -5,7 +5,6 @@ namespace api\Models;
 use \base\models\Model;
 use Error;
 use Exception;
-use ValueError;
 
 class Charge extends Model
 {
@@ -20,7 +19,7 @@ class Charge extends Model
 	{
 		//Validate param
 		if (!isset($id) || (int) $id === 0) {
-			throw new ValueError("Charge identity is not a valid number", 400);
+			throw new Error("Charge identity is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":id" => $id];
@@ -66,7 +65,7 @@ class Charge extends Model
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new ValueError("Cedula is not a valid number", 400);
+			throw new Error("Cedula is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
@@ -112,7 +111,7 @@ class Charge extends Model
 	{
 		//Validate param
 		if (!isset($receipt) || (int) $receipt === 0) {
-			throw new ValueError("receipt number is not a valid number", 400);
+			throw new Error("receipt number is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":receipt" => $receipt];
@@ -179,11 +178,11 @@ class Charge extends Model
 
 		// Validamos que sean números válidos 
 		if (!isset($params['receipt_number']) || (int) $params['receipt_number'] === 0) {
-			throw new ValueError("the receipt_number is not a valid receipt number", 400);
+			throw new Error("the receipt_number is not a valid receipt number", 400);
 		}
 
 		if (!isset($params['order_id']) || (int) $params['order_id'] === 0) {
-			throw new ValueError("the order_id is not a valid receipt number", 400);
+			throw new Error("the order_id is not a valid receipt number", 400);
 		}
 		// seteamos la fecha :D
 		//set reg_date -4 GMT like 2022-05-15 17:05 Y-M-D H:mm

@@ -5,7 +5,6 @@ namespace api\Models;
 use base\models\Model;
 use Error;
 use Exception;
-use ValueError;
 
 class Category extends Model
 {
@@ -20,7 +19,7 @@ class Category extends Model
 	{
 		//Validate param
 		if (!isset($id) || (int) $id === 0) {
-			throw new ValueError("Identity of category is not a valid number", 400);
+			throw new Error("Identity of category is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":id" => $id];

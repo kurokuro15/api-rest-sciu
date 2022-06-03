@@ -4,7 +4,6 @@ namespace api\Models;
 
 use base\models\Model;
 use Error;
-use ValueError;
 
 class Student extends Model
 {
@@ -19,7 +18,7 @@ class Student extends Model
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new ValueError("Cedula is not a valid number", 400);
+			throw new Error("Cedula is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];

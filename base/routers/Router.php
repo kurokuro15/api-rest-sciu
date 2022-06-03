@@ -2,7 +2,7 @@
 
 namespace base\routers;
 
-use TypeError;
+use Error;
 
 /**
  * Este archivo llevará la clase Router, quien contendrá todas las rutas posibles y los métodos de estas. 
@@ -113,7 +113,7 @@ class Router
 
 		//Validamos que no esté vacío el arreglo de rutas de coincidencias
 		if (!$this->matchPatternRouter || empty($this->matchPatternRouter)) {
-			throw new \ValueError("No se ha conseguido la ruta", 404);
+			throw new Error("No se ha conseguido la ruta", 404);
 		} else {
 			// Hacemos la llamada del callback a cada método de cada ruta
 			foreach ($this->matchPatternRouter as $route) {
@@ -184,7 +184,7 @@ class Router
 			// caso contrario retornamos error
 			if (!empty($url_segments[1]) && (int) ($url_segments[1]) === 0) {
 				$param = ltrim($pattern_segments[1], ":");
-				throw new TypeError("No se es válido el valor del parámetro: $param; $url_segments[1] no es válido.", 404);
+				throw new Error("No se es válido el valor del parámetro: $param; $url_segments[1] no es válido.", 404);
 			}
 
 			// si no hay parámetro, se detiene la iteración y setea matchRouter con la ruta actual. Y dejamos de buscar.

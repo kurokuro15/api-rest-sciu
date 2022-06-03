@@ -6,7 +6,6 @@ use \base\controllers\Controller;
 use \api\Models\Order;
 use Exception;
 use Throwable;
-use ValueError;
 
 /**
  * Clase Controlador para el Endpoint "Ordenes"
