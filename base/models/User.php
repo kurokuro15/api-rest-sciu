@@ -89,9 +89,8 @@ class User extends Model
 			parent::queryAuth($queryTwo, $param);
 
 			//execute user_rol query
-			if (empty($user["rol"])) {
-				$param[":rol"] = 1;
-			} else {
+			$param = [":rol" => 1];
+			if (!empty($user["rol"])) {
 				$param[":rol"] = $user["rol"];
 			}
 			$data = parent::queryAuth($queryThree, $param);
