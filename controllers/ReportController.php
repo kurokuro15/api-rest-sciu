@@ -35,7 +35,7 @@ class ReportController extends Controller
 	/**
 	 * Constructor a header report with receipt and orders counts and other info
 	 * @param  array $queryParams
-	 * @param  string $query
+	 * @param  array $params
 	 * @return array
 	 */
 	function constructReportHeader($queryParams =[],$params =[]) {
