@@ -28,7 +28,7 @@ class Encrypter
 	public function passEncrypt($str)
 	{
 		$pass = $this->encrypt($str);
-		return password_hash($pass, PASSWORD_ARGON2ID);
+		return password_hash($pass, PASSWORD_BCRYPT);
 	}
 
 	/**
