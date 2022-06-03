@@ -6,6 +6,9 @@ use base\models\Model;
 
 class Report extends Model
 {
+	/**
+	 * Get reports for a dataset
+	 */
 	public function get($queryParams)
 	{
 		$params = [];
@@ -50,6 +53,75 @@ class Report extends Model
 			tipodepago,
 			nombrecategoria;";
 
+
+
+		
+			list($params, $query) = $this->mapParams($queryParams, $query);
+
+			$data = $this->query($query, $params, false);
+
+		if ($data !== '[]') {
+			foreach ($data as $key => $value) {
+				//convert $data['amount'] field to float
+				$data[$key]['amount'] = floatval($value['amount']);
+			}
+		}
+
+		// if all it's okay return the reports.
+		return $data;
+	}
+
+	// Get some things to reports
+	public function getReceiptInterval($queryParams)
+	{
+		$params = [];
+		$query = "select
+			distinct factura as receipt
+		from
+			tipospago,
+			pagos,
+			emisiones
+		where
+			idtipopago = idtipopag
+			and idregistro = idregistr
+			and idcategori in (:categories)
+			and tipopago in (:paymentMethods)
+			and fechapago >= :startDate
+			and fechapago <= :endDate
+			and anulado = false
+		order by
+			1;";
+		list($params, $query) = $this->mapParams($queryParams, $query);
+		$data = $this->query($query, $params, false);
+		return $data;
+	}
+
+	public function getChargeInterval($queryParams)
+	{
+		$params = [];
+		$query = "select
+			idregistr as charge
+		from
+			tipospago,
+			pagos,
+			emisiones
+		where
+			idtipopago = idtipopag
+			and idregistro = idregistr
+			and tipopago in (:paymentMethods)
+			and idcategori in (:categories)
+			and fechapago >= :startDate
+			and fechapago <= :endDate
+			and anulado = false
+			order by idregistr;";
+			list($params, $query) = $this->mapParams($queryParams, $query);
+			$data = $this->query($query, $params, false);
+			return $data;
+	}
+
+	private function mapParams($queryParams, $query)
+	{
+		$params = [];
 		//Map categories
 		if (!empty($queryParams["categories"])) {
 			$query = preg_replace("/:categories/", $queryParams["categories"], $query);
@@ -87,16 +159,6 @@ class Report extends Model
 			$params["endDate"] = "2100-01-01";
 		}
 
-		$data = $this->query($query, $params, false);
-
-		if ($data !== '[]') {
-			foreach ($data as $key => $value) {
-				//convert $data['amount'] field to float
-				$data[$key]['amount'] = floatval($value['amount']);
-			}
-		}
-
-		// if all it's okay return the reports.
-		return $data;
+		return [$params,$query];
 	}
 }
