@@ -1,10 +1,14 @@
 <?php
+
 namespace api\Models;
+
 use base\models\Model;
 use Error;
 
-class PaymentMethod extends Model {
-	function getAll($params) {
+class PaymentMethod extends Model
+{
+	function getAll($params)
+	{
 		$query = "SELECT DISTINCT tipopago FROM tipospago;";
 		$data = parent::query($query);
 		// validate that have some more zero records

@@ -2,7 +2,7 @@
 
 namespace api;
 // definimos ROOT y traemos el archivo Autoload.php
-define('__ROOT__', dirname(__FILE__,2));
+define('__ROOT__', dirname(__FILE__, 2));
 require(__ROOT__ . '/base/helpers/Autoload.php');
 
 /**

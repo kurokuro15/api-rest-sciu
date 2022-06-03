@@ -88,10 +88,10 @@ class Payment extends Model
 			//validamos que no estén vacíos, si lo están los definimos como NULL. 
 			if (!isset($payment[$value])) {
 				$params[$value] = null;
-					continue;
-				}
-				$params[$value] = $payment[$value];
+				continue;
 			}
+			$params[$value] = $payment[$value];
+		}
 
 		// sí está en null payment_date, entonces seteamos la hora actual.
 		if ($params['payment_date'] === null) {

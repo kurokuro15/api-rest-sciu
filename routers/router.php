@@ -24,9 +24,9 @@ $router->get("/estudiantes", function ($params) {
 //retrieve one
 $router->get("/estudiantes/:cedula", function ($params) {
 	$auth = new AuthenticationMiddleware;
-	$auth->authy($params,	function($params) {
-			$student = new StudentController;
-			$student->retrieve($params);
+	$auth->authy($params,	function ($params) {
+		$student = new StudentController;
+		$student->retrieve($params);
 	});
 });
 /**
@@ -94,24 +94,24 @@ $router->post("/cobros", function ($params) {
  *  Charges Endpoints
  */
 
- /**
+/**
  *  Categories Endpoints
  */
-$router->get("/categorias", function($params) { 
+$router->get("/categorias", function ($params) {
 	$category = new CategoryController;
 	$category->get($params);
 });
 
-$router->get("/categorias/:category", function($params) { 
+$router->get("/categorias/:category", function ($params) {
 	$category = new CategoryController;
 	$category->retrieve($params);
 });
 
-$router->post("/categorias", function($params) { 
+$router->post("/categorias", function ($params) {
 	$category = new CategoryController;
 	$category->create($params);
 });
- /**
+/**
  *  Categories Endpoints
  */
 

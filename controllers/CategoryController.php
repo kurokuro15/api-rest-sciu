@@ -54,7 +54,7 @@ class CategoryController extends Controller
 	{
 		// extraígo la data...
 		$input = $this->request->input(); //solo puede ser una categoria a la vez...
-	
+
 		try {
 			$index = $this->categories->insert($input)['id'];
 			$data = $this->categories->get($index);

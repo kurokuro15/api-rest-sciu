@@ -77,7 +77,7 @@ class Student extends Model
 			reg_date DESC,
 			cedula DESC";
 
-		if($params["offset"] && $params["limit"]) {
+		if ($params["offset"] && $params["limit"]) {
 			$pagination = parent::pagination($params);
 			$query .= " OFFSET :offset LIMIT :limit";
 		}

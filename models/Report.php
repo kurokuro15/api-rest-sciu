@@ -55,10 +55,10 @@ class Report extends Model
 
 
 
-		
-			list($params, $query) = $this->mapParams($queryParams, $query);
 
-			$data = $this->query($query, $params, false);
+		list($params, $query) = $this->mapParams($queryParams, $query);
+
+		$data = $this->query($query, $params, false);
 
 		if ($data !== '[]') {
 			foreach ($data as $key => $value) {
@@ -114,9 +114,9 @@ class Report extends Model
 			and fechapago <= :endDate
 			and anulado = :canceled
 			order by idregistr;";
-			list($params, $query) = $this->mapParams($queryParams, $query);
-			$data = $this->query($query, $params, false);
-			return $data;
+		list($params, $query) = $this->mapParams($queryParams, $query);
+		$data = $this->query($query, $params, false);
+		return $data;
 	}
 
 	private function mapParams($queryParams, $query)
@@ -159,11 +159,11 @@ class Report extends Model
 			$params["endDate"] = "2100-01-01";
 		}
 
-		if(!empty($queryParams["canceled"])){
+		if (!empty($queryParams["canceled"])) {
 			$params["canceled"] = $queryParams["canceled"];
-		}else{
+		} else {
 			$params["canceled"] = false;
 		}
-		return [$params,$query];
+		return [$params, $query];
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace base\routers;
 
 use TypeError;
@@ -6,7 +7,8 @@ use TypeError;
 /**
  * Este archivo llevará la clase Router, quien contendrá todas las rutas posibles y los métodos de estas. 
  */
-class Router {
+class Router
+{
 	/**
 	 * route list.
 	 */
@@ -172,8 +174,9 @@ class Router {
 				continue;
 			}
 			// si el pattern no tiene un parámetro y la url sí, sigamos pa lante
-			if ((empty($pattern_segments[1]) && !empty($url_segments[1])) || 
-					(!empty($pattern_segments[1]) && empty($url_segments[1]))) {
+			if ((empty($pattern_segments[1]) && !empty($url_segments[1])) ||
+				(!empty($pattern_segments[1]) && empty($url_segments[1]))
+			) {
 				continue;
 			}
 
@@ -181,7 +184,7 @@ class Router {
 			// caso contrario retornamos error
 			if (!empty($url_segments[1]) && (int) ($url_segments[1]) === 0) {
 				$param = ltrim($pattern_segments[1], ":");
-				throw new TypeError("No se es válido el valor del parámetro: $param; $url_segments[1] no es válido.",404);
+				throw new TypeError("No se es válido el valor del parámetro: $param; $url_segments[1] no es válido.", 404);
 			}
 
 			// si no hay parámetro, se detiene la iteración y setea matchRouter con la ruta actual. Y dejamos de buscar.

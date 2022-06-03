@@ -98,15 +98,14 @@ class OrderController extends Controller
 	 */
 	function create($params)
 	{
-		try { 
-				$order = $this->request->input();
-				$result = $this->order->insert($order);
-				
-				$data = $this->order->get($result);
-				$this->response->send(["orders"=> $data]);
+		try {
+			$order = $this->request->input();
+			$result = $this->order->insert($order);
 
-			} catch(Throwable $err) {
-				$this->response->send(["error" => $err->getMessage()], $err->getCode());
-			}
+			$data = $this->order->get($result);
+			$this->response->send(["orders" => $data]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
 	}
 }

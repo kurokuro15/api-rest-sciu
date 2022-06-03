@@ -38,7 +38,7 @@ class ReceiptController extends Controller
 		}
 	}
 
-		/**
+	/**
 	 * Retrieve an order by 'order' number
 	 */
 	public function retrieve($params)

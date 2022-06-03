@@ -82,7 +82,7 @@ class User extends Model
 				":username" => $user["username"],
 				":password" => $user["password"]
 			];
-			if(empty($user["status"])){
+			if (empty($user["status"])) {
 				$param[":status"] = 1;
 			} else {
 				$param[":status"] = $user["status"];
@@ -90,14 +90,14 @@ class User extends Model
 			parent::queryAuth($queryTwo, $param);
 
 			//execute user_rol query
-			if(empty($user["rol"])){
+			if (empty($user["rol"])) {
 				$param[":rol"] = 1;
 			} else {
 				$param[":rol"] = $user["rol"];
 			}
 			$data = parent::queryAuth($queryThree, $param);
 			$this->authentication->commit();
-			
+
 			//validate data
 			if (is_array($data)) {
 				// Map properties of class to use this info. And return object.

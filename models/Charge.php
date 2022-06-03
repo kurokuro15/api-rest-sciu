@@ -176,7 +176,7 @@ class Charge extends Model
 			}
 			$params[$value] = $charge[$value];
 		}
- 		
+
 		// Validamos que sean números válidos 
 		if (!isset($params['receipt_number']) || (int) $params['receipt_number'] === 0) {
 			throw new ValueError("the receipt_number is not a valid receipt number", 400);
@@ -219,7 +219,7 @@ class Charge extends Model
 		return $result;
 		//return success messange or error msg
 	}
-	
+
 	/**
 	 * Update a Charge record
 	 */
@@ -233,8 +233,9 @@ class Charge extends Model
 	{
 	}
 
-	function getLastReceipt() {
-		$query= "select
+	function getLastReceipt()
+	{
+		$query = "select
 		case
 			when max(factura) is null then 1
 			else max(factura)
@@ -243,7 +244,7 @@ class Charge extends Model
 		pagos";
 
 		$data = parent::query($query);
-		if($data){ 
+		if ($data) {
 			return $data[0];
 		}
 	}

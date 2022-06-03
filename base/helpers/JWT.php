@@ -23,8 +23,9 @@ class JWT
     $this->secret = $secret ?? $this->getConfigFileData('pepper')['peperoni'];
     $this->encode();
   }
-  
-  public function getExpiration() {
+
+  public function getExpiration()
+  {
     return $this->payload["exp"];
   }
 
@@ -109,7 +110,7 @@ class JWT
 
   private function getConfigFileData($file)
   {
-    $data = file_get_contents(dirname(__FILE__,3) . "/config/" . $file);
+    $data = file_get_contents(dirname(__FILE__, 3) . "/config/" . $file);
     return json_decode($data, true);
   }
 }
