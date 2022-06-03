@@ -159,7 +159,7 @@ class Model
 				return $result ?: "[]";
 			}
 		}
-		throw new Error("failed in statement excecute", 500);
+		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 500);
 	}
 
 	/**
