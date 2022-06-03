@@ -80,13 +80,21 @@ class User extends Model
 			//execute app_user query
 			$param = [
 				":username" => $user["username"],
-				":password" => $user["password"],
-				":status" => $user["status"] ?: 1
+				":password" => $user["password"]
 			];
+			if(empty($user["status"])){
+				$param[":status"] = 1;
+			} else {
+				$param[":status"] = $user["status"];
+			}
 			parent::queryAuth($queryTwo, $param);
 
 			//execute user_rol query
-			$param = [":rol" => $user["rol"] ?: 2,];
+			if(empty($user["rol"])){
+				$param[":rol"] = 1;
+			} else {
+				$param[":rol"] = $user["rol"];
+			}
 			$data = parent::queryAuth($queryThree, $param);
 			$this->authentication->commit();
 			
