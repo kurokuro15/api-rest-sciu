@@ -46,7 +46,8 @@ class ReportController extends Controller
 		
 		// enter de first and last receipt number and total count.
 		$_receipts = $this->report->getReceiptInterval($queryParams);
-
+		if(!is_array($_receipts))
+			return $data;
 		// validate that  $_receipts have more than one element
 		if (count($_receipts) > 1) {
 			$data['receipts'] = [
@@ -70,6 +71,8 @@ class ReportController extends Controller
 
 		// enter de first and last charge number and total count.
 		$_charges = $this->report->getChargeInterval($queryParams);
+		if(!is_array($_charges))
+			return $data;
 		// validate that $_charges have more than one element
 		if (count($_charges) > 1) {
 			$data['charges'] = [

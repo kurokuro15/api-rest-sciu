@@ -40,7 +40,7 @@ class Report extends Model
 				tipospago.idtipopago = pagos.idtipopag) on
 				Categorias.idcategoria = Emisiones.idcategori
 			where
-				anulado = false) as ooo
+				anulado = :canceled) as ooo
 		where
 			idcategori in (:categories)
 			and tipopago in (:paymentMethods)
@@ -88,7 +88,7 @@ class Report extends Model
 			and tipopago in (:paymentMethods)
 			and fechapago >= :startDate
 			and fechapago <= :endDate
-			and anulado = false
+			and anulado = :canceled
 		order by
 			1;";
 		list($params, $query) = $this->mapParams($queryParams, $query);
@@ -112,7 +112,7 @@ class Report extends Model
 			and idcategori in (:categories)
 			and fechapago >= :startDate
 			and fechapago <= :endDate
-			and anulado = false
+			and anulado = :canceled
 			order by idregistr;";
 			list($params, $query) = $this->mapParams($queryParams, $query);
 			$data = $this->query($query, $params, false);
@@ -159,6 +159,11 @@ class Report extends Model
 			$params["endDate"] = "2100-01-01";
 		}
 
+		if(!empty($queryParams["canceled"])){
+			$params["canceled"] = $queryParams["canceled"];
+		}else{
+			$params["canceled"] = false;
+		}
 		return [$params,$query];
 	}
 }
