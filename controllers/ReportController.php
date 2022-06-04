@@ -4,7 +4,6 @@ namespace api\Controllers;
 
 use api\Models\Report;
 use base\controllers\Controller;
-use Exception;
 use Throwable;
 
 class ReportController extends Controller
@@ -49,20 +48,14 @@ class ReportController extends Controller
 		if (!is_array($_receipts))
 			return $data;
 		// validate that  $_receipts have more than one element
-		if (count($_receipts) > 1) {
+		if (count($_receipts) > 0) {
 			$data['receipts'] = [
 				'first' => $_receipts[0]['receipt'],
 				'last' => $_receipts[count($_receipts) - 1]['receipt'],
 				'count' => count($_receipts)
 			];
-		} else if (count($_receipts) == 1) {
-			$data['receipts'] = [
-				'first' => $_receipts[0]['receipt'],
-				'last' => $_receipts[0]['receipt'],
-				'count' => 1
-			];
 		} else {
-			$data['charges'] = [
+			$data['receipts'] = [
 				'first' => 0,
 				'last' => 0,
 				'count' => 0
@@ -74,17 +67,11 @@ class ReportController extends Controller
 		if (!is_array($_charges))
 			return $data;
 		// validate that $_charges have more than one element
-		if (count($_charges) > 1) {
+		if (count($_charges) > 0) {
 			$data['charges'] = [
 				'first' => $_charges[0]['charge'],
 				'last' => $_charges[count($_charges) - 1]['charge'],
 				'count' => count($_charges)
-			];
-		} else if (count($_charges) == 1) {
-			$data['charges'] = [
-				'first' => $_charges[0]['charge'],
-				'last' => $_charges[0]['charge'],
-				'count' => 1
 			];
 		} else {
 			$data['charges'] = [

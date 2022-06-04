@@ -35,6 +35,7 @@ class CategoryController extends Controller
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
 	}
+	
 	public function get($params)
 	{
 		/**
