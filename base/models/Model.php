@@ -97,7 +97,7 @@ class Model
 				return $result ?: Array();
 			}
 		}
-		throw new Error("failed in statement excecute", 500);
+		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 500);
 	}
 
 	/** 
@@ -123,7 +123,7 @@ class Model
 			return $this->conection->lastInsertId();
 		}
 
-		throw new Error("not changed", 200);
+		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 200);
 	}
 
 	private function getConfigFile($file)
