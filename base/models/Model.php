@@ -92,9 +92,9 @@ class Model
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			if (isset($result)) {
 				if ($format) {
-					return $this->toUTF8($result) ?: "[]";
+					return $this->toUTF8($result) ?: Array();
 				}
-				return $result ?: "[]";
+				return $result ?: Array();
 			}
 		}
 		throw new Error("failed in statement excecute", 500);
