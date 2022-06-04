@@ -5,23 +5,52 @@
  */
 
 use api\Controllers\CategoryController;
-use api\Controllers\StudentController;
 use api\controllers\ChargeController;
 use api\Controllers\OrderController;
 use api\controllers\ReceiptController;
 use api\Controllers\ReportController;
+use api\Controllers\StudentController;
 use base\controllers\UserController;
 use base\middleware\AuthenticationMiddleware;
+
+
+/**
+ * Login Endpoint
+ */
+$router->post("/login", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authUser($params);
+});
+/**
+ * Login Endpoint
+ */
+
+
+/**
+ * Users Endpoints
+ */
+$router->post("/usuarios", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$users = new UserController;
+		$users->createUser($params);
+	});
+});
+/**
+ * Users Endpoints
+ */
+
 
 /**
  *  Students Endpoints
  */
-//get all
 $router->get("/estudiantes", function ($params) {
-	$student = new StudentController;
-	$student->get($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$student = new StudentController;
+		$student->get($params);
+	});
 });
-//retrieve one
 $router->get("/estudiantes/:cedula", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authy($params,	function ($params) {
@@ -33,110 +62,127 @@ $router->get("/estudiantes/:cedula", function ($params) {
  *  Students Endpoints
  */
 
+
 /**
  *  Orders Endpoints
  */
-//get all
 $router->get("/ordenes", function ($params) {
-	$order = new OrderController;
-	$order->get($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$order = new OrderController;
+		$order->get($params);
+	});
 });
-//retrieve one
 $router->get("/ordenes/:order", function ($params) {
-	$order = new OrderController;
-	$order->retrieve($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$order = new OrderController;
+		$order->retrieve($params);
+	});
 });
-// create one
 $router->post("/ordenes", function ($params) {
-	$order = new OrderController;
-	$order->create($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$order = new OrderController;
+		$order->create($params);
+	});
 });
 /**
  *  Orders Endpoints
  */
 
+
 /**
  *  Receipts Endpoints
  */
-//get all
 $router->get("/recibos", function ($params) {
-	$receipt = new ReceiptController;
-	$receipt->get($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$receipt = new ReceiptController;
+		$receipt->get($params);
+	});
 });
-//retrieve one
 $router->get("/recibos/:receipt", function ($params) {
-	$receipt = new ReceiptController;
-	$receipt->retrieve($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$receipt = new ReceiptController;
+		$receipt->retrieve($params);
+	});
 });
 /**
  *  Receipts Endpoints
  */
 
+
 /**
  *  Charges Endpoints
  */
-//get all
 $router->get("/cobros", function ($params) {
-	$charge = new ChargeController;
-	$charge->get($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$charge = new ChargeController;
+		$charge->get($params);
+	});
 });
-//retrieve one
 $router->get("/cobros/:charge", function ($params) {
-	$charge = new ChargeController;
-	$charge->retrieve($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$charge = new ChargeController;
+		$charge->retrieve($params);
+	});
 });
-//create one
 $router->post("/cobros", function ($params) {
-	$charge = new ChargeController;
-	$charge->create($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$charge = new ChargeController;
+		$charge->create($params);
+	});
 });
 /**
  *  Charges Endpoints
  */
+
 
 /**
  *  Categories Endpoints
  */
 $router->get("/categorias", function ($params) {
-	$category = new CategoryController;
-	$category->get($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$category = new CategoryController;
+		$category->get($params);
+	});
 });
-
 $router->get("/categorias/:category", function ($params) {
-	$category = new CategoryController;
-	$category->retrieve($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$category = new CategoryController;
+		$category->retrieve($params);
+	});
 });
-
 $router->post("/categorias", function ($params) {
-	$category = new CategoryController;
-	$category->create($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$category = new CategoryController;
+		$category->create($params);
+	});
 });
 /**
  *  Categories Endpoints
  */
 
-/**
- * Login Endpoint
- */
-$router->post("/login", function ($params) {
-	$auth = new AuthenticationMiddleware;
-	$auth->authUser($params);
-});
-
 
 /**
  * Reports endpoint
  */
-
 $router->get("/reportes", function ($params) {
-	$report = new ReportController;
-	$report->get($params);
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$report = new ReportController;
+		$report->get($params);
+	});
 });
 
 /**
- * Users Endpoints
+ * Reports endpoint
  */
-$router->post("/usuarios", function ($params) {
-	$users = new UserController;
-	$users->createUser($params);
-});
