@@ -1,5 +1,7 @@
 <?php
+
 namespace base\controllers;
+
 use base\https\Response;
 use base\https\Request;
 
@@ -18,10 +20,6 @@ class Controller
 	 */
 	protected $response;
 	/**
-	 * Query Params map array
-	 */
-	protected $queryParams = [];
-	/**
 	 *  Construct
 	 */
 	public function __construct()
@@ -30,12 +28,22 @@ class Controller
 		$this->response = $GLOBALS['response'];
 	}
 
-	protected function setQueryParams() {
-		if(!empty($_GET)) { 
-			foreach($_GET as $k => $v) {
-				$this->queryParams[$k] = $v;
-			}
+	protected function getMeta($meta)
+	{
+		if (isset($meta)) {
+			$url = $this->request->getUrl();
+			if ($meta["next"]["offset"] <= $meta["count"])
+				$meta["next"] = $url . "?offset=" . $meta["next"]["offset"] . "&limit=" . $meta["next"]["limit"];
+			else
+				$meta["next"] = null;
+
+
+			if ($meta["prev"]["offset"] >= 0)
+				$meta["prev"] = $url . "?offset=" . $meta["prev"]["offset"] . "&limit=" . $meta["prev"]["limit"];
+			else
+				$meta["prev"] = null;
 		}
-		return count($this->queryParams);
+
+		$this->response->send(["meta" => $meta]);
 	}
 }
