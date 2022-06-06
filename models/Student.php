@@ -76,16 +76,21 @@ class Student extends Model
 			reg_date DESC,
 			cedula DESC";
 
-		if ($params["offset"] && $params["limit"]) {
-			$pagination = parent::pagination($params);
-			$query .= " OFFSET :offset LIMIT :limit";
-		}
-		$data = parent::query($query, $pagination);
+		//Add pagination to query
+		list($interval, $placeholder, $meta) = parent::pagination($params);
+		$params = array_merge($params, $interval);
+
+		// Obtenemos el total de elementos de la query y lo guardamos en meta
+		$meta["count"] = $this->count($query);
+
+		// añadimos el placeholder de paginación		
+		$query .= $placeholder;
+		$data = parent::query($query, $params);
 		// validate that have some more zero records
 		if (count($data) < 1) {
 			throw new Error("data not found", 404);
 		}
 		// if all it's okay return the student.
-		return $data;
+		return [$data, $meta];
 	}
 }
