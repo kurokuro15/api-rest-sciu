@@ -27,7 +27,8 @@ $response->setHeader('Content-Type: application/json; charset=UTF-8');
 $url = explode("?", $_SERVER["REQUEST_URI"], 2);
 //picamos la url
 $method = $_SERVER["REQUEST_METHOD"];
-
+// setear la url actual a la request
+$request->setUrl($url[0]);
 // Se crea la ruta e intentamos ejecutarlas. Si algo sale mal, devolvemos un error message
 $router = new Router($url[0], $method);
 require('../routers/router.php');
