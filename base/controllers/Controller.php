@@ -31,7 +31,7 @@ class Controller
 	protected function getMeta($meta)
 	{
 		if (isset($meta)) {
-			if (isset($meta["next"]) || $meta["prev"]) {
+			if (isset($meta["next"]) || isset($meta["prev"])) {
 				$url = $this->request->getUrl();
 				if ($meta["next"]["offset"] <= $meta["count"])
 					$meta["next"] = $url . "?offset=" . $meta["next"]["offset"] . "&limit=" . $meta["next"]["limit"];
