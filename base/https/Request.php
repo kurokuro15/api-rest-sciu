@@ -135,9 +135,12 @@ class Request
 	 */
 	public function getUrl()
 	{
-		return $this->server('QUERY_STRING');
+		return $this->url;
 	}
-
+	public function setUrl($url)
+	{
+		$this->url = $this->server("REQUEST_SCHEME") . "://" . $this->server('HTTP_HOST') . $url;
+	}
 	/**
 	 * Clean Data
 	 *
