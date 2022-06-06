@@ -15,12 +15,13 @@ class CategoryController extends Controller
 	{
 		parent::__construct();
 		$this->categories = new Category;
-		$this->setQueryParams();
 	}
 
 	public function retrieve($params)
 	{
-		// validate that param 'order' exist
+
+
+		// validate that param 'category' exist
 		if (empty($params) || empty($params['category'])) {
 			$this->response->send(["error" => "category field was not send"], 400);
 		}
@@ -35,15 +36,16 @@ class CategoryController extends Controller
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
 	}
-	
+
 	public function get($params)
 	{
 		/**
 		 * Si necesitamos paginar las categorías acá debemos pasarle a $params offset y limit...
 		 */
+		$params = array_merge($params, $this->request->get());
 		try {
-			$data = $this->categories->getAll($params);
-
+			list($data, $meta) = $this->categories->getAll($params);
+			parent::getMeta($meta);
 			if ($data) {
 				$this->response->send(["categories" => $data]);
 			}

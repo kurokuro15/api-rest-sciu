@@ -31,19 +31,19 @@ class Controller
 	protected function getMeta($meta)
 	{
 		if (isset($meta)) {
-			$url = $this->request->getUrl();
-			if ($meta["next"]["offset"] <= $meta["count"])
-				$meta["next"] = $url . "?offset=" . $meta["next"]["offset"] . "&limit=" . $meta["next"]["limit"];
-			else
-				$meta["next"] = null;
+			if (isset($meta["next"]) || $meta["prev"]) {
+				$url = $this->request->getUrl();
+				if ($meta["next"]["offset"] <= $meta["count"])
+					$meta["next"] = $url . "?offset=" . $meta["next"]["offset"] . "&limit=" . $meta["next"]["limit"];
+				else
+					$meta["next"] = null;
 
-
-			if ($meta["prev"]["offset"] >= 0)
-				$meta["prev"] = $url . "?offset=" . $meta["prev"]["offset"] . "&limit=" . $meta["prev"]["limit"];
-			else
-				$meta["prev"] = null;
+				if ($meta["prev"]["offset"] >= 0)
+					$meta["prev"] = $url . "?offset=" . $meta["prev"]["offset"] . "&limit=" . $meta["prev"]["limit"];
+				else
+					$meta["prev"] = null;
+			}
 		}
-
 		$this->response->send(["meta" => $meta]);
 	}
 }

@@ -62,17 +62,22 @@ class Category extends Model
 		nombrecategoria ASC,
 		idcategoria ASC";
 
-		/**
-		 * Si es necesario, se añade la paginación aquí
-		 */
+		//Add pagination to query
+		list($interval, $placeholder, $meta) = parent::pagination($params, false);
+		$params = array_merge($params, $interval);
 
-		$data = parent::query($query);
+		// Obtenemos el total de elementos de la query y lo guardamos en meta
+		$meta["count"] = $this->count($query);
+
+		// añadimos el placeholder de paginación		
+		$query .= $placeholder;
+		$data = parent::query($query, $params);
 		// validate that have some more zero records
 		if (count($data) < 1) {
 			throw new Error("data not found", 404);
 		}
 		// if all it's okay return the student.
-		return $data;
+		return [$data, $meta];
 	}
 
 	public function insert($category)

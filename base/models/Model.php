@@ -166,15 +166,19 @@ class Model
 	 * take the number of page and number of items to show for page
 	 * by default page 0 and 10 items. array with keys: "offset" and "limit"
 	 */
-	protected function pagination($params)
+	protected function pagination($params, $strict = true)
 	{
 		if (isset($params['offset'])) {
 			$offset = intval($params['offset']);
+		} else if (!$strict) {
+			return [[],"",[[],[]]];
 		} else {
 			$offset = 0;
 		}
 		if (isset($params['limit'])) {
 			$limit = intval($params['limit']);
+		} else if (!$strict) {
+			return [[],"",[[],[]]];
 		} else {
 			$limit = 10;
 		}
@@ -189,16 +193,16 @@ class Model
 		];
 
 		$prevOffset = $offset - $limit;
-		if($offset === 0){
+		if ($offset === 0) {
 			$prevOffset = null;
 		} else if ($prevOffset < 0) {
 			$prevOffset = 0;
-			$prevLimit = $offset;
+			$limit = $offset;
 		}
 
 		$prev = [
 			"offset" => $prevOffset,
-			"limit" => $prevLimit
+			"limit" => $limit
 		];
 		// devolvemos los parametros y el placeholder
 		return [$current, $placeholder, ["next" => $next, "prev" => $prev]];
