@@ -187,9 +187,18 @@ class Model
 			"offset" => $offset + $limit,
 			"limit" => $limit
 		];
+
+		$prevOffset = $offset - $limit;
+		if($offset === 0){
+			$prevOffset = null;
+		} else if ($prevOffset < 0) {
+			$prevOffset = 0;
+			$prevLimit = $offset;
+		}
+
 		$prev = [
-			"offset" => $offset - $limit > 0 ? $offset - $limit : 0,
-			"limit" => $limit
+			"offset" => $prevOffset,
+			"limit" => $prevLimit
 		];
 		// devolvemos los parametros y el placeholder
 		return [$current, $placeholder, ["next" => $next, "prev" => $prev]];
