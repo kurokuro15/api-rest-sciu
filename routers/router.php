@@ -7,6 +7,7 @@
 use api\Controllers\CategoryController;
 use api\controllers\ChargeController;
 use api\Controllers\OrderController;
+use api\controllers\ProductController;
 use api\controllers\ReceiptController;
 use api\Controllers\ReportController;
 use api\Controllers\StudentController;
@@ -144,6 +145,23 @@ $router->post("/cobros", function ($params) {
 
 
 /**
+ * Reports endpoint
+ */
+$router->get("/reportes", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$report = new ReportController;
+		$report->get($params);
+	});
+});
+
+/**
+ * Reports endpoint
+ */
+
+
+
+/**
  *  Categories Endpoints
  */
 $router->get("/categorias", function ($params) {
@@ -167,22 +185,64 @@ $router->post("/categorias", function ($params) {
 		$category->create($params);
 	});
 });
+$router->put("/categorias/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$category = new CategoryController;
+		$category->update($params);
+	});
+});
+$router->delete("/categorias/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$category = new CategoryController;
+		$category->delete($params);
+	});
+});
 /**
  *  Categories Endpoints
  */
 
 
-/**
- * Reports endpoint
- */
-$router->get("/reportes", function ($params) {
-	$auth = new AuthenticationMiddleware;
-	$auth->authy($params,	function ($params) {
-		$report = new ReportController;
-		$report->get($params);
+ /**
+	* Products Endpoints
+  */
+	$router->get("/productos", function ($params) {
+		$auth = new AuthenticationMiddleware;
+		$auth->authy($params,	function ($params) {
+			$product = new ProductController;
+			$product->get($params);
+		});
 	});
-});
+	$router->get("/productos/:product", function ($params) {
+		$auth = new AuthenticationMiddleware;
+		$auth->authy($params,	function ($params) {
+			$product = new ProductController;
+			$product->retrieve($params);
+		});
+	});
+	$router->post("/productos", function ($params) {
+		$auth = new AuthenticationMiddleware;
+		$auth->authy($params,	function ($params) {
+			$product = new ProductController;
+			$product->create($params);
+		});
+	});
+	$router->put("/productos/:id", function ($params) {
+		$auth = new AuthenticationMiddleware;
+		$auth->authy($params,	function ($params) {
+			$product = new ProductController;
+			$product->update($params);
+		});
+	});
+	$router->delete("/productos/:id", function ($params) {
+		$auth = new AuthenticationMiddleware;
+		$auth->authy($params,	function ($params) {
+			$product = new ProductController;
+			$product->delete($params);
+		});
+	});
+	/**
+	* Products Endpoints
+  */
 
-/**
- * Reports endpoint
- */

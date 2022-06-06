@@ -12,8 +12,9 @@ class Category extends Model
 	{
 		parent::__construct();
 	}
+
 	/**
-	 * Retrieve a Student by 'cedula'
+	 * Retrieve a Category by id
 	 */
 	public function get($id)
 	{
@@ -37,11 +38,7 @@ class Category extends Model
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
 		//validate data
-		if (is_array($data)) {
-			// Map properties of class to use this info. And return object.
-			foreach ($data[0] as $prop => $value) {
-				$this->$prop = $value;
-			}
+		if (count($data) > 0) {
 			// if all it's okay return the student.
 			return $data[0];
 		} else {
@@ -49,6 +46,9 @@ class Category extends Model
 		}
 	}
 
+	/**
+	 * Get all Categories
+	 */
 	public function getAll($params)
 	{
 		//dentro de param vendría la página
@@ -56,11 +56,11 @@ class Category extends Model
 		idcategoria AS id,
 		nombrecategoria AS category,
 		colorcategoria AS color
-	From
-		categorias
-	ORDER BY
-		nombrecategoria ASC,
-		idcategoria ASC";
+		From
+			categorias
+		ORDER BY
+			nombrecategoria ASC,
+			idcategoria ASC";
 
 		//Add pagination to query
 		list($interval, $placeholder, $meta) = parent::pagination($params, false);
@@ -80,10 +80,13 @@ class Category extends Model
 		return [$data, $meta];
 	}
 
+	/**
+	 * Insert a new Category
+	 */
 	public function insert($category)
 	{
 		$params = [];
-		$query = "INSERT INTO categorias(idcategoria, nombrecategoria, colorcategoria) VALUES (:id, :category, :color)RETURNING idcategoria as id";
+		$query = "INSERT INTO categorias(idcategoria, nombrecategoria, colorcategoria) VALUES (:id, :category, :color) RETURNING idcategoria as id";
 
 		if (empty($category['category'])) {
 			throw new Exception("Error, falta el nombre de la categoría", 400);
@@ -106,22 +109,61 @@ class Category extends Model
 		}
 
 		$result = parent::query($query, $params);
-		return $result[0];
+		return $result[0]["id"];
 	}
 
+	/**
+	 * Get last 'idcategoria' to insert a new category
+	 */
 	private function getLastCategoryId()
 	{
-		$query = "select
+		$query = "SELECT
 		case
 			when max(idcategoria) is null then 1
 			else max(idcategoria)
 		end as id
-	from
+		from
 		categorias";
 
 		$data = parent::query($query);
 		if ($data) {
 			return $data[0];
 		}
+	}
+	/**
+	 * Update an category
+	 */
+	public function update($category)
+	{
+		if (empty($category['category'])) {
+			throw new Exception("Error, falta el nombre de la categoría", 400);
+		}
+		if (empty($category['color'])) {
+			throw new Exception("Error, falta el color de la categoría", 400);
+		}
+		if (empty($category['id'])) {
+			throw new Exception("Error, falta el identificador de la categoría", 400);
+		}
+		$params['category'] = $category['category'];
+		$params['color'] = $category['color'];
+		$params['id'] = $category['id'];
+		$query = "UPDATE categorias SET nombrecategoria = :category, colorcategoria = :color WHERE idcategoria = :id RETURNING idcategoria as id";
+		$result = parent::query($query, $params);
+		if (isset($result))
+			return $result[0]["id"];
+	}
+
+	/**
+	 * Delete a category
+	 */
+	public function delete($category)
+	{
+		if (empty($category['id'])) {
+			throw new Exception("Error, falta el identificador de la categoría", 400);
+		}
+		$query = "DELETE FROM categorias WHERE idcategoria = :id";
+		$params['id'] = $category['id'];
+		$result = parent::query($query, $params);
+		return $result;
 	}
 }

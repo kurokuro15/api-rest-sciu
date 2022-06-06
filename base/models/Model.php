@@ -228,6 +228,7 @@ class Model
 	{
 		return empty($value) && !is_numeric($value);
 	}
+	
 	protected function count($query)
 	{
 		$stmt = $this->conection->prepare($query);
