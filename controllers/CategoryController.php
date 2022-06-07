@@ -4,6 +4,7 @@ namespace api\Controllers;
 
 use base\controllers\Controller;
 use api\Models\Category;
+use api\Models\Order;
 use Exception;
 use Throwable;
 
@@ -77,6 +78,13 @@ class CategoryController extends Controller
 	public function delete($params)
 	{
 		try {
+			if (empty($params['id'])) {
+				throw new Exception("Error, falta el identificador de la categoría", 400);
+			}
+			$order = new Order;
+			$total = $order->getByCategory($params['id']);
+			if ($total['total'] > 0)
+				throw new Exception("Error, la categoría tiene ordenes asociadas", 400);
 			$data = $this->categories->delete($params);
 			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {

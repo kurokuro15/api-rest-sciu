@@ -2,9 +2,11 @@
 
 namespace api\controllers;
 
+use api\Models\Order;
 use base\controllers\Controller;
 use api\Models\Product;
 use Error;
+use Exception;
 use Throwable;
 
 class ProductController extends Controller
@@ -58,7 +60,7 @@ class ProductController extends Controller
 	public function update($params)
 	{
 		if (!isset($params['id']))
-			throw new Error("Error, falta el id de la categoría", 400);
+			throw new Error("Error, falta el id del producto", 400);
 		// extraígo la data...
 		$input = $this->request->input();
 		$input['id'] = $params['id'];
@@ -73,6 +75,13 @@ class ProductController extends Controller
 	public function delete($params)
 	{
 		try {
+			if (empty($params['id'])) {
+				throw new Exception("Error, falta el identificador del producto", 400);
+			}
+			$order = new Order;
+			$total = $order->getByCategory($params['id']);
+			if ($total['total'] > 0)
+				throw new Exception("Error, el producto tiene ordenes asociadas", 400);
 			$data = $this->products->delete($params);
 			$this->response->send(["products" => $data]);
 		} catch (Throwable $err) {

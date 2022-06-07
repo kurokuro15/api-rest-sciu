@@ -160,7 +160,38 @@ class Order extends Model
 			return $data;
 		}
 	}
-
+	public function getByCategory($category) { 
+		if(isset($category) && (int) $category === 0) {
+			throw new \Error("Category number is not a valid number", 400);
+		}
+		$param = [":category" => $category];
+		$query = "SELECT
+			COUNT(*) as total
+		FROM
+			emisiones e
+		WHERE
+			e.idcategori  = :category";
+		$data = parent::query($query, $param);
+		if(isset($data)) {
+			return $data[0];
+		}
+	}
+	public function getByProduct($product) {
+		if(isset($product) && (int) $product === 0) {
+			throw new \Error("Product number is not a valid number", 400);
+		}
+		$param = [":product" => $product];
+		$query = "SELECT
+			COUNT(*) as total
+		FROM
+			emisiones e
+		WHERE
+			e.idproduct  = :product";
+		$data = parent::query($query, $param);
+		if(isset($data)) {
+			return $data[0];
+		}
+	}
 	/**
 	 * Get all Orders
 	 */
