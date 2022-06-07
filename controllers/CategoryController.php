@@ -84,7 +84,7 @@ class CategoryController extends Controller
 			$order = new Order;
 			$total = $order->getByCategory($params['id']);
 			if ($total['total'] > 0)
-				throw new Exception("Error, la categoría tiene ordenes asociadas", 400);
+				throw new Exception("No puede eliminar la categoría, tiene ordenes asociadas", 400);
 			$data = $this->categories->delete($params);
 			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {

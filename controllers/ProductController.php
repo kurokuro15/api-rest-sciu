@@ -81,7 +81,7 @@ class ProductController extends Controller
 			$order = new Order;
 			$total = $order->getByCategory($params['id']);
 			if ($total['total'] > 0)
-				throw new Exception("Error, el producto tiene ordenes asociadas", 400);
+				throw new Exception("No puede eliminar el producto, tiene ordenes asociadas", 400);
 			$data = $this->products->delete($params);
 			$this->response->send(["products" => $data]);
 		} catch (Throwable $err) {
