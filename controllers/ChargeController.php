@@ -150,10 +150,10 @@ class ChargeController extends Controller
 					}
 
 					// registro el pago. 
-					if (isset($deposit["payment"]) || isset($inserted)) {
-						$data = $this->charge->insert($charge);
-					} else  throw new Error("No se pudo validar el campo 'deposit' (idtipodepago)", 500);
-
+					if (empty($deposit["payment"]) || empty($inserted))
+							throw new Error("No se pudo validar el campo 'deposit' (idtipodepago)", 500);
+					
+					$data = $this->charge->insert($charge);
 					//devuelvo los pagos por el id de recibo
 					$res["charges"][] = $data;
 				}
