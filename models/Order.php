@@ -157,8 +157,7 @@ class Order extends Model
 
 		$data = parent::query($query, $param);
 		//validate
-		if (count($data)  <= 0)
-			throw new Error("data not found", 404);
+
 
 		return $data;
 	}
