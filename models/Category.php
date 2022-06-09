@@ -74,7 +74,8 @@ class Category extends Model
 		if (count($data)  <= 0) {
 			throw new Error("data not found", 404);
 		}
-		// if all it's okay return the student.
+		// (LIMPIAR EL RETURN AL MOMENTO DE NO TENER PAGINACIÓN) por implementar
+
 		return [$data, $meta];
 	}
 

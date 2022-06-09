@@ -117,7 +117,7 @@ class Payment extends Model
 			:bank,
 			:concept,
 			:method) /**idtipopago -> detalles del método */
-			RETURNING idtipopago;";
+			RETURNING idtipopago as deposit;";
 		//insert data 
 		$data = parent::query($query, $params);
 

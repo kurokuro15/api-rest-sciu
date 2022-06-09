@@ -128,13 +128,14 @@ class Report extends Model
 	{
 		$params = [];
 		//Map categories
-		if (!empty($queryParams["categories"])) {
-			$query = preg_replace("/:categories/", $queryParams["categories"], $query);
-		} else {
+		if (empty($queryParams["categories"])) {
 			// traer todas las categorias
 			$categories = new Category;
-			$categories = $categories->getAll($params);
+			// por implementar (limpiar)
+			list($categories,$meta) = $categories->getAll($params);
 			$query = preg_replace("/:categories/", implode(", ", array_column($categories, "id")), $query);
+		} else {
+			$query = preg_replace("/:categories/", $queryParams["categories"], $query);
 		}
 
 		//Map payment methods

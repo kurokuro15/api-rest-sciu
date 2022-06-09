@@ -141,16 +141,19 @@ class ChargeController extends Controller
 					if (isset($charge['deposit'])) {
 						try {
 							// validamos el metodo de pago del pago
-							$deposit = $this->payment->get($charge['deposit']);
+							$deposit= $this->payment->get($charge['deposit']);
+							$charge['deposit'] = $deposit['deposit'];
+
 						} catch (Error $err) {
 							if ($err->getCode() === 404)
 								// registro metodo de pago del pago
 								$inserted = $this->payment->insert($charge);
+								$charge['deposit'] = $inserted['deposit'];
 						}
 					}
 
 					// registro el pago. 
-					if (empty($deposit["payment"]) || empty($inserted))
+					if (empty($charge['deposit']))
 							throw new Error("No se pudo validar el campo 'deposit' (idtipodepago)", 500);
 					
 					$data = $this->charge->insert($charge);
