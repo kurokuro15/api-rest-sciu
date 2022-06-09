@@ -21,8 +21,18 @@ $response = new Response;
 // Seteamos los Header necesarios.
 $response->setHeader('Access-Control-Allow-Origin: *');
 $response->setHeader("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+$response->setHeader('Access-Control-Allow-Headers: Origin, Content-Type');
 $response->setHeader('Content-Type: application/json; charset=UTF-8');
-
+ 
+//trampita para validar el preflight
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+	// The request is using the POST method
+	header("HTTP/1.1 200 OK");
+	header('Access-Control-Allow-Origin:  http://localhost:3000');
+	header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Authorization, Origin');
+	header('Access-Control-Allow-Methods:  POST, PUT');
+	return;
+}
 // resquest. Acá tocaría validad que sea un método válido CREO...
 $url = explode("?", $_SERVER["REQUEST_URI"], 2);
 //picamos la url
