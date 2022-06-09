@@ -3,7 +3,6 @@
 namespace api\Models;
 
 use base\models\Model;
-use Error;
 
 class Report extends Model
 {
@@ -57,9 +56,6 @@ class Report extends Model
 		list($params, $query) = $this->mapParams($queryParams, $query);
 
 		$data = $this->query($query, $params, false);
-		if (count($data)  <= 0)
-			throw new Error("data not found", 404);
-
 		//convert $data['amount'] field to float
 		foreach ($data as $key => $value) {
 			$data[$key]['amount'] = floatval($value['amount']);
