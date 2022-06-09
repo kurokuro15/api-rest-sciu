@@ -33,9 +33,7 @@ class StudentController extends Controller
 		try {
 			$data = $this->students->get($params['cedula']);
 
-			if ($data) {
 				$this->response->send(["students" => $data]);
-			}
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -50,11 +48,11 @@ class StudentController extends Controller
 
 			parent::getMeta($meta);
 
-			if ($data) {
 				$this->response->send(["students" => $data]);
-			}
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
 	}
+	//update
+	//create
 }

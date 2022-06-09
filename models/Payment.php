@@ -40,17 +40,19 @@ class Payment extends Model
 
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param, false);
-		//validate data
+
+		//validate 
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		// Map properties of class to use this info. And return object.
 		if (is_array($data)) {
-			// Map properties of class to use this info. And return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
-			// if all it's okay return the payment.
-			return $data[0];
-		} else {
-			throw new Error("Not Found", 404);
 		}
+
+		return $data[0];
 	}
 	/**
 	 * Create a Payment record
@@ -120,6 +122,8 @@ class Payment extends Model
 		$data = parent::query($query, $params);
 
 		return $data[0];
-		//return success messange or error msg
 	}
+	// Get all payments por implementar
+	// Update por implementar
+	// Delete por implementar
 }

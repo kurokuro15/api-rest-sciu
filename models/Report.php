@@ -3,6 +3,7 @@
 namespace api\Models;
 
 use base\models\Model;
+use Error;
 
 class Report extends Model
 {
@@ -53,25 +54,23 @@ class Report extends Model
 			tipodepago,
 			nombrecategoria;";
 
-
-
-
 		list($params, $query) = $this->mapParams($queryParams, $query);
 
 		$data = $this->query($query, $params, false);
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
 
-		if ($data !== '[]') {
-			foreach ($data as $key => $value) {
-				//convert $data['amount'] field to float
-				$data[$key]['amount'] = floatval($value['amount']);
-			}
+		//convert $data['amount'] field to float
+		foreach ($data as $key => $value) {
+			$data[$key]['amount'] = floatval($value['amount']);
 		}
 
 		// if all it's okay return the reports.
 		return $data;
 	}
-
-	// Get some things to reports
+	/* 
+	* Get Interval of an report
+	*/
 	public function getReceiptInterval($queryParams)
 	{
 		$params = [];
@@ -93,9 +92,12 @@ class Report extends Model
 			1;";
 		list($params, $query) = $this->mapParams($queryParams, $query);
 		$data = $this->query($query, $params, false);
+
 		return $data;
 	}
-
+	/**
+	 * Get Interval of Chargers for a report
+	 */
 	public function getChargeInterval($queryParams)
 	{
 		$params = [];
@@ -116,9 +118,12 @@ class Report extends Model
 			order by idregistr;";
 		list($params, $query) = $this->mapParams($queryParams, $query);
 		$data = $this->query($query, $params, false);
+
 		return $data;
 	}
-
+	/**
+	 * Map query params for all class methods
+	 */
 	private function mapParams($queryParams, $query)
 	{
 		$params = [];

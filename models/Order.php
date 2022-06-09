@@ -16,7 +16,7 @@ class Order extends Model
 		parent::__construct();
 	}
 	/**
-	 * Retrieve from Order or 'emisiones' table.
+	 * Retrieve from Order (emisiones)
 	 */
 	public function get($registro)
 	{
@@ -49,16 +49,18 @@ class Order extends Model
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
 		//validate data
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		// we map properties of class to use this info. And send return object.
 		if (is_array($data)) {
-			// we map properties of class to use this info. And send return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
 			// if all it's okay return the order.
-			return $data[0];
-		} else {
-			throw new Error("Not Found", 404);
 		}
+
+		return $data[0];
 	}
 
 	/**
@@ -68,7 +70,7 @@ class Order extends Model
 	{
 		//Validate param
 		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new \Error("Cedula number is not a valid number", 400);
+			throw new Error("Cedula number is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
@@ -154,14 +156,18 @@ class Order extends Model
 			id;";
 
 		$data = parent::query($query, $param);
+		//validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
 
-		// if all it's okay return the order.
-		if (isset($data)) {
-			return $data;
-		}
+		return $data;
 	}
-	public function getByCategory($category) { 
-		if(isset($category) && (int) $category === 0) {
+	/**
+	 * Get total number of orders by an Category
+	 */
+	public function getByCategory($category)
+	{
+		if (isset($category) && (int) $category === 0) {
 			throw new \Error("Category number is not a valid number", 400);
 		}
 		$param = [":category" => $category];
@@ -172,12 +178,18 @@ class Order extends Model
 		WHERE
 			e.idcategori  = :category";
 		$data = parent::query($query, $param);
-		if(isset($data)) {
-			return $data[0];
-		}
+		// validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		return $data[0];
 	}
-	public function getByProduct($product) {
-		if(isset($product) && (int) $product === 0) {
+	/**
+	 * Get total number of orders by an Product id
+	 */
+	public function getByProduct($product)
+	{
+		if (isset($product) && (int) $product === 0) {
 			throw new \Error("Product number is not a valid number", 400);
 		}
 		$param = [":product" => $product];
@@ -188,19 +200,23 @@ class Order extends Model
 		WHERE
 			e.idproduct  = :product";
 		$data = parent::query($query, $param);
-		if(isset($data)) {
-			return $data[0];
-		}
+
+		// validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		return $data[0];
 	}
 	/**
 	 * Get all Orders
 	 */
 	public function getAll($params)
 	{
-		$pagination = parent::pagination($params);
 		// hacemos magiaaaaaaa :V
 	}
-
+	/**
+	 * Insert an new Order
+	 */
 	public function insert($order)
 	{
 		$params = [];
@@ -257,4 +273,7 @@ class Order extends Model
 		return $result;
 		//return success messange or error msg
 	}
+
+	//Update por implementar
+	//Delete (¿anular?) por implementar
 }

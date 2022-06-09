@@ -27,9 +27,7 @@ class CategoryController extends Controller
 		}
 		try {
 			$data = $this->categories->get($params['category']);
-			if ($data) {
-				$this->response->send(["categories" => $data]);
-			}
+			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -41,9 +39,8 @@ class CategoryController extends Controller
 		try {
 			list($data, $meta) = $this->categories->getAll($params);
 			parent::getMeta($meta);
-			if ($data) {
-				$this->response->send(["categories" => $data]);
-			}
+
+			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -55,6 +52,7 @@ class CategoryController extends Controller
 		try {
 			$index = $this->categories->insert($input);
 			$data = $this->categories->get($index);
+
 			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
@@ -70,6 +68,7 @@ class CategoryController extends Controller
 		try {
 			$index = $this->categories->update($input);
 			$data = $this->categories->get($index);
+
 			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
@@ -86,6 +85,7 @@ class CategoryController extends Controller
 			if ($total['total'] > 0)
 				throw new Exception("No puede eliminar la categoría, tiene ordenes asociadas", 400);
 			$data = $this->categories->delete($params);
+			
 			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());

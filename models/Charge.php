@@ -45,16 +45,17 @@ class Charge extends Model
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
 		//validate data
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		// Map properties of class to use this info. And return object.
 		if (is_array($data)) {
-			// Map properties of class to use this info. And return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
-			// if all it's okay return the charge.
-			return $data[0];
-		} else {
-			throw new Error("Not Found", 404);
 		}
+
+		return $data[0];
 	}
 
 	/**
@@ -92,16 +93,21 @@ class Charge extends Model
 		order by 
 			fechapago desc, 
 			fecha desc;";
-		// retrieve data and save in an variable
+
 		$data = parent::query($query, $param);
-		// if all it's okay return the student.
+
+		//validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
 		return $data;
 	}
 	/**
-	 * Get All Charge Records
+	 * Get All Charge Records por implementar
 	 */
-	public function getAll($pagination)
+	public function getAll($params)
 	{
+		// will be created
 	}
 
 	/**
@@ -142,7 +148,11 @@ class Charge extends Model
 				fecha desc;";
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
-		// if all it's okay return the student.
+
+		//validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
 		return $data;
 	}
 
@@ -216,17 +226,16 @@ class Charge extends Model
 		$result = parent::nonQuery($query, $params);
 
 		return $result;
-		//return success messange or error msg
 	}
 
 	/**
-	 * Update a Charge record
+	 * Update a Charge record por implementar
 	 */
 	public function update($charge)
 	{
 	}
 	/**
-	 * Delete a Charge record
+	 * Delete a Charge record por implementar
 	 */
 	function delete($charge)
 	{
@@ -243,8 +252,10 @@ class Charge extends Model
 		pagos";
 
 		$data = parent::query($query);
-		if ($data) {
-			return $data[0];
-		}
+
+		if (count($data)  <= 0)
+			throw new Error("can't get last receipt number", 404);
+
+		return $data[0];
 	}
 }

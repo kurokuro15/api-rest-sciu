@@ -25,9 +25,8 @@ class ProductController extends Controller
 		}
 		try {
 			$data = $this->products->get($params['product']);
-			if ($data) {
-				$this->response->send(["products" => $data]);
-			}
+
+			$this->response->send(["products" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -38,9 +37,8 @@ class ProductController extends Controller
 		try {
 			list($data, $meta) = $this->products->getAll($params);
 			parent::getMeta($meta);
-			if ($data) {
-				$this->response->send(["products" => $data]);
-			}
+
+			$this->response->send(["products" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -52,6 +50,7 @@ class ProductController extends Controller
 		try {
 			$index = $this->products->insert($input);
 			$data = $this->products->get($index);
+
 			$this->response->send(["products" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
@@ -67,6 +66,7 @@ class ProductController extends Controller
 		try {
 			$index = $this->products->update($input);
 			$data = $this->products->get($index);
+
 			$this->response->send(["products" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
@@ -79,10 +79,11 @@ class ProductController extends Controller
 				throw new Exception("Error, falta el identificador del producto", 400);
 			}
 			$order = new Order;
-			$total = $order->getByCategory($params['id']);
+			$total = $order->getByProduct($params['id']);
 			if ($total['total'] > 0)
 				throw new Exception("No puede eliminar el producto, tiene ordenes asociadas", 400);
 			$data = $this->products->delete($params);
+
 			$this->response->send(["products" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());

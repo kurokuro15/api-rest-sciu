@@ -11,6 +11,9 @@ class Product extends Model
 	{
 		parent::__construct();
 	}
+	/**
+	 * Retrieve a Product by id
+	 */
 	public function get($id)
 	{
 		// Validate param
@@ -36,14 +39,16 @@ class Product extends Model
 				idproducto = :id";
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
+
 		// validate data
-		if (count($data) > 0) {
-			// if all it's okay return the product.
-			return $data[0];
-		} else {
-			throw new Error("Not Found", 404);
-		}
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		return $data[0];
 	}
+	/**
+	 * Get all Products
+	 */
 	public function getAll($params)
 	{
 		// dentro de param vendría la página
@@ -66,14 +71,16 @@ class Product extends Model
 		// añadimos el placeholder de paginación		
 		$query .= $placeholder;
 		$data = parent::query($query, $params);
+	
 		// validate data
-		if (count($data) > 0) {
-			// if all it's okay return the student.
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
 			return [$data, $meta];
-		} else {
-			throw new Error("Not Found", 404);
-		}
 	}
+	/**
+	 * Insert a new Product
+	 */
 	public function insert($product)
 	{
 		$params = [];
@@ -100,6 +107,9 @@ class Product extends Model
 		$result = parent::nonQuery($query, $params);
 		return $result;
 	}
+	/**
+	 * Update a Product
+	 */
 	public function update($product)
 	{
 		$params = [];
@@ -130,9 +140,12 @@ class Product extends Model
 		$params["used"] = $product["used"];
 
 		$result = parent::query($query, $params);
-		if(isset($result))
-			return $result[0]["id"];
+	
+		return $result[0]["id"];
 	}
+	/**
+	 * Delete a Product
+	 */
 	public function delete($product)
 	{
 		if (empty($product['id']))

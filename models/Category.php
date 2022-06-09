@@ -38,12 +38,10 @@ class Category extends Model
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
 		//validate data
-		if (count($data) > 0) {
-			// if all it's okay return the student.
-			return $data[0];
-		} else {
-			throw new Error("Not Found", 404);
-		}
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		return $data[0];
 	}
 
 	/**
@@ -73,7 +71,7 @@ class Category extends Model
 		$query .= $placeholder;
 		$data = parent::query($query, $params);
 		// validate that have some more zero records
-		if (count($data) < 1) {
+		if (count($data)  <= 0) {
 			throw new Error("data not found", 404);
 		}
 		// if all it's okay return the student.
@@ -109,6 +107,8 @@ class Category extends Model
 		}
 
 		$result = parent::query($query, $params);
+		if (count($result)  <= 0)
+			throw new Error("Category not created", 404);
 		return $result[0]["id"];
 	}
 
@@ -126,9 +126,10 @@ class Category extends Model
 		categorias";
 
 		$data = parent::query($query);
-		if ($data) {
-			return $data[0];
-		}
+
+		if (count($data)  <= 0)
+			throw new Error("last id not found", 404);
+		return $data[0];
 	}
 	/**
 	 * Update an category
@@ -149,8 +150,9 @@ class Category extends Model
 		$params['id'] = $category['id'];
 		$query = "UPDATE categorias SET nombrecategoria = :category, colorcategoria = :color WHERE idcategoria = :id RETURNING idcategoria as id";
 		$result = parent::query($query, $params);
-		if (isset($result))
-			return $result[0]["id"];
+		if (count($result)  <= 0)
+			throw new Error("data not update", 404);
+		return $result[0]["id"];
 	}
 
 	/**

@@ -43,17 +43,19 @@ class Student extends Model
 
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
+
 		//validate data
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		// Map properties of class to use this info. And return object.
 		if (is_array($data)) {
-			// Map properties of class to use this info. And return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
-			// if all it's okay return the student.
-			return $data[0];
-		} else {
-			throw new Error("Not Found", 404);
 		}
+
+		return $data[0];
 	}
 	/**
 	 * Get all Students on page of 20 by default
@@ -87,10 +89,12 @@ class Student extends Model
 		$query .= $placeholder;
 		$data = parent::query($query, $params);
 		// validate that have some more zero records
-		if (count($data) < 1) {
+		if (count($data)  <= 0)
 			throw new Error("data not found", 404);
-		}
-		// if all it's okay return the student.
+
 		return [$data, $meta];
 	}
+	// Update por implementar
+	// Create por implementar 
+	// Delete por implementar
 }

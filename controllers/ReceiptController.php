@@ -51,9 +51,7 @@ class ReceiptController extends Controller
 		try {
 			$data = $this->receipt->get($params['receipt']);
 
-			if ($data) {
-				$this->response->send(["receipts" => $data]);
-			}
+			$this->response->send(["receipts" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -72,9 +70,7 @@ class ReceiptController extends Controller
 		try {
 			$data = $this->receipt->getByStudent($params['cedula']);
 
-			if ($data) {
-				$this->response->send(["receipts" => $data]);
-			}
+			$this->response->send(["receipts" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}

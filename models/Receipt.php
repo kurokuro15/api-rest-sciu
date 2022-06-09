@@ -49,17 +49,20 @@ class Receipt extends Model
 
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
+		
 		//validate data
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		// we map properties of class to use this info. And send return object.
 		if (is_array($data)) {
-			// we map properties of class to use this info. And send return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
 			// if all it's okay return the receipt.
-			return $data;
-		} else {
-			throw new Error("Not Found", 404);
 		}
+
+		return $data;
 	}
 	/**
 	 * get All receipts from a Student
@@ -93,6 +96,12 @@ class Receipt extends Model
 				fechapago DESC;";
 
 		$data = parent::query($query, $param);
+		// validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+		
 		return $data;
 	}
+	//Update por implementar
+	//Delete (¿anular?) por implementar
 }

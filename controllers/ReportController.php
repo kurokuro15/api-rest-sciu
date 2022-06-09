@@ -21,7 +21,7 @@ class ReportController extends Controller
 		try {
 			$data = $this->report->get($queryParams);
 
-			$header = $this->constructReportHeader($queryParams);
+			$header = $this->constructReportHeader($queryParams, $params);
 
 			$this->response->send(["reports" => $data, "header" => $header]);
 		} catch (Throwable $err) {
