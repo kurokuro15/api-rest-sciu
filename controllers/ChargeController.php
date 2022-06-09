@@ -143,7 +143,7 @@ class ChargeController extends Controller
 							// validamos el metodo de pago del pago
 							$deposit = $this->payment->get($charge['deposit']);
 						} catch (Error $err) {
-							if ($err->getMessage() === "Not Found")
+							if ($err->getCode() === 404)
 								// registro metodo de pago del pago
 								$inserted = $this->payment->insert($charge);
 						}
@@ -159,7 +159,7 @@ class ChargeController extends Controller
 				}
 			}
 			$res["receipt_number"] = $receipt["receipt_number"];
-			
+
 			$this->response->send($res);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
