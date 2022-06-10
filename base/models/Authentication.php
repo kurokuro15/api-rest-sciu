@@ -44,6 +44,9 @@ class Authentication extends Model
 		$this->jwt->getSignature();
 		return [$this->jwt->getToken(), $this->jwt];
 	}
+	function encrypt($string){
+		return $this->encrypter->passEncrypt($string);
+	}
 	// Obtener un token por el token (usuario asociado al token y el token persé)
 	// Crear un token para el usuario pasado
 	// Actualizar un token, vencerlo. 

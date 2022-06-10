@@ -44,7 +44,7 @@ class AuthenticationMiddleware extends Controller
 		}
 
 		// Validamos si es un usuario inactivo o eliminado.
-		$inactive = 0;
+		$inactive = "inactivo";
 		if ($user["status"] === $inactive) {
 			throw new Error("Usuario inactivo o eliminado recientemente", 403);
 		}
@@ -65,12 +65,45 @@ class AuthenticationMiddleware extends Controller
 		//Respondemos con un objeto tipo ["token"=> "token", "expiration" => "time_stamp"]
 		$this->response->send(["token" => $token[0], "expiration" => $expiration]);
 	}
-
 	/**
 	 * Controlador para autenticar pase de preguntas de recuperación de contraseña...
 	 */
 	public function authQuestions($params)
 	{
+		try {
+			$input = $this->request->input();
+			// recibo usuario y contraseña... Valido que existan
+			if (empty($input['username']) || empty($input['new_password']) || empty($input['answer']) || empty($input['answer_two']) || empty($input['answer_three'])) {
+				throw new Error("Usuario o contraseña no enviados", 403);
+			}
+
+			// Buscamos al usuario y luego las preguntas
+			$credentials = [
+				'username' => $input['username'],
+				'password' => $this->auth->encrypt($input['new_password']),
+				'answer' => $input['answer'],
+				'answer_two' => $input['answer_two'],
+				'answer_three' => $input['answer_three'],
+			];
+			$user = $this->users->getUser($credentials['username']);
+			$credentials["id"] = $user["id"];
+			$user = $this->users->getAnswers(($user['id']));
+
+			// validamos las respuestas
+			$valid[] = $this->auth->matchPassword($credentials['answer'], $user['answer']);
+			$valid[] = $this->auth->matchPassword($credentials['answer_two'], $user['answer_two']);
+			$valid[] = $this->auth->matchPassword($credentials['answer_three'], $user['answer_three']);
+
+			if ($valid[0] && $valid[1] && $valid[2]) {
+				// cambiamos la contraseña	
+				$id = $this->users->updatePassword($credentials);
+				$this->response->send(["users" => ["id" => $id]]);
+			} else {
+				throw new Error("Respuestas inválidas", 403);
+			}
+		} catch (Error $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
 	}
 	/**
 	 * Controlador para validar que el usuario está autenticado
@@ -96,7 +129,6 @@ class AuthenticationMiddleware extends Controller
 			} else {
 				throw new Error("Non Authorized. need a valid token", 403);
 			}
-
 		} catch (Error $err) {
 			// mandamos un error para redirigir al login.
 			$error = $err->getMessage() ?: "Session expired";

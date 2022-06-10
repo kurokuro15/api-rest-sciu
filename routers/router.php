@@ -41,6 +41,31 @@ $router->post("/usuarios", function ($params) {
 		$users->createUser($params);
 	});
 });
+$router->get("/usuarios", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$users = new UserController;
+		$users->get($params);
+	});
+});
+$router->get("/usuarios/:username", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$users = new UserController;
+		$users->retrieve($params);
+	});
+});
+$router->put("/usuarios", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authQuestions($params);
+});
+$router->delete("/usuarios/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$users = new UserController;
+		$users->delete($params);
+	});
+});
 /**
  * Users Endpoints
  */
