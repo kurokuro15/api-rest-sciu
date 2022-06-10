@@ -77,7 +77,7 @@ class AuthenticationMiddleware extends Controller
 	/**
 	 * Controlador para validar que el usuario está autenticado
 	 */
-	public function authy($params, $next)
+	public function authy($params, $next = null)
 	{
 		// validamos que exista el encabezado de autorización
 		if (empty($this->request->headers['Authorization'])) {
@@ -90,32 +90,47 @@ class AuthenticationMiddleware extends Controller
 		try {
 			$authorized = JWT::validateJWT($jwt);
 			if ($authorized) {
-				$now = time();
-				$fiveMinutes = 60 * 5;
-				// verificamos si está por vencerse el JWT, de hacerlo, le generamos uno nuevo.
-				$uncryptedJWT = JWT::decode($jwt);
-				if ($uncryptedJWT[1]['exp'] - $now <= $fiveMinutes) {
-					// preparamos un nuevo JWT con el payload recibido.
-					$payload = $uncryptedJWT[1];
-					unset($payload['exp']);
-					unset($payload['iat']);
-					$newJWT = new JWT(null, $payload);
-					$expiration = $newJWT->getExpiration();
-					$newJWT->getSignature();
-					$token = $newJWT->getToken();
-					$this->response->send(["token" => $token, "expiration" => $expiration]);
-				}
+
+				$this->refreshToken($jwt);
+				
 				if (is_callable($next)) {
 					call_user_func($next, $params);
-				} else {
+				} else if (isset($next)) {
 					throw new Error("Fatal Error, not calleable function", 500);
 				}
 			} else {
 				throw new Error("Non Authorized. need a valid token", 403);
 			}
+
 		} catch (Error $err) {
 			// mandamos un error para redirigir al login.
-			throw new Error("Session expired", 302);
+			$error = $err->getMessage() ?: "Session expired";
+			$code = $err->getCode() ?: 302;
+			throw new Error($error, $code);
 		}
+	}
+	/**
+	 * refrescamos el token
+	 */
+	private function refreshToken($jwt)
+	{
+		$now = time();
+		$greatTime = 60 * 5;
+		// verificamos si está por vencerse el JWT, de hacerlo, le generamos uno nuevo.
+		$uncryptedJWT = JWT::decode($jwt);
+		if ($uncryptedJWT[1]['exp'] - $now <= $greatTime) {
+			// preparamos un nuevo JWT con el payload recibido.
+			$payload = $uncryptedJWT[1];
+			unset($payload['exp']);
+			unset($payload['iat']);
+			$newJWT = new JWT(null, $payload);
+			$expiration = $newJWT->getExpiration();
+			$newJWT->getSignature();
+			$token = $newJWT->getToken();
+		} else {
+			$token = $jwt;
+			$expiration = date("Y-m-d H:i:s", $uncryptedJWT[1]['exp']);
+		}
+		$this->response->send(["token" => $token, "expiration" => $expiration]);
 	}
 }
