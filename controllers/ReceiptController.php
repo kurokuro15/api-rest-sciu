@@ -81,13 +81,20 @@ class ReceiptController extends Controller
 	 */
 	private function getAll($params)
 	{
-		/**
-		 * TO do. :V This is a example response...
-		 */
-		$this->response->send(["from" => "Desde el endpoint /recibos sin estudiantes"]);
+		$params = array_merge($params, $this->request->get());
+		try {
+			list($data, $meta) = $this->receipt->getAll($params);
+
+			parent::getMeta($meta);
+
+			$this->response->send(["receipts" => $data]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
 	}
 
-	public function delete($params) {
+	public function delete($params)
+	{
 		// validate that param 'order' exist
 		if (empty($params) || empty($params['receipt'])) {
 			$this->response->send(["error" => "receipt identity field was not send"], 400);
