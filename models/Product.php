@@ -124,13 +124,13 @@ class Product extends Model
 			throw new Error("Name is required", 400);
 		if (empty($product["category"]))
 			throw new Error("Category is required", 400);
-		if (empty($product["price"]))
+		if ($this->is_blank($product["price"]))
 			throw new Error("Price is required", 400);
-		if (empty($product["stock"]))
+		if ($this->is_blank($product["stock"]))
 			throw new Error("stock is required", 400);
-		if (empty($product["used"]))
+		if ($this->is_blank($product["used"]))
 			throw new Error("used is required", 400);
-		if (empty($product["contable"]) && $product["contable"] != false)
+		if ($this->is_blank($product["contable"]) && $product["contable"] != false)
 			throw new Error("contable is required", 400);
 
 		$params["category"] = $product["category"];
