@@ -64,7 +64,7 @@ class Model
 				PDO::ATTR_PERSISTENT => true
 			));
 		} catch (PDOException $err) {
-			echo "{$err->getMessage()}";
+			throw new Error($err->getMessage(), 500);
 		}
 	}
 
@@ -123,7 +123,7 @@ class Model
 			return $this->conection->lastInsertId();
 		}
 
-		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 200);
+		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 500);
 	}
 
 	private function getConfigFile($file)
@@ -156,7 +156,7 @@ class Model
 		if ($stmt->execute()) {
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			if (isset($result)) {
-				return $result ?: "[]";
+				return $result ?: array();
 			}
 		}
 		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 500);
@@ -232,6 +232,12 @@ class Model
 	protected function count($query)
 	{
 		$stmt = $this->conection->prepare($query);
+		$stmt->execute();
+		return $stmt->rowCount();
+	}
+	protected function countAuth($query)
+	{
+		$stmt = $this->authentication->prepare($query);
 		$stmt->execute();
 		return $stmt->rowCount();
 	}
