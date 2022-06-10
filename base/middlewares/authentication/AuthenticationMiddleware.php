@@ -6,10 +6,8 @@ use \base\controllers\Controller;
 use base\helpers\JWT;
 use \base\models\Authentication;
 use \base\models\User;
-use DatePeriod;
-use DateTime;
 use \Error;
-use Throwable;
+
 
 /**
  * Middleware de autenticación
@@ -90,9 +88,6 @@ class AuthenticationMiddleware extends Controller
 		try {
 			$authorized = JWT::validateJWT($jwt);
 			if ($authorized) {
-
-				$this->refreshToken($jwt);
-				
 				if (is_callable($next)) {
 					call_user_func($next, $params);
 				} else if (isset($next)) {
