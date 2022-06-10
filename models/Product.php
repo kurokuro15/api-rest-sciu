@@ -53,11 +53,13 @@ class Product extends Model
 	{
 		// dentro de param vendría la página
 		$query = "SELECT
-		idproducto AS id,
-		nombreproducto AS name,
-		cantidad AS stock,
-		preciounitario AS price,
-		idcategor AS category
+			idproducto AS id,
+			nombreproducto AS name,
+			cantidad AS stock,
+			contable AS contable,
+			preciounitario AS price,
+			idcategor AS category,
+			vecesusado as used
 		From
 		productos";
 		// retrieve data and save in an variable
