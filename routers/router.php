@@ -110,6 +110,13 @@ $router->get("/recibos/:receipt", function ($params) {
 		$receipt->retrieve($params);
 	});
 });
+$router->delete("/recibos/:receipt", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$receipt = new ReceiptController;
+		$receipt->delete($params);
+	});
+});
 /**
  *  Receipts Endpoints
  */

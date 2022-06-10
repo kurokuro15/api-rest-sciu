@@ -28,7 +28,8 @@ class Receipt extends Model
 					fechapago as payment_date,
 					registrador as username,
 					id_cedul as cedula,
-					CONCAT(apellido1 || ' ' || nombre1 ) as nombre 
+					CONCAT(apellido1 || ' ' || nombre1 ) as nombre,
+					anulado AS canceled
 				from
 					pagos
 				join emisiones on
@@ -45,7 +46,8 @@ class Receipt extends Model
 					nombre1,
 					nombre2,
 					apellido1,
-					apellido2 ";
+					apellido2,
+					anulado ";
 
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
@@ -104,4 +106,15 @@ class Receipt extends Model
 	}
 	//Update por implementar
 	//Delete (¿anular?) por implementar
+	public function delete($receipt) {
+		if(empty($receipt))
+			throw new Error("Receipt number is not a valid number", 400);
+		
+		$params = [":receipt" => $receipt];
+		$query = "UPDATE pagos SET anulado = true WHERE factura = :receipt returning factura as receipt";
+
+		$data = parent::query($query, $params);
+		
+		return  $data[0];
+	}
 }

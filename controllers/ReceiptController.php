@@ -86,4 +86,19 @@ class ReceiptController extends Controller
 		 */
 		$this->response->send(["from" => "Desde el endpoint /recibos sin estudiantes"]);
 	}
+
+	public function delete($params) {
+		// validate that param 'order' exist
+		if (empty($params) || empty($params['receipt'])) {
+			$this->response->send(["error" => "receipt identity field was not send"], 400);
+		}
+
+		try {
+			$data = $this->receipt->delete($params['receipt']);
+			$data = $this->receipt->get($data['receipt']);
+			$this->response->send(["receipts" => $data]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
+	}
 }
