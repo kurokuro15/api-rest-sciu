@@ -24,7 +24,10 @@ $router->post("/login", function ($params) {
 });
 $router->put("/login", function($params){
 	$auth = new AuthenticationMiddleware;
-	$auth->authy($params);
+	$params["auth"] = $auth;
+	$auth->authy($params, function($params) {
+		$params["auth"]->refreshToken($params);
+	});
 });
 /**
  * Login Endpoint
