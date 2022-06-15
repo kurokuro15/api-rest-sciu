@@ -128,7 +128,7 @@ class Report extends Model
 			// traer todas las categorias
 			$categories = new Category;
 			// por implementar (limpiar)
-			list($categories,$meta) = $categories->getAll($params);
+			list($categories, $meta) = $categories->getAll($params);
 			$query = preg_replace("/:categories/", implode(", ", array_column($categories, "id")), $query);
 		} else {
 			$query = preg_replace("/:categories/", $queryParams["categories"], $query);

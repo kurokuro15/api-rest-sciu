@@ -17,7 +17,7 @@ class Student extends Model
 	public function get($cedula)
 	{
 		//Validate param
-		if (!isset($cedula) || (int) $cedula === 0) {
+		if (!isset($cedula) || (empty($cedula) && !is_numeric($cedula))) {
 			throw new Error("Cedula is not a valid number", 400);
 		}
 		// map param in a array

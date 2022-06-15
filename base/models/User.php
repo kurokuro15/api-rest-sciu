@@ -12,7 +12,7 @@ class User extends Model
 	public function get($id)
 	{
 		//Validate param
-		if (!isset($id)) {
+		if (!isset($id) || (empty($id) && !is_numeric($id))) {
 			throw new Error("id not ¿declared?", 400);
 		}
 		// map param in a array
@@ -229,7 +229,8 @@ class User extends Model
 		$data = parent::queryAuth($query, $params);
 		return $data;
 	}
-	public function getAnswers($id){
+	public function getAnswers($id)
+	{
 		$query = "SELECT
 			u.id,
 			u.username,

@@ -75,7 +75,7 @@ class ProductController extends Controller
 	public function delete($params)
 	{
 		try {
-			if (empty($params['id'])) {
+			if (!isset($params['id'])) {
 				throw new Exception("Error, falta el identificador del producto", 400);
 			}
 			$order = new Order;

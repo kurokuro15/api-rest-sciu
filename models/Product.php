@@ -17,7 +17,7 @@ class Product extends Model
 	public function get($id)
 	{
 		// Validate param
-		if (!isset($id) || (int) $id === 0) {
+		if (!isset($id) || (empty($id) && !is_numeric($id))) {
 			throw new Error("Identity of product is not a valid number", 400);
 		}
 		// map param in a array
@@ -73,12 +73,12 @@ class Product extends Model
 		// añadimos el placeholder de paginación		
 		$query .= $placeholder;
 		$data = parent::query($query, $params);
-	
+
 		// validate data
 		if (count($data)  <= 0)
 			throw new Error("data not found", 404);
 
-			return [$data, $meta];
+		return [$data, $meta];
 	}
 	/**
 	 * Insert a new Product
@@ -94,7 +94,7 @@ class Product extends Model
 			throw new Error("Name is required", 400);
 		if (empty($product["category"]))
 			throw new Error("Category is required", 400);
-		if (empty($product["price"]))
+		if (!isset($product["price"]) || (empty($product["price"]) && !is_numeric($product["price"])))
 			throw new Error("Price is required", 400);
 
 		$params["name"] = $product["name"];
@@ -118,17 +118,17 @@ class Product extends Model
 		$query = "UPDATE productos SET nombreproducto = :name, cantidad = :stock, contable = :contable, preciounitario = :price, idcategor = :category, vecesusado = :used WHERE idproducto = :id RETURNING idproducto as id";
 
 		//set required params
-		if (empty($product["id"]))
+		if (!isset($product["id"]) || (empty($product["id"]) && !is_numeric($product["id"])))
 			throw new Error("Id is required", 400);
 		if (empty($product["name"]))
 			throw new Error("Name is required", 400);
 		if (empty($product["category"]))
 			throw new Error("Category is required", 400);
-		if ($this->is_blank($product["price"]))
+		if (!isset($product["price"]) || (empty($product["price"]) && !is_numeric($product["price"])))
 			throw new Error("Price is required", 400);
-		if ($this->is_blank($product["stock"]))
+		if (!isset($product["stock"]) || (empty($product["stock"]) && !is_numeric($product["stock"])))
 			throw new Error("stock is required", 400);
-		if ($this->is_blank($product["used"]))
+		if (!isset($product["used"]) || (empty($product["used"]) && !is_numeric($product["used"])))
 			throw new Error("used is required", 400);
 		if ($this->is_blank($product["contable"]) && $product["contable"] != false)
 			throw new Error("contable is required", 400);
@@ -142,7 +142,7 @@ class Product extends Model
 		$params["used"] = $product["used"];
 
 		$result = parent::query($query, $params);
-	
+
 		return $result[0]["id"];
 	}
 	/**
@@ -150,7 +150,7 @@ class Product extends Model
 	 */
 	public function delete($product)
 	{
-		if (empty($product['id']))
+		if (!isset($product["id"]) || (empty($product["id"]) && !is_numeric($product["id"])))
 			throw new Error("Error, falta el identificador del producto", 400);
 
 		$params = [];

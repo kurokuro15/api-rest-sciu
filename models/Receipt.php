@@ -17,7 +17,7 @@ class Receipt extends Model
 	public function get($receipt)
 	{
 		//Validate param
-		if (!isset($receipt) || (int) $receipt === 0) {
+		if (!isset($receipt) || (empty($receipt) && !is_numeric($receipt))) {
 			throw new Error("Receipt number is not a valid number", 400);
 		}
 		// map param in a array
@@ -72,7 +72,7 @@ class Receipt extends Model
 	public function getByStudent($cedula)
 	{
 		//Validate param
-		if (!isset($cedula) || (int) $cedula === 0) {
+		if (!isset($cedula) || (empty($cedula) && !is_numeric($cedula))) {
 			throw new Error("Cedula not is a valid number", 400);
 		}
 		// map param in a array
@@ -142,18 +142,18 @@ class Receipt extends Model
 
 		$query .= $placeholder;
 		$data = parent::query($query, $params);
-		
+
 		if (count($data)  <= 0) {
 			throw new Error("data not found", 404);
 		}
-		
+
 		return [$data, $meta];
 	}
 	//Update por implementar
 	//Delete (¿anular?) por implementar
 	public function delete($receipt)
 	{
-		if (empty($receipt))
+		if (isset($receipt) || (empty($receipt) && !is_numeric($receipt)))
 			throw new Error("Receipt number is not a valid number", 400);
 
 		$params = [":receipt" => $receipt];

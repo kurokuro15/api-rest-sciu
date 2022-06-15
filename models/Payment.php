@@ -21,7 +21,7 @@ class Payment extends Model
 	public function get($id)
 	{
 		//Validate param
-		if ($this->is_blank($id)) {
+		if (!isset($id) || (empty($id) && !is_numeric($id))) {
 			throw new Error("Payment identity is not a valid number", 400);
 		}
 		// map param in a array

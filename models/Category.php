@@ -19,7 +19,7 @@ class Category extends Model
 	public function get($id)
 	{
 		//Validate param
-		if (!isset($id) || (int) $id === 0) {
+		if (!isset($id) || !is_numeric($id)) {
 			throw new Error("Identity of category is not a valid number", 400);
 		}
 		// map param in a array

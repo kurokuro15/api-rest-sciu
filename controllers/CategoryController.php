@@ -77,7 +77,7 @@ class CategoryController extends Controller
 	public function delete($params)
 	{
 		try {
-			if (empty($params['id'])) {
+			if (!isset($params['id'])) {
 				throw new Exception("Error, falta el identificador de la categoría", 400);
 			}
 			$order = new Order;
@@ -85,7 +85,7 @@ class CategoryController extends Controller
 			if ($total['total'] > 0)
 				throw new Exception("No puede eliminar la categoría, tiene ordenes asociadas", 400);
 			$data = $this->categories->delete($params);
-			
+
 			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());

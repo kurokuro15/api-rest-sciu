@@ -21,7 +21,7 @@ class Order extends Model
 	public function get($registro)
 	{
 		//Validate param
-		if (!isset($registro) || (int) $registro === 0) {
+		if (!isset($registro) || (empty($registro) && !is_numeric($registro))) {
 			throw new Error("Collection order number is not a valid number", 400);
 		}
 		// map param in a array
@@ -69,7 +69,7 @@ class Order extends Model
 	public function getByStudent($cedula)
 	{
 		//Validate param
-		if (!isset($cedula) || (int) $cedula === 0) {
+		if (!isset($cedula) || (empty($cedula) && !is_numeric($cedula))) {
 			throw new Error("Cedula number is not a valid number", 400);
 		}
 		// map param in a array
@@ -166,7 +166,7 @@ class Order extends Model
 	 */
 	public function getByCategory($category)
 	{
-		if (isset($category) && (int) $category === 0) {
+		if (isset($category) || (empty($category) && !is_numeric($category))) {
 			throw new \Error("Category number is not a valid number", 400);
 		}
 		$param = [":category" => $category];
@@ -188,7 +188,7 @@ class Order extends Model
 	 */
 	public function getByProduct($product)
 	{
-		if (isset($product) && (int) $product === 0) {
+		if (isset($product) || (empty($product) && !is_numeric($product))) {
 			throw new \Error("Product number is not a valid number", 400);
 		}
 		$param = [":product" => $product];
@@ -233,14 +233,14 @@ class Order extends Model
 		//validate username, concept, outstanding , units
 		//validate product_id
 		foreach ($required as $value) {
-			if (empty($order[$value]) && $order[$value] !== 0) {
+			if (empty($order[$value]) || (empty($order[$value]) && !is_numeric($order[$value]))) {
 				throw new Exception("no se a conseguido el campo $value", 400);
 			};
 			$params[$value] = $order[$value];
 		}
 
 		//validade cedula
-		if (!isset($params['cedula']) || (int) $params['cedula'] === 0) {
+		if (!isset($params['cedula']) || (empty($params['cedula']) && !is_numeric($params['cedula']))) {
 			throw new Error("the cedula number is not a valid number", 400);
 		}
 

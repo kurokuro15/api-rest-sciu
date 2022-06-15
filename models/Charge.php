@@ -18,7 +18,7 @@ class Charge extends Model
 	public function get($id)
 	{
 		//Validate param
-		if (!isset($id) || (int) $id === 0) {
+		if (!isset($id) || (empty($id) && !is_numeric($id))) {
 			throw new Error("Charge identity is not a valid number", 400);
 		}
 		// map param in a array
@@ -65,7 +65,7 @@ class Charge extends Model
 	public function getByStudent($cedula)
 	{
 		//Validate param
-		if (!isset($cedula) || (int) $cedula === 0) {
+		if (!isset($id) || (empty($id) && !is_numeric($id))) {
 			throw new Error("Cedula is not a valid number", 400);
 		}
 		// map param in a array
@@ -116,7 +116,7 @@ class Charge extends Model
 	public function getByReceipt($receipt)
 	{
 		//Validate param
-		if (!isset($receipt) || (int) $receipt === 0) {
+		if (!isset($receipt) || (empty($receipt) && !is_numeric($receipt))) {
 			throw new Error("receipt number is not a valid number", 400);
 		}
 		// map param in a array
@@ -180,18 +180,18 @@ class Charge extends Model
 
 		// Validate all others required fields
 		foreach ($required as $value) {
-			if (!isset($payment[$value]) && $this->is_blank($charge[$value])) {
+			if (!isset($charge[$value]) && $this->is_blank($charge[$value])) {
 				throw new Exception("no se a conseguido el campo $value", 400);
 			}
 			$params[$value] = $charge[$value];
 		}
 
 		// Validamos que sean números válidos 
-		if (!isset($params['receipt_number']) || (int) $params['receipt_number'] === 0) {
+		if (!isset($params['receipt_number']) || (empty($params['receipt_number']) && !is_numeric($params['receipt_number']))) {
 			throw new Error("the receipt_number is not a valid receipt number", 400);
 		}
 
-		if (!isset($params['order_id']) || (int) $params['order_id'] === 0) {
+		if (!isset($params['order_id']) || (empty($params['order_id']) && !is_numeric($params['order_id']))) {
 			throw new Error("the order_id is not a valid receipt number", 400);
 		}
 		// seteamos la fecha :D

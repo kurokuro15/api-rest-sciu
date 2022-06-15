@@ -30,7 +30,7 @@ class OrderController extends Controller
 	{
 		// If $params have cedula param 
 		if (!empty($params)) {
-			if (!empty($params['cedula'])) {
+			if (isset($params['cedula'])) {
 				$this->getByStudent($params);
 			}
 		} else {

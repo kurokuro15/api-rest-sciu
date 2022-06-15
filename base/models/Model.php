@@ -168,20 +168,20 @@ class Model
 	 */
 	protected function pagination($params, $strict = true)
 	{
+		if ((!isset($params['offset']) || !isset($params['limit'])) && !$strict)
+			return [];
+
 		if (isset($params['offset'])) {
 			$offset = intval($params['offset']);
-		} else if (!$strict) {
-			return [[],"",[[],[]]];
 		} else {
 			$offset = 0;
 		}
 		if (isset($params['limit'])) {
 			$limit = intval($params['limit']);
-		} else if (!$strict) {
-			return [[],"",[[],[]]];
 		} else {
 			$limit = 10;
 		}
+
 		$current = [
 			"offset" => $offset,
 			"limit" => $limit
@@ -211,7 +211,6 @@ class Model
 	private function toUTF8($array)
 	{
 		try {
-
 			array_walk_recursive($array, function (&$item, $key) {
 				if (!mb_detect_encoding($item, 'utf-8', true)) {
 					$item = utf8_encode($item);
@@ -228,7 +227,7 @@ class Model
 	{
 		return empty($value) && !is_numeric($value);
 	}
-	
+
 	protected function count($query)
 	{
 		$stmt = $this->conection->prepare($query);
