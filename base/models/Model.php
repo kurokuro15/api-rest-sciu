@@ -169,7 +169,7 @@ class Model
 	protected function pagination($params, $strict = true)
 	{
 		if ((!isset($params['offset']) || !isset($params['limit'])) && !$strict)
-			return [];
+			return Array();
 
 		if (isset($params['offset'])) {
 			$offset = intval($params['offset']);

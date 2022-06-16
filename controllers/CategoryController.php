@@ -38,8 +38,10 @@ class CategoryController extends Controller
 		$params = array_merge($params, $this->request->get());
 		try {
 			list($data, $meta) = $this->categories->getAll($params);
-			parent::getMeta($meta);
-
+			if (count($meta) > 0) {
+				parent::getMeta($meta);
+			}
+			
 			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());

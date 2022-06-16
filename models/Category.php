@@ -61,22 +61,31 @@ class Category extends Model
 			idcategoria ASC";
 
 		//Add pagination to query
-		list($interval, $placeholder, $meta) = parent::pagination($params, false);
-		$params = array_merge($params, $interval);
+		$paginable = false;
+		$pages = parent::pagination($params, $paginable);
+		$meta = [];
 
+		if (count($pages) > 0) {
+
+			list($interval, $placeholder, $meta) = $pages;
+
+			$meta["count"] = $this->count($query);
+			$query .= $placeholder;
+
+			$params = array_merge($params, $interval);
+		}
+
+		if (count($meta) > 0) {
+			$data[] = $meta;
+		}
 		// Obtenemos el total de elementos de la query y lo guardamos en meta
-		$meta["count"] = $this->count($query);
 
 		// añadimos el placeholder de paginación		
-		$query .= $placeholder;
-		$data = parent::query($query, $params);
-		// validate that have some more zero records
-		if (count($data)  <= 0) {
-			throw new Error("data not found", 404);
-		}
-		// (LIMPIAR EL RETURN AL MOMENTO DE NO TENER PAGINACIÓN) por implementar
+		$result = parent::query($query, $params);
 
-		return [$data, $meta];
+		// (LIMPIAR EL RETURN AL MOMENTO DE NO TENER PAGINACIÓN) por implementar
+		$data[] = $result;
+		return $data;
 	}
 
 	/**
