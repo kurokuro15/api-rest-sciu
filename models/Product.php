@@ -64,21 +64,30 @@ class Product extends Model
 		productos";
 		// retrieve data and save in an variable
 		//Add pagination to query
-		list($interval, $placeholder, $meta) = parent::pagination($params, false);
-		$params = array_merge($params, $interval);
+		$paginable = false;
+		$pages = parent::pagination($params, $paginable);
+		$meta = [];
+				
+		if (count($pages) > 0) {
+			// si hay paginación disponible. Se prepara todo para agregarlo
+			// a la query y a la respuesta.
+			list($interval, $placeholder, $meta) = $pages;
+			
+			// Obtenemos el total de elementos de la query y lo guardamos en meta
+			$meta["count"] = $this->count($query);
+			// añadimos el placeholder de paginación		
+			$query .= $placeholder;
 
-		// Obtenemos el total de elementos de la query y lo guardamos en meta
-		$meta["count"] = $this->count($query);
+			$params = array_merge($params, $interval);
+		}
 
-		// añadimos el placeholder de paginación		
-		$query .= $placeholder;
-		$data = parent::query($query, $params);
+		if (count($meta) > 0) {
+			$data[] = $meta;
+		}
+		$result = parent::query($query, $params);
 
-		// validate data
-		if (count($data)  <= 0)
-			throw new Error("data not found", 404);
-
-		return [$data, $meta];
+		$data[] = $result;
+		return $data;
 	}
 	/**
 	 * Insert a new Product

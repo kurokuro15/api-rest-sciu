@@ -152,7 +152,7 @@ class ChargeController extends Controller
 					}
 
 					// registro el pago. 
-					if (!isset($nonExist) || (empty($nonExist) && !is_numeric($nonExist)))
+					if (!isset($charge["deposit"]) || (empty($charge["deposit"]) && !is_numeric($charge["deposit"])))
 						throw new Error("No se pudo validar el campo 'deposit' (idtipodepago)", 500);
 
 					$data = $this->charge->insert($charge);

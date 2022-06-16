@@ -81,8 +81,10 @@ class Report extends Model
 			and idregistro = idregistr
 			and idcategori in (:categories)
 			and tipopago in (:paymentMethods)
-			and fechapago >= :startDate
-			and fechapago <= :endDate
+			and ((fechapago >= :startDate
+			and fechapago <= :endDate) 
+			or (fecha >= :startDate
+			and fecha <= :endDate) )
 			and anulado = :canceled
 		order by
 			1;";
@@ -108,8 +110,10 @@ class Report extends Model
 			and idregistro = idregistr
 			and tipopago in (:paymentMethods)
 			and idcategori in (:categories)
-			and fechapago >= :startDate
-			and fechapago <= :endDate
+			and ((fechapago >= :startDate
+			and fechapago <= :endDate) 
+			or (fecha >= :startDate
+			and fecha <= :endDate) )
 			and anulado = :canceled
 			order by idregistr;";
 		list($params, $query) = $this->mapParams($queryParams, $query);

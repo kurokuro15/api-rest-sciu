@@ -153,7 +153,7 @@ class Receipt extends Model
 	//Delete (¿anular?) por implementar
 	public function delete($receipt)
 	{
-		if (isset($receipt) || (empty($receipt) && !is_numeric($receipt)))
+		if (!isset($receipt) || (empty($receipt) && !is_numeric($receipt)))
 			throw new Error("Receipt number is not a valid number", 400);
 
 		$params = [":receipt" => $receipt];

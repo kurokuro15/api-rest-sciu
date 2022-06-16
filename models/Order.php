@@ -166,7 +166,7 @@ class Order extends Model
 	 */
 	public function getByCategory($category)
 	{
-		if (isset($category) || (empty($category) && !is_numeric($category))) {
+		if (!isset($category) || (empty($category) && !is_numeric($category))) {
 			throw new \Error("Category number is not a valid number", 400);
 		}
 		$param = [":category" => $category];
@@ -188,7 +188,7 @@ class Order extends Model
 	 */
 	public function getByProduct($product)
 	{
-		if (isset($product) || (empty($product) && !is_numeric($product))) {
+		if (!isset($product) || (empty($product) && !is_numeric($product))) {
 			throw new \Error("Product number is not a valid number", 400);
 		}
 		$param = [":product" => $product];

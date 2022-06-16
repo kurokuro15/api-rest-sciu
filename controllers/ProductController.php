@@ -36,7 +36,9 @@ class ProductController extends Controller
 		$params = array_merge($params, $this->request->get());
 		try {
 			list($data, $meta) = $this->products->getAll($params);
-			parent::getMeta($meta);
+			if (isset($meta)) {
+				parent::getMeta($meta);
+			}
 
 			$this->response->send(["products" => $data]);
 		} catch (Throwable $err) {

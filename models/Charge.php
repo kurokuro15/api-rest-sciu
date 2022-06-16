@@ -147,7 +147,7 @@ class Charge extends Model
 				fechapago desc, 
 				fecha desc;";
 		// retrieve data and save in an variable
-		$data = parent::query($query, $param);
+		$data = parent::query($query, $param, false);
 
 		//validate
 		if (count($data)  <= 0)

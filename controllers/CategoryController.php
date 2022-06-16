@@ -38,7 +38,7 @@ class CategoryController extends Controller
 		$params = array_merge($params, $this->request->get());
 		try {
 			list($data, $meta) = $this->categories->getAll($params);
-			if (count($meta) > 0) {
+			if (isset($meta)) {
 				parent::getMeta($meta);
 			}
 			
