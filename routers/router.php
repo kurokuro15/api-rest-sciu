@@ -193,7 +193,13 @@ $router->get("/reportes", function ($params) {
 		$report->get($params);
 	});
 });
-
+$router->get("/reportes/:report", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$report = new ReportController;
+		$report->detailed($params);
+	});
+});
 /**
  * Reports endpoint
  */

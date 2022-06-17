@@ -9,17 +9,47 @@ use Throwable;
 class ReportController extends Controller
 {
 	protected $report;
+
 	function __construct()
 	{
 		parent::__construct();
 		$this->report = new Report;
 	}
 
+	/**
+	 * Behaivor for get reports from a GET request
+	 */
 	public function get($params)
+	{
+		try {
+			$queryParams = $this->request->get();
+			$reportType = $queryParams["report_type"];
+
+			switch ($reportType) {
+				case "1":
+				case "2":
+					$this->cashRegister($queryParams);
+					break;
+				case "3":
+					$this->detailed($queryParams);
+					break;
+				default:
+					$this->response->send(["error" => "Invalid report type"], 400);
+					break;
+			}
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
+	}
+
+	/**
+	 * Handler for 'Arqueo de Caja' report.
+	 */
+	public function cashRegister($params)
 	{
 		$queryParams = $this->request->get();
 		try {
-			$data = $this->report->get($queryParams);
+			$data = $this->report->getCashRegister($queryParams);
 
 			$header = $this->constructReportHeader($queryParams, $params);
 
@@ -29,6 +59,22 @@ class ReportController extends Controller
 		}
 	}
 
+	/**
+	 * Handler for 'Informe detallado' report.
+	 */
+	public function detailed($params)
+	{
+		$queryParams = $this->request->get();
+		try {
+			$data = $this->report->getDetailed($queryParams);
+
+			$header = $this->constructReportHeader($queryParams, $params);
+
+			$this->response->send(["reports" => $data, "header" => $header]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
+	}
 
 	/**
 	 * Constructor a header report with receipt and orders counts and other info

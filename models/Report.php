@@ -9,7 +9,7 @@ class Report extends Model
 	/**
 	 * Get reports for a dataset
 	 */
-	public function get($queryParams)
+	public function getCashRegister($queryParams)
 	{
 		$params = [];
 		$query = "select
@@ -54,6 +54,60 @@ class Report extends Model
 			nombrecategoria;";
 
 		list($params, $query) = $this->mapParams($queryParams, $query);
+
+		$data = $this->query($query, $params, false);
+		//convert $data['amount'] field to float
+		foreach ($data as $key => $value) {
+			$data[$key]['amount'] = floatval($value['amount']);
+		}
+
+		// if all it's okay return the reports.
+		return $data;
+	}
+	/**
+	 * Get Detailed reports for a dataset
+	 */
+	public function getDetailed($queryParams)
+	{
+		$params = [];
+		$query = "select 
+				p.factura as receipt,	
+				e.id_cedul as cedula, 
+				t.tipopago as payment, 
+				t.idtipopago as deposit,
+				SUM(p.monto) as amount,
+				p.anulado as canceled,
+				t.fecha as payment_date,
+				p.fechapago as reg_date
+			from
+				pagos p
+			join 
+				emisiones e on
+				e.idregistro = p.idregistr
+			join 
+				tipospago t on
+				t.idtipopago = p.idtipopag
+			where
+				tipopago in (:paymentMethods)
+				and ((p.fechapago >= :startDate
+					and p.fechapago <= :endDate)
+				or (t.fecha >= :startDate
+					and t.fecha <= :endDate))
+			group by 
+				payment,
+				deposit,
+				cedula,
+				receipt,
+				payment_date,
+				reg_date,
+				canceled
+			order by 
+				reg_date desc,
+				payment_date desc,
+				receipt desc,
+				cedula desc";
+
+		list($params, $query) = $this->mapParams($queryParams, $query, false);
 
 		$data = $this->query($query, $params, false);
 		//convert $data['amount'] field to float
@@ -124,7 +178,7 @@ class Report extends Model
 	/**
 	 * Map query params for all class methods
 	 */
-	private function mapParams($queryParams, $query)
+	private function mapParams($queryParams, $query, $filter_canceled = true)
 	{
 		$params = [];
 		//Map categories
@@ -132,7 +186,7 @@ class Report extends Model
 			// traer todas las categorias
 			$categories = new Category;
 			// por implementar (limpiar)
-			list($categories, $meta) = $categories->getAll($params);
+			list($categories) = $categories->getAll($params);
 			$query = preg_replace("/:categories/", implode(", ", array_column($categories, "id")), $query);
 		} else {
 			$query = preg_replace("/:categories/", $queryParams["categories"], $query);
@@ -165,10 +219,12 @@ class Report extends Model
 			$params["endDate"] = "2100-01-01";
 		}
 
-		if (!empty($queryParams["canceled"])) {
-			$params["canceled"] = $queryParams["canceled"];
-		} else {
-			$params["canceled"] = false;
+		if ($filter_canceled) {
+			if (!empty($queryParams["canceled"])) {
+				$params["canceled"] = $queryParams["canceled"];
+			} else {
+				$params["canceled"] = false;
+			}
 		}
 		return [$params, $query];
 	}
