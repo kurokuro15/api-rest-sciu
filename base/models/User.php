@@ -23,6 +23,7 @@ class User extends Model
 			u.username,
 			u.password,
 			us.status,
+			u.secret,
 			r.rol
 		FROM
 			app_user u
@@ -65,6 +66,7 @@ class User extends Model
 			u.username,
 			u.password,
 			us.status,
+			u.secret,
 			r.rol
 		FROM
 			app_user u
@@ -181,7 +183,7 @@ class User extends Model
 			throw new Error($err->getMessage(), 500);
 		}
 	}
-	//Update ( cambiamos la contraseña nada más)
+	//Update (cambiamos la contraseña nada más)
 	public function updatePassword($user)
 	{
 		$query = "UPDATE app_user 
@@ -229,6 +231,9 @@ class User extends Model
 		$data = parent::queryAuth($query, $params);
 		return $data;
 	}
+	/**
+	 * get secret answers by user
+	 */
 	public function getAnswers($id)
 	{
 		$query = "SELECT
@@ -238,6 +243,29 @@ class User extends Model
 			s.answer,
 			s.answer_two,
 			s.answer_three
+		FROM
+			app_user u
+		JOIN secret s ON
+			u.secret = s.id
+		WHERE
+			u.id = :id";
+		$params = [
+			":id" => $id
+		];
+		$data = parent::queryAuth($query, $params);
+		return $data[0];
+	}
+	/**
+	 * get secret questions by user
+	 */
+	public function getQuestions($id)
+	{
+			$query = "SELECT
+			u.id,
+			u.username,
+			s.question,
+			s.question_two,
+			s.question_three
 		FROM
 			app_user u
 		JOIN secret s ON

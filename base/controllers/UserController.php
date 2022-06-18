@@ -116,10 +116,10 @@ class UserController extends Controller
 		$input = $this->request->input();
 		//validamos que no vengan los campos requeridos vacíos
 		if (
-			empty($input['username']) 			||
-			empty($input['new_password']) 	||
-			empty($input['answer']) 				||
-			empty($input['answer_two']) 		||
+			empty($input['username']) 		||
+			empty($input['new_password']) ||
+			empty($input['answer']) 			||
+			empty($input['answer_two']) 	||
 			empty($input['answer_three'])
 		)
 			throw new Error("Faltan campos requeridos", 403);
@@ -147,9 +147,9 @@ class UserController extends Controller
 			throw new Error("Las respuestas no coinciden", 403);
 		// encriptamos la contraseña y traemos el id
 		$input['new_password'] = $this->encrypter->passEncrypt($input['new_password']);
-		
+
 		//Tengo que utilizar auth para validar el match password
-		if($users->password === $input['new_password'])
+		if ($users->password === $input['new_password'])
 			throw new Error("La contraseña no puede ser la misma", 403);
 
 		$input['id'] = $this->users->id;
@@ -157,6 +157,25 @@ class UserController extends Controller
 		//actualizamos la contraseña
 		$id = $this->users->updatePassword($input);
 		$this->response->send(["users" => ["id" => $id]]);
+	}
+	/**
+	 * Obtener las preguntas de un usuario para la recuperación de contraseña
+	 */
+	function question($params)
+	{
+		try {
+			$input = $this->request->input();
+			$username = $input['username'];
+
+			$this->users->getUser($username);
+
+			$questions = $this->users->getQuestions($this->users->id);
+
+			$this->response->send(["questions" => $questions]);
+
+		} catch (Error $err) {
+			$this->response->send($err->getMessage(), $err->getCode());
+		}
 	}
 	/**
 	 * Manejador de DELETE para desactivar el usuario

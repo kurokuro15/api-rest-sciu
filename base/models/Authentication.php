@@ -5,9 +5,6 @@ namespace base\models;
 use \base\helpers\Encrypter;
 use \base\helpers\JWT;
 use \base\models\Model;
-use Error;
-use PDO;
-use PDOException;
 
 /**
  * Class Model of Authentication middleware
