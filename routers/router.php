@@ -11,6 +11,7 @@ use api\controllers\ProductController;
 use api\controllers\ReceiptController;
 use api\Controllers\ReportController;
 use api\Controllers\StudentController;
+use api\Controllers\StudentStatusController;
 use base\controllers\UserController;
 use base\middleware\AuthenticationMiddleware;
 
@@ -22,10 +23,10 @@ $router->post("/login", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authUser($params);
 });
-$router->put("/login", function($params){
+$router->put("/login", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$params["auth"] = $auth;
-	$auth->authy($params, function($params) {
+	$auth->authy($params, function ($params) {
 		$params["auth"]->refreshToken($params);
 	});
 });
@@ -89,6 +90,13 @@ $router->get("/estudiantes/:cedula", function ($params) {
 	$auth->authy($params,	function ($params) {
 		$student = new StudentController;
 		$student->retrieve($params);
+	});
+});
+$router->put("/estudiantes/:cedula", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$student = new StudentController;
+		$student->put($params);
 	});
 });
 /**
@@ -249,45 +257,55 @@ $router->delete("/categorias/:id", function ($params) {
  */
 
 
- /**
-	* Products Endpoints
-  */
-	$router->get("/productos", function ($params) {
-		$auth = new AuthenticationMiddleware;
-		$auth->authy($params,	function ($params) {
-			$product = new ProductController;
-			$product->get($params);
-		});
+/**
+ * Products Endpoints
+ */
+$router->get("/productos", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$product = new ProductController;
+		$product->get($params);
 	});
-	$router->get("/productos/:product", function ($params) {
-		$auth = new AuthenticationMiddleware;
-		$auth->authy($params,	function ($params) {
-			$product = new ProductController;
-			$product->retrieve($params);
-		});
+});
+$router->get("/productos/:product", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$product = new ProductController;
+		$product->retrieve($params);
 	});
-	$router->post("/productos", function ($params) {
-		$auth = new AuthenticationMiddleware;
-		$auth->authy($params,	function ($params) {
-			$product = new ProductController;
-			$product->create($params);
-		});
+});
+$router->post("/productos", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$product = new ProductController;
+		$product->create($params);
 	});
-	$router->put("/productos/:id", function ($params) {
-		$auth = new AuthenticationMiddleware;
-		$auth->authy($params,	function ($params) {
-			$product = new ProductController;
-			$product->update($params);
-		});
+});
+$router->put("/productos/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$product = new ProductController;
+		$product->update($params);
 	});
-	$router->delete("/productos/:id", function ($params) {
-		$auth = new AuthenticationMiddleware;
-		$auth->authy($params,	function ($params) {
-			$product = new ProductController;
-			$product->delete($params);
-		});
+});
+$router->delete("/productos/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$product = new ProductController;
+		$product->delete($params);
 	});
-	/**
-	* Products Endpoints
-  */
+});
+/**
+ * Products Endpoints
+ */
 
+/**
+ * Students Status Endpoints
+ */
+$router->get("/status", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$status = new StudentStatusController;
+		$status->get($params);
+	});
+});

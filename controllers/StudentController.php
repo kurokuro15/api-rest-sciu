@@ -33,7 +33,7 @@ class StudentController extends Controller
 		try {
 			$data = $this->students->get($params['cedula']);
 
-				$this->response->send(["students" => $data]);
+			$this->response->send(["students" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -48,7 +48,22 @@ class StudentController extends Controller
 
 			parent::getMeta($meta);
 
-				$this->response->send(["students" => $data]);
+			$this->response->send(["students" => $data]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
+	}
+	public function put($params)
+	{
+		// validate that param 'cedula' exist
+		if (empty($params) || empty($params['cedula'])) {
+			$this->response->send(["error" => "Cedula field was not send"], 400);
+		}
+		try {
+			$params = array_merge($params, $this->request->input());
+			$cedula = $this->students->update($params);
+			$data = $this->students->get($cedula);
+			$this->response->send(["students" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
