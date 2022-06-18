@@ -81,12 +81,10 @@ class Product extends Model
 			$params = array_merge($params, $interval);
 		}
 
-		if (count($meta) > 0) {
-			$data[] = $meta;
-		}
 		$result = parent::query($query, $params);
-
+		
 		$data[] = $result;
+		$data[] = $meta;
 		return $data;
 	}
 	/**
