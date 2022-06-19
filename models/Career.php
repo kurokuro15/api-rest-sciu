@@ -103,11 +103,7 @@ class Career extends Model
 
 	private function getLastId()
 	{
-		$query = "select
-		case
-			when max(id_carrer) is null then 1
-			else max(id_carrer)
-		end as id from carreras";
+		$query = "SELECT id_carrer as id FROM carreras ORDER BY id_carrer DESC LIMIT 1";
 
 		$data = parent::query($query);
 
@@ -115,5 +111,11 @@ class Career extends Model
 			throw new Error("can't get last career id", 404);
 
 		return $data[0]['id'];
+	}
+	function getByCoordination($id) {
+		$query="SELECT COUNT(*) as count FROM carreras WHERE idcoordinacio = :id";
+		$param = [":id" => $id];
+		$data = parent::query($query, $param);
+		return $data[0]['count'];
 	}
 }

@@ -7,6 +7,7 @@
 use api\Controllers\CareerController;
 use api\Controllers\CategoryController;
 use api\controllers\ChargeController;
+use api\Controllers\CoordinationController;
 use api\Controllers\OrderController;
 use api\controllers\ProductController;
 use api\controllers\ReceiptController;
@@ -345,35 +346,35 @@ $router->delete("/status/:id", function ($params) {
 /**
  * Careers Endpoints
  */
-$router->get("/career/:career", function ($params) {
+$router->get("/carreras/:career", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authy($params,	function ($params) {
 		$career = new CareerController;
 		$career->retrieve($params);
 	});
 });
-$router->get("/career", function ($params) {
+$router->get("/carreras", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authy($params,	function ($params) {
 		$career = new CareerController;
 		$career->get($params);
 	});
 });
-$router->post("/career", function ($params) {
+$router->post("/carreras", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authy($params,	function ($params) {
 		$career = new CareerController;
 		$career->create($params);
 	});
 });
-$router->put("/career/:career", function ($params) {
+$router->put("/carreras/:id", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authy($params,	function ($params) {
 		$career = new CareerController;
 		$career->update($params);
 	});
 });
-$router->delete("/career/:career", function ($params) {
+$router->delete("/carreras/:id", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authy($params,	function ($params) {
 		$career = new CareerController;
@@ -383,3 +384,42 @@ $router->delete("/career/:career", function ($params) {
 /**
  * Careers Endpoints
  */
+
+ /**
+	* Coordinates Endpoints
+  */
+$router->get("/coordinaciones/:coordination", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$coordinate = new CoordinationController;
+		$coordinate->retrieve($params);
+	});
+});
+$router->get("/coordinaciones", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$coordinate = new CoordinationController;
+		$coordinate->get($params);
+	});
+});
+$router->post("/coordinaciones", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$coordinate = new CoordinationController;
+		$coordinate->create($params);
+	});
+});
+$router->put("/coordinaciones/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$coordinate = new CoordinationController;
+		$coordinate->update($params);
+	});
+});
+$router->delete("/coordinaciones/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$coordinate = new CoordinationController;
+		$coordinate->delete($params);
+	});
+});

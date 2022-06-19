@@ -26,7 +26,7 @@ class CareerController extends Controller
 			$this->response->send(["error" => "career field was not send"], 400);
 		}
 		try {
-			$data = $this->categories->get($params['career']);
+			$data = $this->career->get($params['career']);
 			$this->response->send(["careers" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
@@ -38,10 +38,7 @@ class CareerController extends Controller
 	public function get($params)
 	{
 		try {
-			list($data, $meta) = $this->career->getAll($params);
-			if (isset($meta)) {
-				parent::getMeta($meta);
-			}
+			$data =  $this->career->getAll($params);
 
 			$this->response->send(["careers" => $data]);
 		} catch (Throwable $err) {
