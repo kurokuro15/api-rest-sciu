@@ -57,9 +57,7 @@ class UserController extends Controller
 	{
 		try {
 			$params = array_merge($params, $this->request->get());
-			list($data, $meta) = $this->users->getAll($params);
-
-			parent::getMeta($meta);
+			$data = $this->users->getAll($params);
 
 			$this->response->send(["users" => $data]);
 		} catch (Throwable $err) {

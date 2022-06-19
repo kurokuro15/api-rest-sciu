@@ -111,22 +111,14 @@ class User extends Model
 		JOIN rol r ON
 			ur.rol = r.id";
 
-		//Add pagination to query
-		list($interval, $placeholder, $meta) = parent::pagination($params, false);
-		$params = array_merge($params, $interval);
-
 		// Obtenemos el total de elementos de la query y lo guardamos en meta
-		$meta["count"] = $this->countAuth($query);
-
-		// añadimos el placeholder de paginación		
-		$query .= $placeholder;
 		$data = parent::queryAuth($query, $params);
 
 		//validate data
 		if (count($data)  <= 0)
 			throw new Error("Not Found", 404);
 
-		return [$data, $meta];
+		return $data;
 	}
 	//create
 	public function create($user)
