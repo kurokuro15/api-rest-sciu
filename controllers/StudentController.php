@@ -20,7 +20,6 @@ class StudentController extends Controller
 	{
 		parent::__construct();
 		$this->students = new Student;
-		$this->setQueryParams();
 	}
 
 	/* Handler to get a student from Db */
@@ -34,28 +33,41 @@ class StudentController extends Controller
 		try {
 			$data = $this->students->get($params['cedula']);
 
-			if ($data) {
-				$this->response->send(["students" => $data]);
-			}
+			$this->response->send(["students" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
 	}
 
-	public function get($params)
+	public function get($params = [])
 	{
 		// need refactor this section. to Limit and offset and maybe external class middleware
-		if (isset($this->queryParams['page'])) $params['page'] =  $this->queryParams['page'];
-		if (isset($this->queryParams['records'])) $params['records'] =  $this->queryParams['records'];
-
+		$params = array_merge($params, $this->request->get());
 		try {
-			$data = $this->students->getAll($params);
+			list($data, $meta) = $this->students->getAll($params);
 
-			if ($data) {
-				$this->response->send(["students" => $data]);
-			}
+			parent::getMeta($meta);
+
+			$this->response->send(["students" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
 	}
+	public function put($params)
+	{
+		// validate that param 'cedula' exist
+		if (empty($params) || empty($params['cedula'])) {
+			$this->response->send(["error" => "Cedula field was not send"], 400);
+		}
+		try {
+			$params = array_merge($params, $this->request->input());
+			$cedula = $this->students->update($params);
+			$data = $this->students->get($cedula);
+			$this->response->send(["students" => $data]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
+	}
+	//update
+	//create
 }

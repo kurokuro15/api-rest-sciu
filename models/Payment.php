@@ -21,7 +21,7 @@ class Payment extends Model
 	public function get($id)
 	{
 		//Validate param
-		if ($this->is_blank($id)) {
+		if (!isset($id) || (empty($id) && !is_numeric($id))) {
 			throw new Error("Payment identity is not a valid number", 400);
 		}
 		// map param in a array
@@ -40,17 +40,19 @@ class Payment extends Model
 
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param, false);
-		//validate data
+
+		//validate 
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		// Map properties of class to use this info. And return object.
 		if (is_array($data)) {
-			// Map properties of class to use this info. And return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
-			// if all it's okay return the payment.
-			return $data[0];
-		} else {
-			throw new Error("Not Found", 404);
 		}
+
+		return $data[0];
 	}
 	/**
 	 * Create a Payment record
@@ -115,11 +117,13 @@ class Payment extends Model
 			:bank,
 			:concept,
 			:method) /**idtipopago -> detalles del método */
-			RETURNING idtipopago;";
+			RETURNING idtipopago as deposit;";
 		//insert data 
 		$data = parent::query($query, $params);
 
 		return $data[0];
-		//return success messange or error msg
 	}
+	// Get all payments por implementar
+	// Update por implementar
+	// Delete por implementar
 }

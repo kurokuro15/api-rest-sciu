@@ -30,7 +30,7 @@ class OrderController extends Controller
 	{
 		// If $params have cedula param 
 		if (!empty($params)) {
-			if (!empty($params['cedula'])) {
+			if (isset($params['cedula'])) {
 				$this->getByStudent($params);
 			}
 		} else {
@@ -52,9 +52,7 @@ class OrderController extends Controller
 		try {
 			$data = $this->order->get($params['order']);
 
-			if ($data) {
-				$this->response->send(["orders" => $data]);
-			}
+			$this->response->send(["orders" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -73,9 +71,7 @@ class OrderController extends Controller
 		try {
 			$data = $this->order->getByStudent($params['cedula']);
 
-			if ($data) {
-				$this->response->send(["orders" => $data]);
-			}
+			$this->response->send(["orders" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -100,8 +96,8 @@ class OrderController extends Controller
 		try {
 			$order = $this->request->input();
 			$result = $this->order->insert($order);
-
 			$data = $this->order->get($result);
+
 			$this->response->send(["orders" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());

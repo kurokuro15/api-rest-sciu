@@ -184,7 +184,7 @@ class Router
 			// caso contrario retornamos error
 			if (!empty($url_segments[1]) && (int) ($url_segments[1]) === 0) {
 				$param = ltrim($pattern_segments[1], ":");
-				throw new Error("No se es válido el valor del parámetro: $param; $url_segments[1] no es válido.", 404);
+				throw new Error("No es válido el valor del parámetro: $param; $url_segments[1] no es válido.", 404);
 			}
 
 			// si no hay parámetro, se detiene la iteración y setea matchRouter con la ruta actual. Y dejamos de buscar.

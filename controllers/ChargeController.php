@@ -53,9 +53,7 @@ class ChargeController extends Controller
 		try {
 			$data = $this->charge->get($params['charge']);
 
-			if ($data) {
-				$this->response->send(["charges" => $data]);
-			}
+			$this->response->send(["charges" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -75,9 +73,7 @@ class ChargeController extends Controller
 		try {
 			$data = $this->charge->getByStudent($params['cedula']);
 
-			if ($data) {
-				$this->response->send(["charges" => $data]);
-			}
+			$this->response->send(["charges" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -97,9 +93,7 @@ class ChargeController extends Controller
 		try {
 			$data = $this->charge->getByReceipt($params['receipt']);
 
-			if ($data) {
-				$this->response->send(["charges" => $data]);
-			}
+			$this->response->send(["charges" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -114,7 +108,7 @@ class ChargeController extends Controller
 		/**
 		 * TO do. :V This is a example response...
 		 */
-		$this->response->send(["from" => "Desde el endpoint /cobros sin estudiantes"]);
+		$this->response->send(["desde" => "Desde el endpoint /cobros sin estudiantes"]);
 	}
 
 
@@ -124,50 +118,53 @@ class ChargeController extends Controller
 	function create($params)
 	{
 		// extraígo la data...
-		$input = $this->request->input(); // not an array por los momentos
+		$input = $this->request->input(); // Array de Ordenes (emisiones)
 
 		// preparamos el número de factura.
-		$receipt = $this->charge->getLastReceipt();
-		$receipt["receipt_number"] = $receipt["receipt_number"] + 1;
-		if (is_array($input)) {
-			foreach ($input as $charge) {
-				try {
+		try {
+			$receipt = $this->charge->getLastReceipt();
+			$receipt["receipt_number"] = $receipt["receipt_number"] + 1;
+			if (is_array($input)) {
+				foreach ($input as $charge) {
 					$charge["receipt_number"] = $receipt["receipt_number"];
 					//validamos que exista y sea un array el att "method" y lo extraemos
 					if (empty($charge["method"]) || !is_array($charge["method"])) {
 						throw new Exception("No se a conseguido ningún método", 400);
 					}
 
+					//Aplanamos el objeto/propiedad "method" dentro de $charge
 					foreach ($charge["method"] as $key => $method) {
 						$charge[$key] = $method;
 					}
 
-					// validar si el idtipodepago existe
+					// validar si el "deposit" (idtipodepago) existe
 					if (isset($charge['deposit'])) {
 						try {
 							// validamos el metodo de pago del pago
 							$deposit = $this->payment->get($charge['deposit']);
+							$charge['deposit'] = $deposit['deposit'];
 						} catch (Error $err) {
-							if ($err->getMessage() === "Not Found")
+							if ($err->getCode() === 404)
 								// registro metodo de pago del pago
 								$inserted = $this->payment->insert($charge);
+							$charge['deposit'] = $inserted['deposit'];
 						}
 					}
 
 					// registro el pago. 
-					if (isset($deposit["payment"]) || isset($inserted)) {
-						$data = $this->charge->insert($charge);
-					} else  throw new Error("No se pudo validar el idtipodepago", 500);
+					if (!isset($charge["deposit"]) || (empty($charge["deposit"]) && !is_numeric($charge["deposit"])))
+						throw new Error("No se pudo validar el campo 'deposit' (idtipodepago)", 500);
 
+					$data = $this->charge->insert($charge);
 					//devuelvo los pagos por el id de recibo
 					$res["charges"][] = $data;
-				} catch (Throwable $err) {
-					$this->response->send(["error" => $err->getMessage()], $err->getCode());
 				}
 			}
-		}
-		if (isset($res))
 			$res["receipt_number"] = $receipt["receipt_number"];
-		$this->response->send($res);
+
+			$this->response->send($res);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
 	}
 }

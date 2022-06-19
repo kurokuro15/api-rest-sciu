@@ -3,10 +3,5 @@
     # Removes index.php from ExpressionEngine URLs  
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php?url=$1 [PT,L,QSA]
-
-    # Si la ruta no es un archivo existente, ni una carpeta
-    # Reescribir al index
-    RewriteRule ^(.+?)/?$ index.php?url=$1 [L,QSA]
-    RewriteRule ^(.+)$ index.php?$1 [QSA,L]
+    RewriteRule ^(.*)$ index.php [L,QSA]
 </IfModule>

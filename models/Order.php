@@ -16,12 +16,12 @@ class Order extends Model
 		parent::__construct();
 	}
 	/**
-	 * Retrieve from Order or 'emisiones' table.
+	 * Retrieve from Order (emisiones)
 	 */
 	public function get($registro)
 	{
 		//Validate param
-		if (!isset($registro) || (int) $registro === 0) {
+		if (!isset($registro) || (empty($registro) && !is_numeric($registro))) {
 			throw new Error("Collection order number is not a valid number", 400);
 		}
 		// map param in a array
@@ -49,16 +49,18 @@ class Order extends Model
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
 		//validate data
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		// we map properties of class to use this info. And send return object.
 		if (is_array($data)) {
-			// we map properties of class to use this info. And send return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
 			// if all it's okay return the order.
-			return $data[0];
-		} else {
-			throw new Error("Not Found", 404);
 		}
+
+		return $data[0];
 	}
 
 	/**
@@ -67,8 +69,8 @@ class Order extends Model
 	public function getByStudent($cedula)
 	{
 		//Validate param
-		if (!isset($cedula) || (int) $cedula === 0) {
-			throw new \Error("Cedula number is not a valid number", 400);
+		if (!isset($cedula) || (empty($cedula) && !is_numeric($cedula))) {
+			throw new Error("Cedula number is not a valid number", 400);
 		}
 		// map param in a array
 		$param = [":cedula" => $cedula];
@@ -154,22 +156,66 @@ class Order extends Model
 			id;";
 
 		$data = parent::query($query, $param);
+		//validate
 
-		// if all it's okay return the order.
-		if (isset($data)) {
-			return $data;
-		}
+
+		return $data;
 	}
+	/**
+	 * Get total number of orders by an Category
+	 */
+	public function getByCategory($category)
+	{
+		if (!isset($category) || (empty($category) && !is_numeric($category))) {
+			throw new \Error("Category number is not a valid number", 400);
+		}
+		$param = [":category" => $category];
+		$query = "SELECT
+			COUNT(*) as total
+		FROM
+			emisiones e
+		WHERE
+			e.idcategori  = :category";
+		$data = parent::query($query, $param);
+		// validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
 
+		return $data[0];
+	}
+	/**
+	 * Get total number of orders by an Product id
+	 */
+	public function getByProduct($product)
+	{
+		if (!isset($product) || (empty($product) && !is_numeric($product))) {
+			throw new \Error("Product number is not a valid number", 400);
+		}
+		$param = [":product" => $product];
+		$query = "SELECT
+			COUNT(*) as total
+		FROM
+			emisiones e
+		WHERE
+			e.idproduct  = :product";
+		$data = parent::query($query, $param);
+
+		// validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		return $data[0];
+	}
 	/**
 	 * Get all Orders
 	 */
 	public function getAll($params)
 	{
-		$pagination = parent::pagination($params);
 		// hacemos magiaaaaaaa :V
 	}
-
+	/**
+	 * Insert an new Order
+	 */
 	public function insert($order)
 	{
 		$params = [];
@@ -187,14 +233,14 @@ class Order extends Model
 		//validate username, concept, outstanding , units
 		//validate product_id
 		foreach ($required as $value) {
-			if (empty($order[$value]) && $order[$value] !== 0) {
+			if (!isset($order[$value]) || (empty($order[$value]) && (!is_numeric($order[$value])))) {
 				throw new Exception("no se a conseguido el campo $value", 400);
 			};
 			$params[$value] = $order[$value];
 		}
 
 		//validade cedula
-		if (!isset($params['cedula']) || (int) $params['cedula'] === 0) {
+		if (!isset($params['cedula']) || (empty($params['cedula']) && !is_numeric($params['cedula']))) {
 			throw new Error("the cedula number is not a valid number", 400);
 		}
 
@@ -226,4 +272,7 @@ class Order extends Model
 		return $result;
 		//return success messange or error msg
 	}
+
+	//Update por implementar
+	//Delete (¿anular?) por implementar
 }

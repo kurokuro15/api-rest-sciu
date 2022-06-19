@@ -29,7 +29,7 @@ class ReceiptController extends Controller
 	{
 		// If $params have cedula param 
 		if (!empty($params)) {
-			if (!empty($params['cedula'])) {
+			if (isset($params['cedula'])) {
 				$this->getByStudent($params);
 			}
 		} else {
@@ -51,9 +51,7 @@ class ReceiptController extends Controller
 		try {
 			$data = $this->receipt->get($params['receipt']);
 
-			if ($data) {
-				$this->response->send(["receipts" => $data]);
-			}
+			$this->response->send(["receipts" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -72,9 +70,7 @@ class ReceiptController extends Controller
 		try {
 			$data = $this->receipt->getByStudent($params['cedula']);
 
-			if ($data) {
-				$this->response->send(["receipts" => $data]);
-			}
+			$this->response->send(["receipts" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -85,9 +81,31 @@ class ReceiptController extends Controller
 	 */
 	private function getAll($params)
 	{
-		/**
-		 * TO do. :V This is a example response...
-		 */
-		$this->response->send(["from" => "Desde el endpoint /recibos sin estudiantes"]);
+		$params = array_merge($params, $this->request->get());
+		try {
+			list($data, $meta) = $this->receipt->getAll($params);
+
+			parent::getMeta($meta);
+
+			$this->response->send(["receipts" => $data]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
+	}
+
+	public function delete($params)
+	{
+		// validate that param 'order' exist
+		if (empty($params) || empty($params['receipt'])) {
+			$this->response->send(["error" => "receipt identity field was not send"], 400);
+		}
+
+		try {
+			$data = $this->receipt->delete($params['receipt']);
+			$data = $this->receipt->get($data['receipt']);
+			$this->response->send(["receipts" => $data]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
 	}
 }

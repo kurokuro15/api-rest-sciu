@@ -23,7 +23,7 @@ class Encrypter
 	}
 
 	/**
-	 * Create password hash with ARGON2ID
+	 * Create password hash with PASSWORD_BCRYPT
 	 */
 	public function passEncrypt($str)
 	{

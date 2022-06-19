@@ -18,7 +18,7 @@ class Charge extends Model
 	public function get($id)
 	{
 		//Validate param
-		if (!isset($id) || (int) $id === 0) {
+		if (!isset($id) || (empty($id) && !is_numeric($id))) {
 			throw new Error("Charge identity is not a valid number", 400);
 		}
 		// map param in a array
@@ -45,16 +45,17 @@ class Charge extends Model
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
 		//validate data
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		// Map properties of class to use this info. And return object.
 		if (is_array($data)) {
-			// Map properties of class to use this info. And return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
-			// if all it's okay return the charge.
-			return $data[0];
-		} else {
-			throw new Error("Not Found", 404);
 		}
+
+		return $data[0];
 	}
 
 	/**
@@ -64,7 +65,7 @@ class Charge extends Model
 	public function getByStudent($cedula)
 	{
 		//Validate param
-		if (!isset($cedula) || (int) $cedula === 0) {
+		if (!isset($id) || (empty($id) && !is_numeric($id))) {
 			throw new Error("Cedula is not a valid number", 400);
 		}
 		// map param in a array
@@ -92,16 +93,21 @@ class Charge extends Model
 		order by 
 			fechapago desc, 
 			fecha desc;";
-		// retrieve data and save in an variable
+
 		$data = parent::query($query, $param);
-		// if all it's okay return the student.
+
+		//validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
 		return $data;
 	}
 	/**
-	 * Get All Charge Records
+	 * Get All Charge Records por implementar
 	 */
-	public function getAll($pagination)
+	public function getAll($params)
 	{
+		// will be created
 	}
 
 	/**
@@ -110,7 +116,7 @@ class Charge extends Model
 	public function getByReceipt($receipt)
 	{
 		//Validate param
-		if (!isset($receipt) || (int) $receipt === 0) {
+		if (!isset($receipt) || (empty($receipt) && !is_numeric($receipt))) {
 			throw new Error("receipt number is not a valid number", 400);
 		}
 		// map param in a array
@@ -141,8 +147,12 @@ class Charge extends Model
 				fechapago desc, 
 				fecha desc;";
 		// retrieve data and save in an variable
-		$data = parent::query($query, $param);
-		// if all it's okay return the student.
+		$data = parent::query($query, $param, false);
+
+		//validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
 		return $data;
 	}
 
@@ -170,18 +180,18 @@ class Charge extends Model
 
 		// Validate all others required fields
 		foreach ($required as $value) {
-			if (!isset($payment[$value]) && $this->is_blank($charge[$value])) {
+			if (!isset($charge[$value]) && $this->is_blank($charge[$value])) {
 				throw new Exception("no se a conseguido el campo $value", 400);
 			}
 			$params[$value] = $charge[$value];
 		}
 
 		// Validamos que sean números válidos 
-		if (!isset($params['receipt_number']) || (int) $params['receipt_number'] === 0) {
+		if (!isset($params['receipt_number']) || (empty($params['receipt_number']) && !is_numeric($params['receipt_number']))) {
 			throw new Error("the receipt_number is not a valid receipt number", 400);
 		}
 
-		if (!isset($params['order_id']) || (int) $params['order_id'] === 0) {
+		if (!isset($params['order_id']) || (empty($params['order_id']) && !is_numeric($params['order_id']))) {
 			throw new Error("the order_id is not a valid receipt number", 400);
 		}
 		// seteamos la fecha :D
@@ -216,17 +226,16 @@ class Charge extends Model
 		$result = parent::nonQuery($query, $params);
 
 		return $result;
-		//return success messange or error msg
 	}
 
 	/**
-	 * Update a Charge record
+	 * Update a Charge record por implementar
 	 */
 	public function update($charge)
 	{
 	}
 	/**
-	 * Delete a Charge record
+	 * Delete a Charge record por implementar
 	 */
 	function delete($charge)
 	{
@@ -243,8 +252,10 @@ class Charge extends Model
 		pagos";
 
 		$data = parent::query($query);
-		if ($data) {
-			return $data[0];
-		}
+
+		if (count($data)  <= 0)
+			throw new Error("can't get last receipt number", 404);
+
+		return $data[0];
 	}
 }

@@ -11,11 +11,15 @@ class PaymentMethod extends Model
 	{
 		$query = "SELECT DISTINCT tipopago FROM tipospago;";
 		$data = parent::query($query);
-		// validate that have some more zero records
-		if (count($data) < 1) {
+
+		// validate 
+		if (count($data)  <= 0)
 			throw new Error("data not found", 404);
-		}
-		// if all it's okay return the student.
+
 		return $data;
 	}
+	// Retrieve por implementar
+	// Create por implementar
+	// Update por implementar
+	// Delete por implementar
 }

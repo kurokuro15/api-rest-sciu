@@ -64,7 +64,7 @@ class Model
 				PDO::ATTR_PERSISTENT => true
 			));
 		} catch (PDOException $err) {
-			echo "{$err->getMessage()}";
+			throw new Error($err->getMessage(), 500);
 		}
 	}
 
@@ -92,9 +92,9 @@ class Model
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			if (isset($result)) {
 				if ($format) {
-					return $this->toUTF8($result) ?: Array();
+					return $this->toUTF8($result) ?: array();
 				}
-				return $result ?: Array();
+				return $result ?: array();
 			}
 		}
 		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 500);
@@ -123,7 +123,7 @@ class Model
 			return $this->conection->lastInsertId();
 		}
 
-		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 200);
+		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 500);
 	}
 
 	private function getConfigFile($file)
@@ -156,7 +156,7 @@ class Model
 		if ($stmt->execute()) {
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			if (isset($result)) {
-				return $result ?: "[]";
+				return $result ?: array();
 			}
 		}
 		throw new Error(json_encode($stmt->errorInfo(), JSON_UNESCAPED_UNICODE), 500);
@@ -164,33 +164,53 @@ class Model
 
 	/**
 	 * take the number of page and number of items to show for page
-	 * by default page 0 and 20 items.
+	 * by default page 0 and 10 items. array with keys: "offset" and "limit"
 	 */
-	protected function pagination($params)
+	protected function pagination($params, $strict = true)
 	{
-		$page = 0;
-		$records = 10;
+		if ((!isset($params['offset']) || !isset($params['limit'])) && !$strict)
+			return Array();
 
 		if (isset($params['offset'])) {
-			$page = $params['offset'];
+			$offset = intval($params['offset']);
+		} else {
+			$offset = 0;
 		}
 		if (isset($params['limit'])) {
-			$records = $params['limit'];
+			$limit = intval($params['limit']);
+		} else {
+			$limit = 10;
 		}
 
-		$registroInicial = ($records * ($page));
+		$current = [
+			"offset" => $offset,
+			"limit" => $limit
+		];
+		$placeholder =  " OFFSET :offset LIMIT :limit";
+		$next = [
+			"offset" => $offset + $limit,
+			"limit" => $limit
+		];
 
-		if ($page > 1) {
+		$prevOffset = $offset - $limit;
+		if ($offset === 0) {
+			$prevOffset = null;
+		} else if ($prevOffset < 0) {
+			$prevOffset = 0;
+			$limit = $offset;
 		}
-		// limit determina la cantidad de items
-		return ["offset" => $registroInicial, "limit" => $records];
-		// offset determina el index desde el cual contar (empieza en 0)
+
+		$prev = [
+			"offset" => $prevOffset,
+			"limit" => $limit
+		];
+		// devolvemos los parametros y el placeholder
+		return [$current, $placeholder, ["next" => $next, "prev" => $prev]];
 	}
 
 	private function toUTF8($array)
 	{
 		try {
-
 			array_walk_recursive($array, function (&$item, $key) {
 				if (!mb_detect_encoding($item, 'utf-8', true)) {
 					$item = utf8_encode($item);
@@ -206,5 +226,18 @@ class Model
 	protected function is_blank($value)
 	{
 		return empty($value) && !is_numeric($value);
+	}
+
+	protected function count($query)
+	{
+		$stmt = $this->conection->prepare($query);
+		$stmt->execute();
+		return $stmt->rowCount();
+	}
+	protected function countAuth($query)
+	{
+		$stmt = $this->authentication->prepare($query);
+		$stmt->execute();
+		return $stmt->rowCount();
 	}
 }

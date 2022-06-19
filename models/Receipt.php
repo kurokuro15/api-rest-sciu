@@ -17,7 +17,7 @@ class Receipt extends Model
 	public function get($receipt)
 	{
 		//Validate param
-		if (!isset($receipt) || (int) $receipt === 0) {
+		if (!isset($receipt) || (empty($receipt) && !is_numeric($receipt))) {
 			throw new Error("Receipt number is not a valid number", 400);
 		}
 		// map param in a array
@@ -28,7 +28,8 @@ class Receipt extends Model
 					fechapago as payment_date,
 					registrador as username,
 					id_cedul as cedula,
-					CONCAT(apellido1 || ' ' || nombre1 ) as nombre 
+					CONCAT(apellido1 || ' ' || nombre1 ) as nombre,
+					anulado AS canceled
 				from
 					pagos
 				join emisiones on
@@ -45,21 +46,25 @@ class Receipt extends Model
 					nombre1,
 					nombre2,
 					apellido1,
-					apellido2 ";
+					apellido2,
+					anulado ";
 
 		// retrieve data and save in an variable
 		$data = parent::query($query, $param);
+
 		//validate data
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
+		// we map properties of class to use this info. And send return object.
 		if (is_array($data)) {
-			// we map properties of class to use this info. And send return object.
 			foreach ($data[0] as $prop => $value) {
 				$this->$prop = $value;
 			}
 			// if all it's okay return the receipt.
-			return $data;
-		} else {
-			throw new Error("Not Found", 404);
 		}
+
+		return $data;
 	}
 	/**
 	 * get All receipts from a Student
@@ -67,7 +72,7 @@ class Receipt extends Model
 	public function getByStudent($cedula)
 	{
 		//Validate param
-		if (!isset($cedula) || (int) $cedula === 0) {
+		if (!isset($cedula) || (empty($cedula) && !is_numeric($cedula))) {
 			throw new Error("Cedula not is a valid number", 400);
 		}
 		// map param in a array
@@ -93,6 +98,69 @@ class Receipt extends Model
 				fechapago DESC;";
 
 		$data = parent::query($query, $param);
+		// validate
+		if (count($data)  <= 0)
+			throw new Error("data not found", 404);
+
 		return $data;
+	}
+	// get all receipts
+	public function getAll($params)
+	{
+		$query = "SELECT
+					factura as receipt,
+					SUM(pagos.monto) as amount,
+					fechapago as payment_date,
+					registrador as username,
+					id_cedul as cedula,
+					CONCAT(apellido1 || ' ' || nombre1 ) as nombre,
+					anulado AS canceled
+				from
+					pagos
+				join emisiones on
+					idregistro = idregistr
+					join alumnos on
+					id_cedul = id_cedula
+				group by
+					factura,
+					fechapago,
+					registrador,
+					id_cedul,
+					nombre1,
+					nombre2,
+					apellido1,
+					apellido2,
+					anulado 
+					ORDER BY 
+					fechapago DESC, 
+					factura DESC, 
+					id_cedul DESC";
+		//Add pagination to query
+		list($interval, $placeholder, $meta) = parent::pagination($params);
+		$params = array_merge($params, $interval);
+		$meta["count"] = $this->count($query);
+
+		$query .= $placeholder;
+		$data = parent::query($query, $params);
+
+		if (count($data)  <= 0) {
+			throw new Error("data not found", 404);
+		}
+
+		return [$data, $meta];
+	}
+	//Update por implementar
+	//Delete (¿anular?) por implementar
+	public function delete($receipt)
+	{
+		if (!isset($receipt) || (empty($receipt) && !is_numeric($receipt)))
+			throw new Error("Receipt number is not a valid number", 400);
+
+		$params = [":receipt" => $receipt];
+		$query = "UPDATE pagos SET anulado = true WHERE factura = :receipt returning factura as receipt";
+
+		$data = parent::query($query, $params);
+
+		return  $data[0];
 	}
 }
