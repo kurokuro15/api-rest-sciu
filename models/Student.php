@@ -149,9 +149,18 @@ class Student extends Model
 
 	function getBystatus($status)
 	{
-		$query = "SELECT COUNT(*) FROM alumnos WHERE retiro = :status";
+		$query = "SELECT COUNT(*) as count FROM alumnos WHERE retiro = :status";
 		$params = [
 			":status" => $status
+		];
+		$result = parent::query($query, $params);
+		return $result[0]["count"];
+	}
+	function getByCareer($career)
+	{
+		$query = "SELECT COUNT(*) as count FROM alumnos WHERE id_carrera = :career";
+		$params = [
+			":career" => $career
 		];
 		$result = parent::query($query, $params);
 		return $result[0]["count"];

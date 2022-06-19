@@ -35,7 +35,6 @@ class CategoryController extends Controller
 
 	public function get($params)
 	{
-		$params = array_merge($params, $this->request->get());
 		try {
 			list($data, $meta) = $this->categories->getAll($params);
 			if (isset($meta)) {
