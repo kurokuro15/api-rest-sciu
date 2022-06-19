@@ -146,6 +146,16 @@ class Student extends Model
 		$result = parent::query($query, $params);
 		return $result[0]["cedula"];
 	}
+
+	function getBystatus($status)
+	{
+		$query = "SELECT COUNT(*) FROM alumnos WHERE retiro = :status";
+		$params = [
+			":status" => $status
+		];
+		$result = parent::query($query, $params);
+		return $result[0]["count"];
+	}
 	// Create por implementar 
 	// Delete por implementar
 }

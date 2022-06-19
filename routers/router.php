@@ -309,3 +309,31 @@ $router->get("/status", function ($params) {
 		$status->get($params);
 	});
 });
+$router->get("/status/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$status = new StudentStatusController;
+		$status->retrieve($params);
+	});
+});
+$router->put("/status/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$status = new StudentStatusController;
+		$status->put($params);
+	});
+});
+$router->post("/status", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$status = new StudentStatusController;
+		$status->post($params);
+	});
+});
+$router->delete("/status/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$status = new StudentStatusController;
+		$status->delete($params);
+	});
+});
