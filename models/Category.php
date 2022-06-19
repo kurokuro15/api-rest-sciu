@@ -69,22 +69,20 @@ class Category extends Model
 
 			list($interval, $placeholder, $meta) = $pages;
 
+			// Obtenemos el total de elementos de la query y lo guardamos en meta
 			$meta["count"] = $this->count($query);
 			$query .= $placeholder;
 
 			$params = array_merge($params, $interval);
 		}
 
-		if (count($meta) > 0) {
-			$data[] = $meta;
-		}
-		// Obtenemos el total de elementos de la query y lo guardamos en meta
-
+		
 		// añadimos el placeholder de paginación		
 		$result = parent::query($query, $params);
-
+		
 		// (LIMPIAR EL RETURN AL MOMENTO DE NO TENER PAGINACIÓN) por implementar
 		$data[] = $result;
+		$data[] = $meta;
 		return $data;
 	}
 
