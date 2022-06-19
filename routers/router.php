@@ -4,6 +4,7 @@
  * Definiremos las rutas acá.
  */
 
+use api\Controllers\CareerController;
 use api\Controllers\CategoryController;
 use api\controllers\ChargeController;
 use api\Controllers\OrderController;
@@ -309,3 +310,76 @@ $router->get("/status", function ($params) {
 		$status->get($params);
 	});
 });
+$router->get("/status/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$status = new StudentStatusController;
+		$status->retrieve($params);
+	});
+});
+$router->put("/status/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$status = new StudentStatusController;
+		$status->put($params);
+	});
+});
+$router->post("/status", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$status = new StudentStatusController;
+		$status->post($params);
+	});
+});
+$router->delete("/status/:id", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$status = new StudentStatusController;
+		$status->delete($params);
+	});
+});
+/**
+ * Students Status Endpoints
+ */
+
+/**
+ * Careers Endpoints
+ */
+$router->get("/career/:career", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$career = new CareerController;
+		$career->retrieve($params);
+	});
+});
+$router->get("/career", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$career = new CareerController;
+		$career->get($params);
+	});
+});
+$router->post("/career", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$career = new CareerController;
+		$career->create($params);
+	});
+});
+$router->put("/career/:career", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$career = new CareerController;
+		$career->update($params);
+	});
+});
+$router->delete("/career/:career", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$career = new CareerController;
+		$career->delete($params);
+	});
+});
+/**
+ * Careers Endpoints
+ */
