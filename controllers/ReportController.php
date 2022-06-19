@@ -23,7 +23,7 @@ class ReportController extends Controller
 	{
 		try {
 			$queryParams = $this->request->get();
-			$reportType = $queryParams["report_type"];
+			$reportType = $queryParams["reportType"];
 
 			switch ($reportType) {
 				case "1":
