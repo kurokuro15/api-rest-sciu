@@ -233,7 +233,7 @@ class Order extends Model
 		//validate username, concept, outstanding , units
 		//validate product_id
 		foreach ($required as $value) {
-			if (empty($order[$value]) || (empty($order[$value]) && !is_numeric($order[$value]))) {
+			if (!isset($order[$value]) || (empty($order[$value]) && (!is_numeric($order[$value])))) {
 				throw new Exception("no se a conseguido el campo $value", 400);
 			};
 			$params[$value] = $order[$value];
