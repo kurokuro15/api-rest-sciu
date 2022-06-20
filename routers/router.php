@@ -9,6 +9,7 @@ use api\Controllers\CategoryController;
 use api\controllers\ChargeController;
 use api\Controllers\CoordinationController;
 use api\Controllers\OrderController;
+use api\Controllers\ParameterController;
 use api\controllers\ProductController;
 use api\controllers\ReceiptController;
 use api\Controllers\ReportController;
@@ -421,5 +422,20 @@ $router->delete("/coordinaciones/:id", function ($params) {
 	$auth->authy($params,	function ($params) {
 		$coordinate = new CoordinationController;
 		$coordinate->delete($params);
+	});
+});
+
+$router->get("/parametros", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$parameter = new ParameterController;
+		$parameter->get($params);
+	});
+});
+$router->put("/parametros", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$parameter = new ParameterController;
+		$parameter->put($params);
 	});
 });
