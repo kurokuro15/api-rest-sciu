@@ -34,7 +34,7 @@ class OrderController extends Controller
 				$this->getByStudent($params);
 			}
 		} else {
-			$this->getAll();
+			$this->getAll($params);
 			// else if $params don't have cedula param
 		}
 	}
@@ -80,12 +80,19 @@ class OrderController extends Controller
 	/**
 	 * retrieve all outstanding orders.
 	 */
-	private function getAll()
+	private function getAll($params)
 	{
-		/**
-		 * TO do. :V This is a example response...
-		 */
-		$this->response->send(["from" => "Desde el endpoint /ordenes sin estudiantes"]);
+		try{
+			$params = array_merge($params, $this->request->get());
+			$data = $this->order->getAll($params);
+			if(isset($this->order->pages) && count($this->order->pages) > 0) {
+				$this->getMeta(["prev" => $this->order->pages["prev"], "next" => $this->order->pages["next"], "count" => $this->order->pages["count"]]);
+			}
+			$this->response->send(["orders" => $data]);
+
+		}catch(Throwable $err){
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
 	}
 
 	/**

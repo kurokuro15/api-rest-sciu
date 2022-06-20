@@ -211,8 +211,74 @@ class Order extends Model
 	 */
 	public function getAll($params)
 	{
-		// hacemos magiaaaaaaa :V
+
+		$query= "select
+			foo.id_cedul,
+			MAX(fechaemision) as fecha,
+			SUM(foo.pendiente) as deuda
+		from
+			(
+			select
+				id_cedul,
+				fechaemision,
+				SUM(monto - pago) as pendiente
+			from
+				(
+				select
+					emisiones.id_cedul,
+					emisiones.concepto,
+					emisiones.fechaemision,
+					emisiones.idregistro,
+					pagos.anulado,
+					emisiones.monto,
+					case
+						when pagos.monto is null 
+					then 0
+						else 
+					pagos.monto *(
+						case
+							when anulado 
+								then 0
+							else 1
+						end)
+					end as pago
+				from
+					Emisiones
+				left join pagos on
+					Emisiones.idregistro = pagos.idregistr
+				left join alumnos a on
+					a.id_cedula = emisiones.id_cedul
+				where
+					a.retiro = 0 ) as ooo	
+			group by
+				idregistro,
+				fechaemision,
+				id_cedul,
+				concepto,
+				monto
+			having
+				monto-sum(pago) <> 0
+		) as foo
+		group by 
+		id_cedul
+		order by
+			fecha desc,
+			foo.id_cedul desc";
+		
+			// this part OK.
+		$pages = $this->pagination($params, false);
+		$param = [];
+		if(count($pages) > 0) {	
+			$pages["count"] = $this->count($query);
+			$query .= $pages['placeholder'];
+			$param = $pages['current'];
+			$this->pages = $pages;
+		}
+		$data = parent::query($query,$param);
+		// less the meta data (next and prev arrays)
+		return $data;
 	}
+
 	/**
 	 * Insert an new Order
 	 */
