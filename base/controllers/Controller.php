@@ -38,12 +38,14 @@ class Controller
 				else
 					$meta["next"] = null;
 
-				if ($meta["prev"]["offset"] >= 0)
+				if ($meta["prev"]["offset"] > 0)
 					$meta["prev"] = $url . "?offset=" . $meta["prev"]["offset"] . "&limit=" . $meta["prev"]["limit"];
+				else if ($meta["prev"]["offset"] === 0)
+					$meta["prev"] = $url . "?offset=" . "0" . "&limit=" . $meta["prev"]["limit"];
 				else
 					$meta["prev"] = null;
 			}
+			$this->response->send(["meta" => $meta]);
 		}
-		$this->response->send(["meta" => $meta]);
 	}
 }

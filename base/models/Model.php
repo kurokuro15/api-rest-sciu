@@ -205,7 +205,7 @@ class Model
 			"limit" => $limit
 		];
 		// devolvemos los parametros y el placeholder
-		return [$current, $placeholder, ["next" => $next, "prev" => $prev]];
+		return ["current" => $current, "placeholder" => $placeholder,"next" => $next, "prev" => $prev];
 	}
 
 	private function toUTF8($array)
