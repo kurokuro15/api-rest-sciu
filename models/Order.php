@@ -213,9 +213,9 @@ class Order extends Model
 	{
 
 		$query= "select
-			foo.id_cedul,
-			MAX(fechaemision) as fecha,
-			SUM(foo.pendiente) as deuda
+			foo.id_cedul as cedula,
+			MAX(fechaemision) as date,
+			SUM(foo.pendiente) as due
 		from
 			(
 			select
@@ -262,8 +262,8 @@ class Order extends Model
 		group by 
 		id_cedul
 		order by
-			fecha desc,
-			foo.id_cedul desc";
+			date desc,
+			cedula desc";
 		
 			// this part OK.
 		$pages = $this->pagination($params, false);
