@@ -68,19 +68,19 @@ class Parameter extends Model
 	{
 		if (!isset($parameter['seed']) || empty($parameter['seed']))
 			throw new Error("No se ha especificado la semilla");
-		if (!isset($parameter['name']) || empty($parameter['seed']))
+		if (!isset($parameter['name']) || empty($parameter['name']))
 			throw new Error("No se ha especificado el nombre");
-		if (!isset($parameter['document']) || empty($parameter['seed']))
+		if (!isset($parameter['document']) || empty($parameter['document']))
 			throw new Error("No se ha especificado el RIF");
-		if (!isset($parameter['address']) || empty($parameter['seed']))
+		if (!isset($parameter['address']) || empty($parameter['address']))
 			throw new Error("No se ha especificado la dirección");
-		if (!isset($parameter['zone']) || empty($parameter['seed']))
+		if (!isset($parameter['zone']) || empty($parameter['zone']))
 			throw new Error("No se ha especificado la población");
-		if (!isset($parameter['phone']) || empty($parameter['seed']))
+		if (!isset($parameter['phone']) || empty($parameter['phone']))
 			throw new Error("No se ha especificado el teléfono");
-		if (!isset($parameter['period']) || empty($parameter['seed']))
+		if (!isset($parameter['period']) || empty($parameter['period']))
 			throw new Error("No se ha especificado el lapso");
-		if (!isset($parameter['next_period']) || empty($parameter['seed']))
+		if (!isset($parameter['next_period']) || empty($parameter['next_period']))
 			throw new Error("No se ha especificado el lapso siguiente");
 
 		$query = "UPDATE parametros SET 
