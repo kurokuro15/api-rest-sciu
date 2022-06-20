@@ -25,11 +25,34 @@ class ParameterController extends Controller
 		}
 	}
 
+	public function post($params)
+	{
+		try {
+			$params = array_merge($params, $this->request->input());
+			$this->parameter->create($params);
+			$data = $this->parameter->get();
+			$this->response->send(["parameters" =>  $data]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
+	}
+
 	public function put($params)
 	{
 		try {
 			$params = array_merge($params, $this->request->input());
 			$this->parameter->update($params);
+			$data = $this->parameter->get();
+			$this->response->send(["parameters" =>  $data]);
+		} catch (Throwable $err) {
+			$this->response->send(["error" => $err->getMessage()], $err->getCode());
+		}
+	}
+
+	public function delete($params)
+	{
+		try {
+			$this->parameter->delete($params);
 			$data = $this->parameter->get();
 			$this->response->send(["parameters" =>  $data]);
 		} catch (Throwable $err) {

@@ -432,10 +432,27 @@ $router->get("/parametros", function ($params) {
 		$parameter->get($params);
 	});
 });
-$router->put("/parametros", function ($params) {
+
+$router->post("/parametros", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$parameter = new ParameterController;
+		$parameter->post($params);
+	});
+});
+
+$router->put("/parametros/:seed", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authy($params,	function ($params) {
 		$parameter = new ParameterController;
 		$parameter->put($params);
+	});
+});
+
+$router->delete("/parametros/:seed", function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$parameter = new ParameterController;
+		$parameter->delete($params);
 	});
 });

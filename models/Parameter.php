@@ -28,6 +28,41 @@ class Parameter extends Model
 
 		return $data;
 	}
+	function create($parameter)
+	{
+		if (!isset($parameter['seed']) || empty($parameter['seed']))
+			throw new Error("No se ha especificado la semilla");
+		if (!isset($parameter['name']) || empty($parameter['seed']))
+			throw new Error("No se ha especificado el nombre");
+		if (!isset($parameter['document']) || empty($parameter['seed']))
+			throw new Error("No se ha especificado el RIF");
+		if (!isset($parameter['address']) || empty($parameter['seed']))
+			throw new Error("No se ha especificado la dirección");
+		if (!isset($parameter['zone']) || empty($parameter['seed']))
+			throw new Error("No se ha especificado la población");
+		if (!isset($parameter['phone']) || empty($parameter['seed']))
+			throw new Error("No se ha especificado el teléfono");
+		if (!isset($parameter['period']) || empty($parameter['seed']))
+			throw new Error("No se ha especificado el lapso");
+		if (!isset($parameter['next_period']) || empty($parameter['seed']))
+			throw new Error("No se ha especificado el lapso siguiente");
+
+		$query = "INSERT INTO parametros(semilla, nombre, rif, direccion, poblacion, telefono, lapso, lapsosiguiente) 
+			VALUES( :seed, :name, :document, :address, :zone, :phone, :period, :next_period)";
+
+		$params = [
+			'seed' => $parameter['seed'],
+			'name' => $parameter['name'],
+			'document' => $parameter['document'],
+			'address' => $parameter['address'],
+			'zone' => $parameter['zone'],
+			'phone' => $parameter['phone'],
+			'period' => $parameter['period'],
+			'next_period' => $parameter['next_period']
+		];
+		$data = parent::query($query, $params);
+		return $data;
+	}
 
 	function update($parameter)
 	{
@@ -68,6 +103,18 @@ class Parameter extends Model
 			'phone' => $parameter['phone'],
 			'period' => $parameter['period'],
 			'next_period' => $parameter['next_period']
+		];
+		$data = parent::query($query, $params);
+		return $data;
+	}
+	
+	function delete($parameter)
+	{
+		if (!isset($parameter['seed']) || empty($parameter['seed']))
+			throw new Error("No se ha especificado la semilla");
+		$query = "DELETE FROM parametros WHERE semilla = :seed";
+		$params = [
+			'seed' => $parameter['seed']
 		];
 		$data = parent::query($query, $params);
 		return $data;
