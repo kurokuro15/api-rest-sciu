@@ -80,20 +80,17 @@ class Student extends Model
 			cedula DESC";
 
 		//Add pagination to query
-		list($interval, $placeholder, $meta) = parent::pagination($params);
-		$params = array_merge($params, $interval);
-
-		// Obtenemos el total de elementos de la query y lo guardamos en meta
-		$meta["count"] = $this->count($query);
-
-		// añadimos el placeholder de paginación		
-		$query .= $placeholder;
-		$data = parent::query($query, $params);
-		// validate that have some more zero records
-		if (count($data)  <= 0)
-			throw new Error("data not found", 404);
-
-		return [$data, $meta];
+		$pages = $this->pagination($params);
+		$param = [];
+		if(count($pages) > 0) {	
+			$pages["count"] = $this->count($query);
+			$query .= $pages['placeholder'];
+			$param = $pages['current'];
+			$this->pages = $pages;
+		}
+		$data = parent::query($query,$param);
+		// less the meta data (next and prev arrays)
+		return $data;
 	}
 	// Update por implementar
 	public function update($student)

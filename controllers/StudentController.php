@@ -42,13 +42,14 @@ class StudentController extends Controller
 	public function get($params = [])
 	{
 		// need refactor this section. to Limit and offset and maybe external class middleware
-		$params = array_merge($params, $this->request->get());
 		try {
-			list($data, $meta) = $this->students->getAll($params);
-
-			parent::getMeta($meta);
-
+		$params = array_merge($params, $this->request->get());
+			$data = $this->students->getAll($params);
+			if(isset($this->students->pages) && count($this->students->pages) > 0) {
+				$this->getMeta(["prev" => $this->students->pages["prev"], "next" => $this->students->pages["next"], "count" => $this->students->pages["count"]]);
+			}
 			$this->response->send(["students" => $data]);
+
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
