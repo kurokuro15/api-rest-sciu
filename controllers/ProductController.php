@@ -35,11 +35,10 @@ class ProductController extends Controller
 	{
 		$params = array_merge($params, $this->request->get());
 		try {
-			list($data, $meta) = $this->products->getAll($params);
-			if (isset($meta)) {
-				parent::getMeta($meta);
+			$data = $this->products->getAll($params);
+			if(isset($this->products->pages) && count($this->products->pages) > 0) {
+				$this->getMeta(["prev" => $this->products->pages["prev"], "next" => $this->products->pages["next"], "count" => $this->products->pages["count"]]);
 			}
-
 			$this->response->send(["products" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
