@@ -264,7 +264,7 @@ class Order extends Model
 		order by
 			date desc,
 			cedula desc";
-		
+
 			// this part OK.
 		$pages = $this->pagination($params, false);
 		$param = [];

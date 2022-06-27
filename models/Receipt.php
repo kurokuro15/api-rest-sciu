@@ -135,19 +135,19 @@ class Receipt extends Model
 					fechapago DESC, 
 					factura DESC, 
 					id_cedul DESC";
+
 		//Add pagination to query
-		list($interval, $placeholder, $meta) = parent::pagination($params);
-		$params = array_merge($params, $interval);
-		$meta["count"] = $this->count($query);
-
-		$query .= $placeholder;
-		$data = parent::query($query, $params);
-
-		if (count($data)  <= 0) {
-			throw new Error("data not found", 404);
+		$pages = $this->pagination($params);
+		$param = [];
+		if(count($pages) > 0) {	
+			$pages["count"] = $this->count($query);
+			$query .= $pages['placeholder'];
+			$param = $pages['current'];
+			$this->pages = $pages;
 		}
-
-		return [$data, $meta];
+		$data = parent::query($query,$param);
+		// less the meta data (next and prev arrays)
+		return $data;
 	}
 	//Update por implementar
 	//Delete (¿anular?) por implementar

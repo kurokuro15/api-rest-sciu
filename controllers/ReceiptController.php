@@ -81,13 +81,14 @@ class ReceiptController extends Controller
 	 */
 	private function getAll($params)
 	{
-		$params = array_merge($params, $this->request->get());
 		try {
-			list($data, $meta) = $this->receipt->getAll($params);
-
-			parent::getMeta($meta);
-
+			$params = array_merge($params, $this->request->get());
+			$data = $this->receipt->getAll($params);
+			if(isset($this->receipt->pages) && count($this->receipt->pages) > 0) {
+				$this->getMeta(["prev" => $this->receipt->pages["prev"], "next" => $this->receipt->pages["next"], "count" => $this->receipt->pages["count"]]);
+			}
 			$this->response->send(["receipts" => $data]);
+			
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
 		}
@@ -95,7 +96,7 @@ class ReceiptController extends Controller
 
 	public function delete($params)
 	{
-		// validate that param 'order' exist
+		// validate that param 'receipt' exist
 		if (empty($params) || empty($params['receipt'])) {
 			$this->response->send(["error" => "receipt identity field was not send"], 400);
 		}
