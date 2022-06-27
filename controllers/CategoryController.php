@@ -36,11 +36,11 @@ class CategoryController extends Controller
 	public function get($params)
 	{
 		try {
-			list($data, $meta) = $this->categories->getAll($params);
-			if (isset($meta)) {
-				parent::getMeta($meta);
+			$params = array_merge($params, $this->request->get());
+			$data = $this->categories->getAll($params);
+			if(isset($this->categories->pages) && count($this->categories->pages) > 0) {
+				$this->getMeta(["prev" => $this->categories->pages["prev"], "next" => $this->categories->pages["next"], "count" => $this->categories->pages["count"]]);
 			}
-			
 			$this->response->send(["categories" => $data]);
 		} catch (Throwable $err) {
 			$this->response->send(["error" => $err->getMessage()], $err->getCode());
