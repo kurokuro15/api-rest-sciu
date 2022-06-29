@@ -8,6 +8,7 @@ use api\Controllers\CareerController;
 use api\Controllers\CategoryController;
 use api\controllers\ChargeController;
 use api\Controllers\CoordinationController;
+use api\controllers\ExchangeController;
 use api\Controllers\OrderController;
 use api\Controllers\ParameterController;
 use api\controllers\ProductController;
@@ -386,9 +387,9 @@ $router->delete("/carreras/:id", function ($params) {
  * Careers Endpoints
  */
 
- /**
-	* Coordinates Endpoints
-  */
+/**
+ * Coordinates Endpoints
+ */
 $router->get("/coordinaciones/:coordination", function ($params) {
 	$auth = new AuthenticationMiddleware;
 	$auth->authy($params,	function ($params) {
@@ -456,3 +457,46 @@ $router->delete("/parametros/:seed", function ($params) {
 		$parameter->delete($params);
 	});
 });
+
+
+/**
+ * Exchange Endpoints
+ */
+$router->get('/intercambios/:id', function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$exchange = new ExchangeController;
+		$exchange->retrieve($params);
+	});
+});
+$router->get('/intercambios', function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$exchange = new ExchangeController;
+		$exchange->get($params);
+	});
+});
+$router->post('/intercambios', function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$exchange = new ExchangeController;
+		$exchange->post($params);
+	});
+});
+$router->put('/intercambios/:id', function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$exchange = new ExchangeController;
+		$exchange->put($params);
+	});
+});
+$router->delete('/intercambios/:id', function ($params) {
+	$auth = new AuthenticationMiddleware;
+	$auth->authy($params,	function ($params) {
+		$exchange = new ExchangeController;
+		$exchange->delete($params);
+	});
+});
+/**
+ * Exchange Endpoints
+ */
