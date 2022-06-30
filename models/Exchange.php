@@ -43,7 +43,7 @@ class Exchange extends Model
 
 	function getAll($params)
 	{
-		$query = "select * from bolivar_exchange";
+		$query = "select * from bolivar_exchange order by date desc";
 		$pages = $this->pagination($params);
 		$param = [];
 		if (count($pages) > 0) {
