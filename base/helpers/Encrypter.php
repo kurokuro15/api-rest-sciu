@@ -58,7 +58,7 @@ class Encrypter
 	private function getFileData($file)
 	{
 		$dir = dirname(__FILE__, 3);
-		$json = file_get_contents($dir . "\config/" . $file);
+		$json = file_get_contents($dir . "/config/" . $file);
 		return json_decode($json, true);
 	}
 }
