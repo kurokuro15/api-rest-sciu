@@ -129,7 +129,7 @@ class Model
 	private function getConfigFile($file)
 	{
 		$root = dirname(dirname(__DIR__));
-		$json = file_get_contents($root . "\Config/" . $file);
+		$json = file_get_contents($root . "/config/" . $file);
 		return json_decode($json, true);
 	}
 
