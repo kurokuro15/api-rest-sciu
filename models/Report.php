@@ -105,7 +105,8 @@ class Report extends Model
 				receipt,
 				payment_date,
 				reg_date,
-				canceled
+				canceled,
+				category
 			order by 
 				reg_date desc,
 				payment_date desc,
