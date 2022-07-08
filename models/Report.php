@@ -78,7 +78,8 @@ class Report extends Model
 				SUM(p.monto) as amount,
 				p.anulado as canceled,
 				t.fecha as payment_date,
-				p.fechapago as reg_date
+				p.fechapago as reg_date,
+				c.nombrecategoria as category
 			from
 				pagos p
 			join 
@@ -87,8 +88,12 @@ class Report extends Model
 			join 
 				tipospago t on
 				t.idtipopago = p.idtipopag
+			join
+				categorias c on
+				c.idcategoria = e.idcategori
 			where
 				tipopago in (:paymentMethods)
+				and e.idcategori in (:categories)
 				and ((p.fechapago >= :startDate
 					and p.fechapago <= :endDate)
 				or (t.fecha >= :startDate
