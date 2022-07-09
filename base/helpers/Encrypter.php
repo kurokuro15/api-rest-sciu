@@ -11,7 +11,7 @@ class Encrypter
 
 	function __construct($secret = null)
 	{
-		$this->secret = $secret || $this->getFileData("pepper")['peperoni'];
+		$this->secret = $secret ?: $this->getFileData("pepper")['peperoni'];
 	}
 
 	/**
