@@ -18,9 +18,9 @@ class JWT
     $payload = null,
     $secret = null
   ) {
-    $this->header = $header ?? ["alg" => "HS256", "typ" => "JWT"];
-    $this->payload = $this->genPayload($payload ?? []);
-    $this->secret = $secret ?? $this->getConfigFileData('pepper')['peperoni'];
+    $this->header = $header ?: ["alg" => "HS256", "typ" => "JWT"];
+    $this->payload = $this->genPayload($payload ?: []);
+    $this->secret = $secret ?: $this->getConfigFileData('pepper')['peperoni'];
     $this->encode();
   }
 
