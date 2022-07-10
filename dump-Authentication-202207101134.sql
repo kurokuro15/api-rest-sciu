@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.4.26
 -- Dumped by pg_dump version 9.4.26
--- Started on 2022-07-01 19:49:46
+-- Started on 2022-07-10 11:34:54
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -454,9 +454,7 @@ ALTER TABLE ONLY public.user_status ALTER COLUMN id SET DEFAULT nextval('public.
 -- Data for Name: app_user; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.app_user (id, username, password, secret, status, create_at) FROM stdin;
-1	usuariocaja	$2y$10$EVyhxNl0Q3SYDnDSgJ4CRO8mUu3Y3qddnC67IpoZCalA6f9WeVsA2	1	1	2022-07-01 19:48:25.6
-\.
+INSERT INTO public.app_user VALUES (1, 'usuariocaja', '$2y$10$7Gph39fltqM3Ee/KAdE0r.BHlFEel5wB3GeyqqzQCOZTJuDdJ4x5y', 1, 1, '2022-07-10 11:29:53.658');
 
 
 --
@@ -474,9 +472,9 @@ SELECT pg_catalog.setval('public.app_user_id_seq', 1, true);
 -- Data for Name: bolivar_exchange; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.bolivar_exchange (id, dolar, euro, date) FROM stdin;
-1	5.5552001	5.77963018	2022-07-01 17:00:20.789752-04
-\.
+INSERT INTO public.bolivar_exchange VALUES (1, 5.5552001, 5.77963018, '2022-07-01 17:00:20.789752-04');
+INSERT INTO public.bolivar_exchange VALUES (3, 5.5, 5.5999999, '2022-07-02 12:15:59-04');
+INSERT INTO public.bolivar_exchange VALUES (4, 6, 5, '2022-07-07 23:13:19-04');
 
 
 --
@@ -485,7 +483,7 @@ COPY public.bolivar_exchange (id, dolar, euro, date) FROM stdin;
 -- Name: bolivar_exchange_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.bolivar_exchange_id_seq', 1, true);
+SELECT pg_catalog.setval('public.bolivar_exchange_id_seq', 4, true);
 
 
 --
@@ -494,8 +492,6 @@ SELECT pg_catalog.setval('public.bolivar_exchange_id_seq', 1, true);
 -- Data for Name: permission; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.permission (id, permission, description) FROM stdin;
-\.
 
 
 --
@@ -513,9 +509,7 @@ SELECT pg_catalog.setval('public.permission_id_seq', 1, false);
 -- Data for Name: rol; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.rol (id, rol, level, description) FROM stdin;
-1	admin	1	administrador
-\.
+INSERT INTO public.rol VALUES (1, 'admin', 1, 'administrador');
 
 
 --
@@ -533,8 +527,6 @@ SELECT pg_catalog.setval('public.rol_id_seq', 1, true);
 -- Data for Name: rol_permission; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.rol_permission (id, rol, permission, allowed, reg_data) FROM stdin;
-\.
 
 
 --
@@ -552,9 +544,7 @@ SELECT pg_catalog.setval('public.rol_permission_id_seq', 1, false);
 -- Data for Name: secret; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.secret (id, question, answer, question_two, answer_two, question_three, answer_three, create_at, update_at) FROM stdin;
-1	Clave de recuperación #1	$2y$10$JkLLHlyayIIdm2Usm1b/h.f1ZbfHdltab//8L3VGUYdsDzZPESs.u	Clave de recuperación #2	$2y$10$c5w7z5M9FRR2NSiGpw3o9uUR/UCDwTvJLNP/e1Zz4HrYPfynsfdfi	Clave de recuperación #3	$2y$10$e/Gn6d9jhogBMywyGk7Z3OYo2lOrwB.PjkbnBJX0tP3ceiOINJbMK	2022-07-01 19:48:25.6	2022-07-01 19:48:25.6
-\.
+INSERT INTO public.secret VALUES (1, 'Clave de recuperación #1', '$2y$10$eLmbgGHwnZxgWl5km2zLyeirLLYhFABRwU3V/rbPeg0.jqVA1QtFG', 'Clave de recuperación #2', '$2y$10$iSalVJBJ2bwAjOaWGBUQ3.Bk6j5LAjeM9eFjRkZBiytgOMTktG0ky', 'Clave de recuperación #3', '$2y$10$46UCHxTEd9/CxIPLjMXhl.U2kWru.MRstRW8BofvwKd3SG9bMdRua', '2022-07-10 11:29:53.658', '2022-07-10 11:29:53.658');
 
 
 --
@@ -572,8 +562,6 @@ SELECT pg_catalog.setval('public.secret_id_seq', 1, true);
 -- Data for Name: session; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.session (id, token, "user", expiration_date) FROM stdin;
-\.
 
 
 --
@@ -591,9 +579,7 @@ SELECT pg_catalog.setval('public.session_id_seq', 1, false);
 -- Data for Name: user_rol; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.user_rol (id, rol, "user", reg_data) FROM stdin;
-1	1	1	2022-07-01 19:48:25.6
-\.
+INSERT INTO public.user_rol VALUES (1, 1, 1, '2022-07-10 11:29:53.658');
 
 
 --
@@ -611,10 +597,8 @@ SELECT pg_catalog.setval('public.user_rol_id_seq', 1, true);
 -- Data for Name: user_status; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.user_status (id, status, description) FROM stdin;
-0	INACTIVO	\N
-1	ACTIVO	\N
-\.
+INSERT INTO public.user_status VALUES (0, 'INACTIVO', NULL);
+INSERT INTO public.user_status VALUES (1, 'ACTIVO', NULL);
 
 
 --
@@ -818,7 +802,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2022-07-01 19:49:46
+-- Completed on 2022-07-10 11:34:56
 
 --
 -- PostgreSQL database dump complete
